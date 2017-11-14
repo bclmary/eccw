@@ -63,7 +63,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         tmp = lambda elt: lambda: self._there_can_be_only_one(elt)
         for i, elt in enumerate(self.param_object_list):
             elt.pushButton.clicked.connect(tmp(elt))
-            # param objects needs to be identified latter.
+            # param objects needs to be identified later.
             elt.id = self.param_flag_list[i]
         for elt in self.focus_object_list:
             elt.clicked.connect(self._auto_set_focus)
