@@ -12,13 +12,13 @@ if __name__ == "__main__":
 from PyQt4 import QtCore,QtGui
 from collections import OrderedDict
 
-from calculator_main_viewer import Ui_Form
-from lineEdit_controller import SwitchScalarRange
-from comboBox_controller import ComboBoxContext
-from shared.print_tools import graph_print
-from shared.checkers import float_check, str_check
-from wrappers import Wrapper, WrapperDict
-from lib_eccw.compute import EccwCompute
+from eccw.gui.calculator_app.viewers.calculator_main import Ui_Form
+from eccw.gui.shared.controllers.lineEdit import SwitchScalarRange
+from eccw.gui.shared.controllers.comboBox import ComboBoxContext
+from eccw.shared.print_tools import graph_print
+from eccw.shared.checkers import float_check, str_check
+from eccw.gui.shared.wrappers import Wrapper, WrapperDict
+from eccw.physics.compute import EccwCompute
 
 class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
 
