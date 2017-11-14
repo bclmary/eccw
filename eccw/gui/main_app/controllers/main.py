@@ -60,7 +60,7 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.about = About()
 
     def click_doc(self):
-        file_name = "../documentation/ECCW.pdf"
+        file_name = "../../../documentation/ECCW.pdf"
         import webbrowser
         webbrowser.open(file_name, new=0, autoraise=True)
 
