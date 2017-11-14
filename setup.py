@@ -3,17 +3,18 @@
 
 from setuptools import setup
 
-# TODO : some stuffs
-
-
-def myfunc(a):
-    """poulpe. """
-    return a+1
-
+# Get version
+with open('eccw/version.py') as f:
+    exec(f.read())
+    f.close()
+# Get authors
+with open('eccw/authors.py') as f:
+    exec(f.read())
+    f.close()
 
 setup(
     name='eccw',
-    version='2.0',
+    # version= setted above
     description='Exact Critical Coulomb Wedge',
     long_description='Tools to compute and display the exact solution of any'
                      'parameter of Critical Coulomb Wedge',
@@ -26,7 +27,7 @@ setup(
         'Topic :: Scientific/Engineering ::  Geology',
         ],
     url='http://github.com/???',
-    author='BCL Mary',
+    # authors= setted above
     author_email='bclmary@mailoo.org',
     license='MIT',
     packages=['eccw'],
