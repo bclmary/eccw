@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main.ui'
+# Form implementation generated from reading ui file '../uis/main.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -36,20 +36,20 @@ class Ui_Form(object):
         self.horizontalLayout_topmenu.setObjectName(_fromUtf8("horizontalLayout_topmenu"))
         self.pushButton_Open = QtGui.QPushButton(Form)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../UIalpha3/images/icon_open.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_open.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_Open.setIcon(icon)
         self.pushButton_Open.setObjectName(_fromUtf8("pushButton_Open"))
         self.horizontalLayout_topmenu.addWidget(self.pushButton_Open)
         self.pushButton_Save = QtGui.QPushButton(Form)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("../../UIalpha3/images/icon-save.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon-save.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_Save.setIcon(icon1)
         self.pushButton_Save.setObjectName(_fromUtf8("pushButton_Save"))
         self.horizontalLayout_topmenu.addWidget(self.pushButton_Save)
         self.pushButton = QtGui.QPushButton(Form)
         self.pushButton.setMinimumSize(QtCore.QSize(0, 32))
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("../images/icon-export.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon-export.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton.setIcon(icon2)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.horizontalLayout_topmenu.addWidget(self.pushButton)
@@ -65,13 +65,13 @@ class Ui_Form(object):
         self.horizontalLayout_topmenu.addWidget(self.line_2)
         self.pushButton_About = QtGui.QPushButton(Form)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("../../UIalpha3/images/icon_about.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_about.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_About.setIcon(icon3)
         self.pushButton_About.setObjectName(_fromUtf8("pushButton_About"))
         self.horizontalLayout_topmenu.addWidget(self.pushButton_About)
         self.pushButton_Documentation = QtGui.QPushButton(Form)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(_fromUtf8("../../UIalpha3/images/icon_documentation.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_documentation.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_Documentation.setIcon(icon4)
         self.pushButton_Documentation.setObjectName(_fromUtf8("pushButton_Documentation"))
         self.horizontalLayout_topmenu.addWidget(self.pushButton_Documentation)
@@ -99,13 +99,13 @@ class Ui_Form(object):
         self.tab_calculator.setAutoFillBackground(True)
         self.tab_calculator.setObjectName(_fromUtf8("tab_calculator"))
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(_fromUtf8("../../UIalpha3/images/icon_calculate.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_calculate.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tabWidget_main.addTab(self.tab_calculator, icon5, _fromUtf8(""))
         self.tab_plot = QtGui.QWidget()
         self.tab_plot.setAutoFillBackground(True)
         self.tab_plot.setObjectName(_fromUtf8("tab_plot"))
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(_fromUtf8("../../UIalpha3/images/icon_plot.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_plot.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tabWidget_main.addTab(self.tab_plot, icon6, _fromUtf8(""))
         self.verticalLayout_18.addWidget(self.tabWidget_main)
 

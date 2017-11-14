@@ -16,13 +16,14 @@ from PyQt4 import QtCore,QtGui
 from collections import OrderedDict
 from os.path import dirname, realpath
 
-from main_viewer import Ui_Form
-from dialogue_about_controller import About
-from calculator_main_controller import CalculatorController
-from plot_main_controller import PlotController
-from print_tools import graph_print
-from file_management import EccwFile
-from wrappers import Wrapper, WrapperDict
+from eccw.gui.main_app.viewers.main import Ui_Form
+from eccw.gui.main_app.controllers.dialogue_about import About
+from eccw.gui.calculator_app.controllers.calculator_main import CalculatorController
+from eccw.gui.plot_app.controllers.plot_main import PlotController
+from eccw.gui.shared.wrappers import Wrapper, WrapperDict
+from eccw.shared.print_tools import graph_print
+from eccw.shared.file_management import EccwFile
+
 
 class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
 

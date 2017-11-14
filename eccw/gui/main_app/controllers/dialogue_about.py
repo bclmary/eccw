@@ -4,7 +4,7 @@
 
 from PyQt4 import QtCore,QtGui
 
-from dialogue_about_viewer import Ui_Dialog_About
+from eccw.gui.main_app.viewers.dialogue_about import Ui_Dialog_About
 
 
 class About(QtGui.QWidget, Ui_Dialog_About):

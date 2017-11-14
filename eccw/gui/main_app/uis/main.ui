@@ -34,7 +34,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../UIalpha3/images/icon_open.png</normaloff>../../UIalpha3/images/icon_open.png</iconset>
+         <normaloff>../../../images/icon_open.png</normaloff>../../../images/icon_open.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+O</string>
@@ -51,7 +51,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../UIalpha3/images/icon-save.png</normaloff>../../UIalpha3/images/icon-save.png</iconset>
+         <normaloff>../../../images/icon-save.png</normaloff>../../../images/icon-save.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+S</string>
@@ -74,7 +74,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../images/icon-export.png</normaloff>../images/icon-export.png</iconset>
+         <normaloff>../../../images/icon-export.png</normaloff>../../../images/icon-export.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+E</string>
@@ -104,7 +104,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../UIalpha3/images/icon_about.png</normaloff>../../UIalpha3/images/icon_about.png</iconset>
+         <normaloff>../../../images/icon_about.png</normaloff>../../../images/icon_about.png</iconset>
        </property>
       </widget>
      </item>
@@ -118,7 +118,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../UIalpha3/images/icon_documentation.png</normaloff>../../UIalpha3/images/icon_documentation.png</iconset>
+         <normaloff>../../../images/icon_documentation.png</normaloff>../../../images/icon_documentation.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+D</string>
@@ -174,7 +174,7 @@
       </property>
       <attribute name="icon">
        <iconset>
-        <normaloff>../../UIalpha3/images/icon_calculate.png</normaloff>../../UIalpha3/images/icon_calculate.png</iconset>
+        <normaloff>../../../images/icon_calculate.png</normaloff>../../../images/icon_calculate.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Calculator                    </string>
@@ -186,7 +186,7 @@
       </property>
       <attribute name="icon">
        <iconset>
-        <normaloff>../../UIalpha3/images/icon_plot.png</normaloff>../../UIalpha3/images/icon_plot.png</iconset>
+        <normaloff>../../../images/icon_plot.png</normaloff>../../../images/icon_plot.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Plot                              </string>
