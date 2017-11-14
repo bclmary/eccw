@@ -1,42 +1,29 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
-#Makes parent diretory accessible if this file is runned alone. 
-if __name__ == "__main__":
-    import os
-    parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.sys.path.insert(0,parentdir)
-    os.sys.path.insert(0, parentdir+"/shared")
-    os.sys.path.insert(0, parentdir+"/plot_app")
-    os.sys.path.insert(0, parentdir+"/calculator_app")
-
-
-from PyQt4 import QtCore,QtGui
+from PyQt4 import QtGui, QtCore
 from collections import OrderedDict
 from os.path import dirname, realpath
 
 from eccw.gui.main_app.viewers.main import Ui_Form
 from eccw.gui.main_app.controllers.dialogue_about import About
-from eccw.gui.calculator_app.controllers.calculator_main import CalculatorController
+from eccw.gui.calculator_app.controllers.calculator_main import (
+     CalculatorController)
 from eccw.gui.plot_app.controllers.plot_main import PlotController
-from eccw.gui.shared.wrappers import Wrapper, WrapperDict
+from eccw.gui.shared.wrappers import WrapperDict
 from eccw.shared.print_tools import graph_print
 from eccw.shared.file_management import EccwFile
 
 
 class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
-
-    """Qt derived object dedicated to enter graphic settings 
-and parameters of a point."""
-
-
+    """Main window of ECCW app."""
     def __init__(self, parent=None, **kwargs):
         super(MainController, self).__init__(parent)
         self.setupUi(self)
         self.current_dir = QtCore.QDir.homePath()
         self.current_dir = "/home/bmary/SLAMTec/ECCW/UIalpha5"
-        self.mime_types = "Fichier eccw (*.%s);;Tout les Fichiers (*.*)" % EccwFile.mime
+        self.mime_types = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
+                           EccwFile.mime)
         # Set calculator tab.
         self.calculator = CalculatorController()
         layoutC = QtGui.QVBoxLayout()
@@ -55,20 +42,19 @@ and parameters of a point."""
         # Defines keyboard shortcuts.
         QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Q"), self, self.close)
         TabW = self.tabWidget_main
-        prev_tab = lambda : TabW.setCurrentIndex(TabW.currentIndex()-1)
-        next_tab = lambda : TabW.setCurrentIndex(TabW.currentIndex()+1)
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Page up"), self, prev_tab)
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Page down"), self, next_tab)
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Page up"), self,
+                        lambda: TabW.setCurrentIndex(TabW.currentIndex()-1))
+        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Page down"), self,
+                        lambda: TabW.setCurrentIndex(TabW.currentIndex()+1))
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
-            ("calculator" , self.calculator),
-            ("plot"  , self.plot)
+            ("calculator", self.calculator),
+            ("plot",       self.plot)
         ])
         # Fill values with kwargs.
         if kwargs:
             self.setParams(**kwargs)
         self.show()
-
 
     def click_about(self):
         self.about = About()
@@ -78,27 +64,28 @@ and parameters of a point."""
         import webbrowser
         webbrowser.open(file_name, new=0, autoraise=True)
 
-
-
     # Save and load file management.
-    
+
     def load_session(self):
         OpenDialog = QtGui.QFileDialog.getOpenfile_name
-        file_name = OpenDialog(self, "Open file", self.current_dir, self.mime_types)
+        file_name = OpenDialog(self, "Open file", self.current_dir,
+                               self.mime_types)
         if file_name == "":
             return
         self.current_dir = dirname(realpath(file_name))
         eccwf = EccwFile(file_name=file_name)
         if eccwf.values is None:
-            message = "Wrong file type.\nChosen file must be a *.eccw mime type."
+            message = ("Wrong file type.\n"
+                       "Chosen file must be a *.eccw mime type.")
             QtGui.QMessageBox.about(self, "Error", message)
             return
         self.setParams(**eccwf.values)
 
     def save_session(self):
-        submime ='.session'
+        submime = '.session'
         SaveDialog = QtGui.QFileDialog.getSavefile_nameAndFilter
-        file_name, _ = SaveDialog(self, "Save file", self.current_dir, self.mime_types)
+        file_name, _ = SaveDialog(self, "Save file", self.current_dir,
+                                  self.mime_types)
         if file_name:
             self.current_dir = dirname(realpath(file_name))
             mime = "." + EccwFile.mime
@@ -112,13 +99,7 @@ and parameters of a point."""
         eccwf.save(file_name)
 
 
-
-
-
-
-
-
-if __name__=="__main__":
+if __name__ == "__main__":
     import sys
     try:
         app = QtGui.QApplication(sys.argv)
@@ -126,9 +107,4 @@ if __name__=="__main__":
         sys.exit(app.exec_())
     finally:
         print("params =")
-#        graph_print(myapp.getParams())
         graph_print(myapp.getSelect())
-
-
-
-
