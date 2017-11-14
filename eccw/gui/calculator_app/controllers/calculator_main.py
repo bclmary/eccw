@@ -1,35 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-#Makes parent diretory accessible if this file is runned alone.
-if __name__ == "__main__":
-    import os
-    parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.sys.path.insert(0, parentdir)
-    os.sys.path.insert(0, parentdir+"/shared")
-    os.sys.path.insert(0, parentdir+"/images")
-
-from PyQt4 import QtCore,QtGui
+from PyQt4 import QtGui
 from collections import OrderedDict
 
 from eccw.gui.calculator_app.viewers.calculator_main import Ui_Form
 from eccw.gui.shared.controllers.lineEdit import SwitchScalarRange
 from eccw.gui.shared.controllers.comboBox import ComboBoxContext
 from eccw.shared.print_tools import graph_print
-from eccw.shared.checkers import float_check, str_check
 from eccw.gui.shared.wrappers import Wrapper, WrapperDict
 from eccw.physics.compute import EccwCompute
+
 
 class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     def __init__(self, **kwargs):
         super(CalculatorController, self).__init__()
         self.setupUi(self)
-        # Path to images relative to current module.
-        #self.impath = os.path.join(os.path.dirname(__file__), '../images/')
         # Init local attributs.
         self.alpha = SwitchScalarRange(scalar=3.44)
-        self.beta = SwitchScalarRange(scalar=0, range={'begin':-2, 'end':2})
+        self.beta = SwitchScalarRange(scalar=0, range={'begin': -2, 'end': 2})
         self.phiB = SwitchScalarRange(scalar=30)
         self.phiD = SwitchScalarRange(scalar=10)
         self.delta_lambdaB = SwitchScalarRange()
@@ -48,11 +38,13 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.context = ComboBoxContext()
         self.results = Wrapper(fn=self.textEdit_results.setText)
         self.fluids = Wrapper(False, fn=self.groupBox_fluids.setChecked)
-        self.fluids_flag_list = ["delta_lambdaB", "delta_lambdaD", "rho_f", "rho_sr"]
+        self.fluids_flag_list = ["delta_lambdaB", "delta_lambdaD",
+                                 "rho_f", "rho_sr"]
         # List of radioButton defining focus
         self.focus_object_list = [self.radioButton_alpha,
-            self.radioButton_beta, self.radioButton_phiB,
-            self.radioButton_phiD]
+                                  self.radioButton_beta,
+                                  self.radioButton_phiB,
+                                  self.radioButton_phiD]
         self.focus_flag_list = ["alpha", "beta", "phiB", "phiD"]
         for elt, txt in zip(self.focus_object_list, self.focus_flag_list):
             elt.ID = txt
@@ -71,7 +63,8 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         tmp = lambda elt: lambda: self._there_can_be_only_one(elt)
         for i, elt in enumerate(self.param_object_list):
             elt.pushButton.clicked.connect(tmp(elt))
-            elt.id = self.param_flag_list[i] # Add id attribute.
+            # param objects needs to be identified latter.
+            elt.id = self.param_flag_list[i]
         for elt in self.focus_object_list:
             elt.clicked.connect(self._auto_set_focus)
         self.groupBox_fluids.clicked.connect(self._fluidsChanged)
@@ -79,45 +72,44 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.pushButton_Go.clicked.connect(self.click_compute)
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
-            ("context" , self.context),
-            ("fluids"  , self.fluids),
-            ("focus"   , self.focus),
-            ("range"   , self.range),
-            ("alpha"   , self.alpha),
-            ("beta"    , self.beta),
-            ("phiB"    , self.phiB),
-            ("phiD"    , self.phiD),
-            ("delta_lambdaB"  , self.delta_lambdaB),
-            ("delta_lambdaD"  , self.delta_lambdaD),
-            ("rho_f"    , self.rho_f),
-            ("rho_sr"   , self.rho_sr),
-            ("results" , self.results)
+            ("context",       self.context),
+            ("fluids",        self.fluids),
+            ("focus",         self.focus),
+            ("range",         self.range),
+            ("alpha",         self.alpha),
+            ("beta",          self.beta),
+            ("phiB",          self.phiB),
+            ("phiD",          self.phiD),
+            ("delta_lambdaB", self.delta_lambdaB),
+            ("delta_lambdaD", self.delta_lambdaD),
+            ("rho_f",         self.rho_f),
+            ("rho_sr",        self.rho_sr),
+            ("results",       self.results)
         ])
         # Additional variables
         self.name_convert = {
-            "alpha": "α",
-            "beta": "β",
-            "phiB": "Φ<sub>B</sub>",
-            "phiD": "Φ<sub>D</sub>",
+            "alpha":         "α",
+            "beta":          "β",
+            "phiB":          "Φ<sub>B</sub>",
+            "phiD":          "Φ<sub>D</sub>",
             "delta_lambdaB": "∆λ<sub>B</sub>",
             "delta_lambdaD": "∆λ<sub>D</sub>",
-            "rho_f": "ρ<sub>f</sub>",
-            "rho_sr": "ρ<sub>sr</sub>"
+            "rho_f":         "ρ<sub>f</sub>",
+            "rho_sr":        "ρ<sub>sr</sub>"
         }
-        self._result_table_header = self._make_result_table_line([self.name_convert[elt] for elt in self.param_flag_list])
+        self._result_table_header = self._make_result_table_line(
+            [self.name_convert[elt] for elt in self.param_flag_list])
         # Fill values with kwargs
         if kwargs:
             self.setParams(**kwargs)
         self.show()
 
-
     # Methods.
 
     def _make_result_table_line(self, iterable, arg=""):
         td = "<td align='center', "+arg+">"
-        dttd= "</td>" + td
-        return "<tr>"+ td + dttd.join(iterable) + "</td></tr>"
-
+        dttd = "</td>" + td
+        return "<tr>" + td + dttd.join(iterable) + "</td></tr>"
 
     def _there_can_be_only_one(self, elt):
         if elt.focus.value == "scalar":
@@ -128,16 +120,12 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             if Obj is not elt:
                 Obj.set_scalar_visible(True)
 
-
-
     def set_focus(self, arg):
         for elt in self.focus_object_list:
             if elt.ID == arg:
                 elt.setChecked(True)
         for elt in self.focus_object_list:
             self.__dict__[elt.ID].setEnabled(not elt.ID == arg)
-
-
 
     def _auto_set_focus(self):
         for elt in self.focus_object_list:
@@ -155,12 +143,11 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             elt.clear()
         self.textEdit_results.clear()
 
-
     def click_compute(self):
         txt_result = "<p align='center'>"
         select = self.get_select()
         errors = self._check_arguments(select)
-        if errors != "" :
+        if errors != "":
             txt_result += errors
         else:
             focus = self.focus.value
@@ -168,7 +155,8 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             range_ = [None] if range_id is None else select[range_id]['value']
             result = []
             for x in range_:
-                params = [select[flag]['value'] if flag !=  range_id else x for flag in self.param_flag_list]
+                params = [select[flag]['value'] if flag != range_id else x
+                          for flag in self.param_flag_list]
                 self._load_params_in_compute_core(*params)
                 result.append(self.compute_core.compute(focus))
             result = [(i, j, k) for i, (j, k) in zip(range_, result)]
@@ -177,19 +165,19 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.textEdit_results.append(txt_result)
         self.results.value = txt_result
 
-
     def _format_results(self, select, results):
         i = 1 if len(results) == 1 else 0
         txt = self._get_resume_params(select)
         txt += "<table width='" + str((5-i)*10) + "%'>"
         headers = ["●", "inverse", "normal"]
-
-        txt += self._make_result_table_line(headers[i:], arg="style='color: blue'")
+        txt += self._make_result_table_line(headers[i:],
+                                            arg="style='color: blue'")
         for res in results:
-            txt += self._make_result_table_line([str(round(elt, 4))  if elt != None else "-" for elt in res[i:]])
+            txt += self._make_result_table_line([str(round(elt, 4))
+                                                 if elt is not None else "-"
+                                                 for elt in res[i:]])
         txt += "</table>"
         return txt
-
 
     def _check_arguments(self, select):
         errors = ""
@@ -204,14 +192,14 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
                     errors += self.name_convert[p_name] + message
         return errors + ""
 
-
     def _get_resume_params(self, select):
         focus = self.focus.value
         context = " "+self.context.get_params()+" "
-        n = 50   - len(context)
+        n = 50 - len(context)
         title = "-"*n + context + "-"*n
         text = "<table width='100%'>"
-        text += self._make_result_table_line([title], arg="colspan='8', style='color: blue'")
+        text += self._make_result_table_line([title], arg="colspan='8',"
+                                             "style='color: blue'")
         text += self._result_table_header
         values = []
         for elt in self.param_flag_list:
@@ -226,7 +214,6 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         text += self._make_result_table_line(values)
         text += "</table>"
         return text
-
 
     def _load_params_in_compute_core(self, a, b, pB, pD, lB, lD, rf, rs):
         try:
@@ -243,14 +230,13 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             print("Wrong arguments")
         self.compute_core.context = self.context.get_params()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     import sys
     try:
         app = QtGui.QApplication(sys.argv)
-        myapp = CalculatorController()#focus="beta", inputmode="alpha", alpha=[0,0.1,5], phiB=30, phiD=10, results="Coucou !")
-#        myapp.set_focus("phiB")
+        myapp = CalculatorController()
         sys.exit(app.exec_())
     finally:
         print("values :")
-#        graph_print(myapp.get_params())
         graph_print(myapp.get_select())
