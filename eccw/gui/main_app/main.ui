@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>714</width>
+    <height>528</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <kerning>true</kerning>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_18">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_topmenu">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
+     </property>
+     <item>
+      <widget class="QPushButton" name="pushButton_Open">
+       <property name="toolTip">
+        <string>Open previously saved session (Crtl+O)</string>
+       </property>
+       <property name="text">
+        <string>Open</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../UIalpha3/images/icon_open.png</normaloff>../../UIalpha3/images/icon_open.png</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+O</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_Save">
+       <property name="toolTip">
+        <string>Save current session (Crtl+S)</string>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../UIalpha3/images/icon-save.png</normaloff>../../UIalpha3/images/icon-save.png</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+S</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Export datas of current session in cvs format (Crtl+E)</string>
+       </property>
+       <property name="text">
+        <string>Export</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icon-export.png</normaloff>../images/icon-export.png</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+E</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_About">
+       <property name="toolTip">
+        <string>About ECCW software</string>
+       </property>
+       <property name="text">
+        <string>About</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../UIalpha3/images/icon_about.png</normaloff>../../UIalpha3/images/icon_about.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_Documentation">
+       <property name="toolTip">
+        <string>Display pdf fulll documentation (Crtl+D)</string>
+       </property>
+       <property name="text">
+        <string>Documentation</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../UIalpha3/images/icon_documentation.png</normaloff>../../UIalpha3/images/icon_documentation.png</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+D</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget_main">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::DefaultContextMenu</enum>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::South</enum>
+     </property>
+     <property name="tabShape">
+      <enum>QTabWidget::Rounded</enum>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="elideMode">
+      <enum>Qt::ElideLeft</enum>
+     </property>
+     <property name="documentMode">
+      <bool>true</bool>
+     </property>
+     <property name="tabsClosable">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="tab_calculator">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../../UIalpha3/images/icon_calculate.png</normaloff>../../UIalpha3/images/icon_calculate.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Calculator                    </string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_plot">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <attribute name="icon">
+       <iconset>
+        <normaloff>../../UIalpha3/images/icon_plot.png</normaloff>../../UIalpha3/images/icon_plot.png</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Plot                              </string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

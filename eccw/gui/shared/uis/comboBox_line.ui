@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>125</width>
+    <height>30</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QComboBox" name="comboBox">
+     <property name="maximumSize">
+      <size>
+       <width>130</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Line style</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>continuous</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_line_continuous.png</normaloff>../../../images/icon_line_continuous.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>dotted</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_line_dotted.png</normaloff>../../../images/icon_line_dotted.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>dashed</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_line_dashed.png</normaloff>../../../images/icon_line_dashed.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>dash dotted</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_line_dash_dotted.png</normaloff>../../../images/icon_line_dash_dotted.png</iconset>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

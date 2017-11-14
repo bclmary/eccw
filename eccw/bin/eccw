@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+# -*-coding:utf-8 -*
+
+#Copyright 2013-2016 Baptiste Mary, Yann Cost, Stephan Diana, Mario Vicente da Silva, Xiaoping Yuan
+
+
+"""
+ECCW
+allows to compute the exact solution of critical Coulomb wedge, draw it, sketch it, with love. 
+Are available compressive or extensive geological context, with or without fluid pore pressure.
+
+Created on Nov 6 10:58:41 2017
+Last edited Nov 6 2017
+@author: bcl mary
+"""
+
+import sys
+import os
+from PyQt4 import QtGui
+
+from main_app import MainController
+import main_app
+
+print(sys.path[0])
+
+# pathes of the ECCW modules
+if sys.path[0]=='':  # if ECCW is called from python interpreter
+    sys.path.append('main_app/')
+    sys.path.append('shared/')
+    sys.path.append('plot_app/')
+    sys.path.append('calculator_app/')
+else: # if ECCW is called from a terminal
+    sys.path.append(sys.path[0]+'/main_app/')
+    sys.path.append(sys.path[0]+'/shared/')
+    sys.path.append(sys.path[0]+'/plot_app/')
+    sys.path.append(sys.path[0]+'/calculator_app/')
+
+
+
+app = QtGui.QApplication(sys.argv)
+myapp = MainController()
+sys.exit(app.exec_())

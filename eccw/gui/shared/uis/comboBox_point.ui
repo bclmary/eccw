@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>107</width>
+    <height>30</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QComboBox" name="comboBox">
+     <property name="toolTip">
+      <string>Style</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>circle</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_marker_circle.png</normaloff>../../../images/icon_marker_circle.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>square</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_marker_square.png</normaloff>../../../images/icon_marker_square.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>diamond</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_marker_diamond.png</normaloff>../../../images/icon_marker_diamond.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>triangle</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_marker_triangle.png</normaloff>../../../images/icon_marker_triangle.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>star</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_marker_star.png</normaloff>../../../images/icon_marker_star.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>cross</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_marker_cross.png</normaloff>../../../images/icon_marker_cross.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>pentagon</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>../../../images/icon_marker_pentagone.png</normaloff>../../../images/icon_marker_pentagone.png</iconset>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
