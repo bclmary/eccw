@@ -47,6 +47,7 @@ class Ui_Form(object):
         self.pushButton_Save.setObjectName(_fromUtf8("pushButton_Save"))
         self.horizontalLayout_topmenu.addWidget(self.pushButton_Save)
         self.pushButton = QtGui.QPushButton(Form)
+        self.pushButton.setEnabled(False)
         self.pushButton.setMinimumSize(QtCore.QSize(0, 32))
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon-export.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
