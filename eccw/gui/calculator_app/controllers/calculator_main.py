@@ -110,9 +110,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
     def _set_results(self, x):
         self.textEdit_results.setText(x)
         scroll_bar = self.textEdit_results.verticalScrollBar()
-        print(scroll_bar.sliderPosition())
         scroll_bar.setSliderPosition(scroll_bar.maximum())
-        print(scroll_bar.sliderPosition())
 
     def _make_result_table_line(self, iterable, arg=""):
         td = "<td align='center', "+arg+">"
