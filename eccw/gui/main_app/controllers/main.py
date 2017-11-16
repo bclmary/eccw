@@ -21,7 +21,7 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         super(MainController, self).__init__(parent)
         self.setupUi(self)
         self.current_dir = QtCore.QDir.homePath()
-        self.current_dir = "/home/bmary/SLAMTec/ECCW/UIalpha5"
+        self.current_dir = "/home/bmary/Programmation/eccw/eccw/test/"  # debug
         self.mime_types = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
                            EccwFile.mime)
         # Set calculator tab.
@@ -53,7 +53,7 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         ])
         # Fill values with kwargs.
         if kwargs:
-            self.setParams(**kwargs)
+            self.set_params(**kwargs)
         self.show()
 
     def click_about(self):
@@ -67,44 +67,39 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
     # Save and load file management.
 
     def load_session(self):
-        OpenDialog = QtGui.QFileDialog.getOpenfile_name
+        OpenDialog = QtGui.QFileDialog.getOpenFileName
         file_name = OpenDialog(self, "Open file", self.current_dir,
                                self.mime_types)
         if file_name == "":
             return
         self.current_dir = dirname(realpath(file_name))
-        eccwf = EccwFile(file_name=file_name)
+        eccwf = EccwFile(filename=file_name)
         if eccwf.values is None:
             message = ("Wrong file type.\n"
                        "Chosen file must be a *.eccw mime type.")
             QtGui.QMessageBox.about(self, "Error", message)
             return
-        self.setParams(**eccwf.values)
+        graph_print(eccwf.values)
+        self.set_params(**eccwf.values)
 
     def save_session(self):
-        submime = '.session'
-        SaveDialog = QtGui.QFileDialog.getSavefile_nameAndFilter
+        SaveDialog = QtGui.QFileDialog.getSaveFileNameAndFilter
         file_name, _ = SaveDialog(self, "Save file", self.current_dir,
                                   self.mime_types)
         if file_name:
-            self.current_dir = dirname(realpath(file_name))
-            mime = "." + EccwFile.mime
-            N = len(submime) + 5
-            if file_name[-N:] != submime+mime:
-                if file_name[-5:] != mime:
-                    file_name += submime+mime
-                else:
-                    file_name = file_name[:-5] + submime+mime
-        eccwf = EccwFile(self.getParams())
-        eccwf.save(file_name)
+            eccwf = EccwFile(data=self.get_params())
+            eccwf.save(file_name)
 
 
 if __name__ == "__main__":
     import sys
+    eccwf = EccwFile(filename="../../../test/test2.eccw")
+    params = eccwf.values
+
     try:
         app = QtGui.QApplication(sys.argv)
-        myapp = MainController()
+        myapp = MainController(**params)
         sys.exit(app.exec_())
     finally:
         print("params =")
-        graph_print(myapp.getSelect())
+        graph_print(myapp.get_select())

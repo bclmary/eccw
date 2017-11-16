@@ -10,7 +10,7 @@ from eccw.gui.plot_app.viewers.plot_main import Ui_Form
 from eccw.gui.plot_app.controllers.curve_settings import CurveController
 from eccw.gui.plot_app.controllers.point_settings import RefPointSettings
 from eccw.gui.shared.wrappers import Wrapper, WrapperDict, WrapperList
-from eccw.shared.file_management import EccwFile
+# from eccw.shared.file_management import EccwFile
 from eccw.shared.print_tools import graph_print
 
 
@@ -40,21 +40,14 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.curve_count = 0
         self.curves = WrapperList()
         self.refpoints = WrapperList()
-        if kwargs:
-            # Create curves and refpoints.
-            # They will be setted later with self.set_params.
-            N = len(kwargs.get("curves", []))
-            for i in range(N):
-                self.add_curve_tab()
-            N = len(kwargs.get("refpoints", []))
-            for i in range(N):
-                self.add_ref_point()
-        self.legend = Wrapper(False, fn=self.radioButton_legend.setChecked)
-        self.title = Wrapper(False, fn=self.radioButton_title.setChecked)
+        self.legend = Wrapper(False, process=lambda x: eval(str(x)),
+                              action=self.radioButton_legend.setChecked)
+        self.title = Wrapper(False, process=lambda x: eval(str(x)),
+                             action=self.radioButton_title.setChecked)
         # Init events
         self.pushButton_addRefPoint.clicked.connect(self.add_ref_point)
         self.pushButton_killAllRefPoints.clicked.connect(
-            self.kill_all_ref_points)
+            self.kill_all_refpoints)
         self.pushButton_openRefPoints.clicked.connect(self.import_ref_points)
         self.pushButton_addCurve.clicked.connect(self.add_curve_tab)
         self.pushButton_killAllCurves.clicked.connect(self.kill_all_curves)
@@ -76,65 +69,23 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.add_curve_tab()
         self.show()
 
-    # Param settings
+    def set_params(self, **kwargs):
+        # There must be as many curves and refpoints as asked to set.
+        self.kill_all_curves()
+        self.kill_all_refpoints()
+        N = len(kwargs['curves'])
+        for i in range(N):
+            self.add_curve_tab(kwargs['curves'][i]['label'])
+        N = len(kwargs['refpoints'])
+        for i in range(N):
+            self.add_ref_point()
+        WrapperDict.set_params(self, **kwargs)
 
     def _set_legend(self):
         self.legend.value = self.radioButton_legend.isChecked()
 
     def _set_title(self):
         self.title.value = self.radioButton_title.isChecked()
-
-    # Save and load file management.
-
-    def get_load_data(self):  # TODO this will move too main_app
-        OpenDialog = QtGui.QFileDialog.getOpenFileName
-        file_name = OpenDialog(self, "Open file", self.current_dir,
-                               self.mimetypes)
-        if file_name == "":
-            return None
-        self.current_dir = dirname(realpath(file_name))
-        eccwf = EccwFile(file_name=file_name)
-        if eccwf.values is None:
-            message = ("Wrong file type.\n"
-                       "Chosen file must be a *.eccw mime type.")
-            QtGui.QMessageBox.about(self, "Error", message)
-            return None
-        else:
-            return eccwf.values
-
-    def get_save_file_name(self, submime=""):  # TODO  this will move too main_app
-        SaveDialog = QtGui.QFileDialog.getSaveFileNameAndFilter
-        file_name, _ = SaveDialog(self, "Save file", self.current_dir,
-                                  self.import_mimetypes)
-        if file_name:
-            self.current_dir = dirname(realpath(file_name))
-            mime = "." + EccwFile.mime
-            N = len(submime) + 5
-            if file_name[-N:] != submime+mime:
-                if file_name[-5:] != mime:
-                    file_name += submime+mime
-                else:
-                    file_name = file_name[:-5] + submime+mime
-        return file_name
-
-#    def loadCurves(self):
-#        data = self.get_load_data()
-#        if data is None:
-#            return
-#        curves = data["plot"].get("curves")
-#        if curves:
-#            self.setCurves(curves)
-#        else:
-#            message = "The chosen file has no curve data."
-#            QtGui.QMessageBox.about(self, "Info", message)
-
-#    def saveCurves(self):
-#        file_name = self.get_save_file_name(submime='.curves')
-#        if file_name == "":
-#            return
-#        params = OrderedDict([("plot", self.get_params())])
-#        eccwf = EccwFile(params)
-#        eccwf.save(file_name, target="curves")
 
     def import_ref_points(self):
         """Add ref points using data from csv file.
@@ -192,9 +143,9 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     # Curve tab management.
 
-    def add_curve_tab(self):
+    def add_curve_tab(self, label=None):
         self.curve_count += 1
-        name = "Curve "+str(self.curve_count)
+        name = "Curve "+str(self.curve_count) if label is None else label
         newCurve = CurveController(label=name)
         self.curves.list.append(newCurve)
         ncurve = len(self.curves.list)
@@ -276,7 +227,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         if not self.refpoints.list:
             self.pushButton_killAllRefPoints.setEnabled(False)
 
-    def kill_all_ref_points(self):
+    def kill_all_refpoints(self):
         for elt in list(self.refpoints.list):
             elt.close()
             elt.closed = True
@@ -298,13 +249,16 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
 if __name__ == "__main__":
     import sys
+    from eccw.shared.file_management import EccwFile
+    eccwf = EccwFile(filename="../../../test/test2.eccw")
+    eccwf.show()
+    params = eccwf.values['plot']
+
     try:
         app = QtGui.QApplication(sys.argv)
-#        eccwf = EccwFile(file_name="test_in.session.eccw")
-        myapp = PlotController()
-#        myapp.add_curve_tab()
+        myapp = PlotController(**params)
         sys.exit(app.exec_())
     finally:
         print("params =")
-        graph_print(myapp.get_params())
+        # graph_print(myapp.get_params())
         graph_print(myapp.get_select())

@@ -92,16 +92,16 @@ class BoundLineEdit(QtGui.QWidget, Ui_Form_bound, WrapperDict):
         super(BoundLineEdit, self).__init__()
         self.id = "bound"
         self.setupUi(self)
-        self.min = Wrapper()
+        self.min = Wrapper(action=lambda x: self.lineEdit_min.setText(
+                                            str_check(x)),
+                           process=lambda x: None if x == '-inf' else x)
         self.min.get_params = lambda: float_check(self.lineEdit_min.text(),
                                                   default=-float('inf'))
-        self.min.set_params = lambda value: self.lineEdit_min.setText(
-                                            str_check(value))
-        self.max = Wrapper()
+        self.max = Wrapper(action=lambda x: self.lineEdit_max.setText(
+                                            str_check(x)),
+                           process=lambda x: None if x == 'inf' else x)
         self.max.get_params = lambda: float_check(self.lineEdit_max.text(),
                                                   default=float('inf'))
-        self.max.set_params = lambda value: self.lineEdit_max.setText(
-                                            str_check(value))
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
             ("min", self.min),
@@ -133,19 +133,15 @@ class RangeLineEdit(QtGui.QWidget, Ui_Form_range, WrapperDict):
         super(RangeLineEdit, self).__init__()
         self.id = "range"
         self.setupUi(self)
-        self.begin = Wrapper()
+        self.begin = Wrapper(action=lambda x: self.lineEdit_begin.setText(
+                                              str_check(x)))
         self.begin.get_params = lambda: float_check(self.lineEdit_begin.text())
-        self.begin.set_params = lambda value: self.lineEdit_begin.setText(
-                                              str_check(value))
-        self.step = Wrapper()
-        self.step.get_params = lambda: float_check(self.lineEdit_step.text(),
-                                                   default=1)
-        self.step.set_params = lambda value: self.lineEdit_step.setText(
-                                             str_check(value))
-        self.end = Wrapper()
+        self.step = Wrapper(action=lambda x: self.lineEdit_step.setText(
+                                             str_check(x)))
+        self.step.get_params = lambda: float_check(self.lineEdit_step.text())
+        self.end = Wrapper(action=lambda x: self.lineEdit_end.setText(
+                                            str_check(x)))
         self.end.get_params = lambda: float_check(self.lineEdit_end.text())
-        self.end.set_params = lambda value: self.lineEdit_end.setText(
-                                            str_check(value))
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
             ("begin", self.begin),
@@ -159,6 +155,7 @@ class RangeLineEdit(QtGui.QWidget, Ui_Form_range, WrapperDict):
 
     def get_select(self):
         b, s, e = self.get_params().values()
+        s = 1 if s is None else s
         try:
             e = e + s if (e - b) % s == 0 else e
             return arange(b, e, s)
@@ -292,9 +289,11 @@ if __name__ == "__main__":
 
         # params = {"bound": {"min": -1, "max": 1},
         #           "scalar": 5, "focus": "bound"}
+        # params = {"bound": {"min": '-inf', "max": 'inf'},
+        #           "scalar": 5, "focus": "bound"}
         # myapp = SwitchScalarBound(**params)
 
-        params = {"range": {"begin": 1, "step": 2, "end": 8},
+        params = {"range": {"begin": 1, "step": None, "end": 8},
                   "scalar": 5, "focus": "range"}
         myapp = SwitchScalarRange(**params)
 

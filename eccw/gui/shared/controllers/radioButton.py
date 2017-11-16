@@ -48,7 +48,7 @@ if __name__ == "__main__":
     import sys
     try:
         app = QtGui.QApplication(sys.argv)
-        myapp = RadioButton(True, label="Poulpe")
+        myapp = RadioButton("False", label="Poulpe")
         sys.exit(app.exec_())
     finally:
         print("params =", myapp.get_params())

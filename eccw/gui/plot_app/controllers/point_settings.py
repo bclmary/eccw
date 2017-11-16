@@ -139,15 +139,15 @@ if __name__ == "__main__":
     try:
         app = QtGui.QApplication(sys.argv)
 
-        params = {"beta": 0, "alpha": 3.12, "color": (0, 1, 0, 1), "size": 5,
-                  "style": "*", "label": "poulpe"}
+        params = {"beta": '0', "alpha": '3.12', "color": ('0', '1', '0', '1'),
+                  "size": '5', "style": "*", "label": "poulpe"}
         myapp1 = RefPointSettings(**params)
 
-        params = {"alpha": {"bound": {"min": 0, "max": 4}, "scalar": 2,
+        params = {"alpha": {"bound": {"min": '0', "max": '4'}, "scalar": '2',
                             "focus": "bound"},
-                  "beta": {"bound": {"min": -1, "max": 1}, "scalar": 0,
+                  "beta": {"bound": {"min": '-1', "max": '1'}, "scalar": '0',
                            "focus": "scalar"},
-                  "sketch": True, "color": (0, 1, 0, 1), "size": 5,
+                  "sketch": 'True', "color": ('0', '1', '0', '1'), "size": '5',
                   "style": "s", "label": "poulpe"}
         myapp2 = CurvePointSettings(**params)
 

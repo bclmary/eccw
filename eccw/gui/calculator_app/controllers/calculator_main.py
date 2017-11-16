@@ -36,8 +36,9 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.alpha, self.beta, self.phiB, self.phiD,
             self.delta_lambdaB, self.delta_lambdaD, self.rho_f, self.rho_sr]
         self.context = ComboBoxContext()
-        self.results = Wrapper(fn=self.textEdit_results.setText)
-        self.fluids = Wrapper(False, fn=self.groupBox_fluids.setChecked)
+        self.results = Wrapper(action=self._set_results)
+        self.fluids = Wrapper(False, process=lambda x: eval(str(x)),
+                              action=self.groupBox_fluids.setChecked)
         self.fluids_flag_list = ["delta_lambdaB", "delta_lambdaD",
                                  "rho_f", "rho_sr"]
         # List of radioButton defining focus
@@ -48,7 +49,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.focus_flag_list = ["alpha", "beta", "phiB", "phiD"]
         for elt, txt in zip(self.focus_object_list, self.focus_flag_list):
             elt.ID = txt
-        self.focus = Wrapper("alpha", fn=self.set_focus)
+        self.focus = Wrapper("alpha", action=self.set_focus)
         # Put them in self
         self.horizontalLayout_alpha.addWidget(self.alpha)
         self.horizontalLayout_beta.addWidget(self.beta)
@@ -101,10 +102,17 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             [self.name_convert[elt] for elt in self.param_flag_list])
         # Fill values with kwargs
         if kwargs:
-            self.setParams(**kwargs)
+            self.set_params(**kwargs)
         self.show()
 
     # Methods.
+
+    def _set_results(self, x):
+        self.textEdit_results.setText(x)
+        scroll_bar = self.textEdit_results.verticalScrollBar()
+        print(scroll_bar.sliderPosition())
+        scroll_bar.setSliderPosition(scroll_bar.maximum())
+        print(scroll_bar.sliderPosition())
 
     def _make_result_table_line(self, iterable, arg=""):
         td = "<td align='center', "+arg+">"
@@ -163,7 +171,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             txt_result += self._format_results(select, result)
         txt_result += "<br/></p>"
         self.textEdit_results.append(txt_result)
-        self.results.value = txt_result
+        self.results.value += txt_result
 
     def _format_results(self, select, results):
         i = 1 if len(results) == 1 else 0
@@ -234,8 +242,12 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
 if __name__ == "__main__":
     import sys
     try:
+        from eccw.shared.file_management import EccwFile
+        eccwf = EccwFile(filename="../../../test/test.eccw")
+        params = eccwf.values['calculator']
+
         app = QtGui.QApplication(sys.argv)
-        myapp = CalculatorController()
+        myapp = CalculatorController(**params)
         sys.exit(app.exec_())
     finally:
         print("values :")

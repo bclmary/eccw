@@ -5,16 +5,17 @@ from collections import OrderedDict
 
 
 class Wrapper(object):
-    def __init__(self, arg=None, fn=None):
-        self.set_params(arg=arg, fn=fn)
+    def __init__(self, arg=None, action=lambda x: None, process=lambda x: x):
+        self.process = process
+        self.action = action
+        self.set_params(arg=arg)
 
     def get_params(self):
         return self.value
 
-    def set_params(self, arg, fn=None):
-        if fn:
-            fn(arg)
-        self.value = arg
+    def set_params(self, arg):
+        self.value = self.process(arg)
+        self.action(self.value)
 
     def get_select(self):
         return self.get_params()

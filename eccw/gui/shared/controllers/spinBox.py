@@ -46,7 +46,7 @@ if __name__ == "__main__":
     import sys
     try:
         app = QtGui.QApplication(sys.argv)
-        myapp = SpinBox('a')
+        myapp = SpinBox('1.2')
         sys.exit(app.exec_())
     finally:
         print("params =", myapp.get_params())

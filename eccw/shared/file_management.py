@@ -10,24 +10,28 @@ from eccw.shared.print_tools import graph_print
 
 
 class EccwFile():
-    """
-    Read/Write an eccw session file.
-    
+    """Read/Write an eccw session file.
+
     **Usage**
-    
+
     >>> f = EccwFile("path/to/file.eccw")
     >>> f.show()
     >>> f.save("path/to/newfile.eccw")
     """
-
     mime = "eccw"
-    
-    def __init__(self, filename=None):
-        self.values = None
+
+    def __init__(self, data=None, filename=None):
+        self.values = data
         if filename is not None:
             self.load(filename)
 
+    def _check(self, elt, key):
+        if elt[key] == [None]:
+            # No elts must be stored as an empty list entry.
+            elt[key] = []
+
     def load(self, filename):
+        # Keywords that must be present in the result even if empty.
         fl = ('refpoints', 'points', 'curves')
         xmlfile = open(filename, 'r')
         try:
@@ -37,33 +41,15 @@ class EccwFile():
             return
         xmlfile.close()
         try:
-            self.values = tmp["main"]
+            self.values = tmp["session"]
+            # Replace wrong formated elements by proper values.
+            self._check(self.values["plot"], "refpoints")
+            self._check(self.values["plot"], "curves")
+            for i in range(len(self.values["plot"]["curves"])):
+                self._check(self.values["plot"]["curves"][i], "points")
         except KeyError:
             self.values = None
             return
-        # Replace wrong elements by proper values.
-        tmp = self.values["plot"].get("refpoints")
-        if tmp is not None:
-            if tmp == [None]:
-                tmp = []  # No refpoints must be stored as an empty list entry.
-            else :
-                for elt in tmp:
-                    if elt["label"] == None:
-                        elt["label"] = ""  # Empty label must be stored as an empty string.
-        tmp = self.values["plot"].get("curves")
-        if tmp is not None:
-            if tmp == [None]:
-                tmp = []  # No curves must be stored as an empty list entry.
-            else:
-                for elt in tmp:
-                    if elt["points"] == [None]:
-                        elt["points"] = []
-                    else:
-                        for pt in elt["points"]:
-                            if pt["label"] == None:
-                                pt["label"] = ""
-                        if elt["label"] == None:
-                            elt["label"] = ""
 
     def save(self, filename):
         xmlfile = open(filename, 'w')
@@ -85,11 +71,11 @@ class EccwFile():
             for elt in values["plot"]["curves"]:
                 if elt["points"] == []:
                     elt["points"] = [None]
-        return xmltodict.unparse({"main": values}, pretty=pretty)
+        return xmltodict.unparse({"session": values}, pretty=pretty)
+
 
 if __name__ == "__main__":
 
     f = EccwFile()
     f.load("../test/test.eccw")
     f.show()
-

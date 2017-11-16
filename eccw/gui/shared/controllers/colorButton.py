@@ -19,6 +19,8 @@ class ColorButton(QtGui.QWidget, Ui_Form, Wrapper):
     def __init__(self, *args):
         super(ColorButton, self).__init__()
         self.setupUi(self)
+        self.action = lambda x: self.change_color(x)
+        self.process = lambda x: x
         self.style_sheet = ("color: white;"
                             "background-color: %s;"
                             "border-style: outset;"
@@ -52,8 +54,13 @@ class ColorButton(QtGui.QWidget, Ui_Form, Wrapper):
         newcol.setRgbF(*rgba)
         return newcol
 
-    def change_color(self, col):
+    def change_color(self, color):
         """col is an QColor object"""
+        if isinstance(color, tuple):
+            col = QtGui.QColor()
+            col.setRgbF(*color)
+        else:
+            col = color
         style = self.style_sheet % col.name()
         # QColor.lighter method doesn't do the way I want the following job:
         col_hover = self.lighter_color(col)
@@ -66,11 +73,9 @@ class ColorButton(QtGui.QWidget, Ui_Form, Wrapper):
     def set_params(self, arg):
         errmessage = "ColorButton() gets invalid color format '"+str(arg)+"'."
         try:
-            color = [float_check(c) for c in arg]
-            if all([c <= 1. for c in color]) and len(color) == 4:
-                col = QtGui.QColor()
-                col.setRgbF(*color)
-                Wrapper.set_params(self, arg, fn=self.change_color(col))
+            rgba = tuple(float_check(c) for c in arg)
+            if all([c <= 1. for c in rgba]) and len(rgba) == 4:
+                Wrapper.set_params(self, rgba)
             else:
                 raise TypeError(errmessage)
         except TypeError:
@@ -81,7 +86,8 @@ if __name__ == "__main__":
     import sys
     try:
         app = QtGui.QApplication(sys.argv)
-        myapp = ColorButton(0, 1, 0, 1)
+        myapp = ColorButton("0", "1", "0", "1")
+        myapp.set_params(("0", "1", "0", "1"))
         sys.exit(app.exec_())
     finally:
         print("params =", myapp.get_params())

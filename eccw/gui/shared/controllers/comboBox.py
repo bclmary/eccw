@@ -131,7 +131,7 @@ if __name__ == "__main__":
         app = QtGui.QApplication(sys.argv)
 #        myapp = ComboBoxContext("Extension")
 #        myapp = ComboBoxColorMap("Inferno")
-        myapp = ComboBoxPoint('z')
+        myapp = ComboBoxPoint('*')
 #        myapp = ComboBoxLine("dashed")
         sys.exit(app.exec_())
     finally:

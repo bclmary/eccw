@@ -53,7 +53,8 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.phiB = SwitchScalarRange()
         self.phiD = SwitchScalarRange()
         # Fluids.
-        self.fluids = Wrapper(False, fn=self.groupBox_fluids.setChecked)
+        self.fluids = Wrapper(False, process=lambda x: eval(str(x)),
+                              action=self.groupBox_fluids.setChecked)
         self.delta_lambdaB = SwitchScalarRange()
         self.delta_lambdaD = SwitchScalarRange()
         self.rho_f = SwitchScalarRange()
@@ -66,12 +67,6 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.settings = SwitchCurveGraphicSettings()
         # Curve points
         self.points = WrapperList()
-        if kwargs:
-            # Create N points.
-            # they will be setted later with self.set_params.
-            N = len(kwargs.get("points", []))
-            for i in range(N):
-                self.add_curve_point()
         # Put additional elements in self.
         self.horizontalLayout_phiB.addWidget(self.phiB)
         self.horizontalLayout_phiD.addWidget(self.phiD)
@@ -118,6 +113,15 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.set_params(**kwargs)
         self._auto_set_settings()
         self.show()
+
+    def set_params(self, **kwargs):
+        # There must be as many points as asked to set.
+        self.kill_all_curve_point()
+        # Using dict get method allows to pass single parameters.
+        N = len(kwargs.get("points", []))
+        for i in range(N):
+            self.add_curve_point()
+        WrapperDict.set_params(self, **kwargs)
 
     # Events management.
 
@@ -198,8 +202,14 @@ if __name__ == "__main__":
                           "scalar": 0, "focus": "scalar"},
                  "sketch": True, "color": (0, 1, 0, 1), "size": 5,
                  "style": "square", "label": "poulpe"}
-        params = {"fluids": True, "phiB": phiB, "label": "poulpe",
+        params = {"fluids": "False", "phiB": phiB, "label": "poulpe",
                   "context": "Extension", "points": [point, point]}
+
+        from eccw.shared.file_management import EccwFile
+        eccwf = EccwFile(filename="../../../test/test.eccw")
+        params = eccwf.values['plot']['curves'][0]
+        graph_print(params)
+
         myapp = CurveController(**params)
 
         sys.exit(app.exec_())
