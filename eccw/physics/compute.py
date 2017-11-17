@@ -110,6 +110,7 @@ class EccwCompute(object):
         except AttributeError:
             raise ValueError(errmessage)
         self._phiD *= self._sign
+        self._taper_max = pi / 2. - self._phiD + self._numtol
 
     @property
     def rho_f(self):
@@ -318,7 +319,7 @@ class EccwCompute(object):
         Return the 2 possible solutions in tectonic or  collapsing regime.
         Return two None if no physical solutions.
         """
-        BETA = list()
+        betas = list()
         # weird if statement because asin in PSI_D is your ennemy !
         if -self._phiB <= self._alpha_prime <= self._phiB:
             psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
@@ -332,8 +333,8 @@ class EccwCompute(object):
             beta_22 = psiD_22 - psi0_2 - self._alpha
             for b in [beta_11, beta_12, beta_21, beta_22]:
                 if self._is_valid_taper(self._alpha, b):
-                    BETA.append(b)
-            beta1, beta2 = min(BETA), max(BETA)
+                    betas.append(b)
+            beta1, beta2 = min(betas), max(betas)
             if deg:
                 beta1 = self._r2d(beta1)
                 beta2 = self._r2d(beta2)
