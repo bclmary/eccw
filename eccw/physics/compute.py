@@ -3,6 +3,9 @@
 
 import numpy as np
 from math import pi, copysign, cos, sin, tan, atan, asin
+from collections import OrderedDict
+
+from eccw.shared.print_tools import graph_print
 
 
 class EccwCompute(object):
@@ -11,6 +14,8 @@ class EccwCompute(object):
     _numtol = 1e-9
     _h = 1e-5  # Arbitrary small value
     _sign = 1
+    _beta = None
+    _alpha = None
     _phiB = None
     _phiD = None
     _rho_f = 0.
@@ -47,6 +52,10 @@ class EccwCompute(object):
     def alpha(self, value):
         try:
             self._alpha = self._d2r(value)
+            self._lambdaD_D2 = self._convert_lambda(self._alpha, self._lambdaD)
+            self._lambdaB_D2 = self._convert_lambda(self._alpha, self._lambdaB)
+            self._alpha_prime = self._convert_alpha(self._alpha,
+                                                    self._lambdaB_D2)
         except TypeError:
             raise TypeError(self._error_message('alpha', 'type', 'a float'))
 
@@ -295,7 +304,9 @@ class EccwCompute(object):
             Y = X.copy()
             Y[j] += self._h
             DF = self._function_to_root(Y)
-            M[:, j] = DF - F
+            for i in range(3):
+                M[i][j] = DF[i] - F[i]
+            # M[:, j] = DF - F
         return M / self._h
 
     def _newton_rapson_solve(self, X):
@@ -414,12 +425,26 @@ class EccwCompute(object):
         }
         return parser[flag]()
 
+    def show_params(self):
+        params = OrderedDict([
+            ("context", self.context),
+            ("beta", self.beta),
+            ("alpha", self.alpha),
+            ("phiB", self.phiB),
+            ("phiD", self.phiD),
+            ("rho_f", self.rho_f),
+            ("rho_sr", self.rho_sr),
+            ("delta_lambdaB", self.delta_lambdaB),
+            ("delta_lambdaD", self.delta_lambdaD),
+            ])
+        graph_print(params)
+
 
 if __name__ == "__main__":
 
-    foo = EccwCompute(phiB=30, phiD=10, beta=20, alpha=9.413, context="e")
+    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.436, context="c")
 
-    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
+    print("alphas =", foo.compute("alpha"), "[3.4365, 23.9463]")
     print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
     print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
     print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
