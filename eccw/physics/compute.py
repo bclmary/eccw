@@ -6,6 +6,7 @@ from math import pi, copysign, cos, sin, tan, atan, asin
 from collections import OrderedDict
 
 from eccw.shared.print_tools import graph_print
+from eccw.shared.tools import d2r, r2d
 
 
 class EccwCompute(object):
@@ -46,12 +47,12 @@ class EccwCompute(object):
     @property
     def alpha(self):
         """Surface slope [deg], positive downward."""
-        return self._r2d(self._alpha)
+        return r2d(self._alpha)
 
     @alpha.setter
     def alpha(self, value):
         try:
-            self._alpha = self._d2r(value)
+            self._alpha = d2r(value)
             self._lambdaD_D2 = self._convert_lambda(self._alpha, self._lambdaD)
             self._lambdaB_D2 = self._convert_lambda(self._alpha, self._lambdaB)
             self._alpha_prime = self._convert_alpha(self._alpha,
@@ -62,36 +63,36 @@ class EccwCompute(object):
     @property
     def beta(self):
         """Basal slope [deg], posirtive upward."""
-        return self._r2d(self._beta)
+        return r2d(self._beta)
 
     @beta.setter
     def beta(self, value):
         try:
-            self._beta = self._d2r(value)
+            self._beta = d2r(value)
         except TypeError:
             raise TypeError(self._error_message('beta', 'type', 'a float'))
 
     @property
     def phiB(self):
         """Bulk friction angle [deg]."""
-        return self._r2d(self._phiB)
+        return r2d(self._phiB)
 
     @phiB.setter
     def phiB(self, value):
         try:
-            self._phiB = self._d2r(value)
+            self._phiB = d2r(value)
         except TypeError:
             raise TypeError(self._error_message('phiB', 'type', 'a float'))
 
     @property
     def phiD(self):
         """Basal friction angle [deg]."""
-        return self._r2d(self._sign*self._phiD)
+        return r2d(self._sign*self._phiD)
 
     @phiD.setter
     def phiD(self, value):
         try:
-            self._phiD = self._d2r(value)
+            self._phiD = d2r(value)
             self._taper_min = -self._numtol
             self._taper_max = pi / 2. - self._phiD + self._numtol
         except TypeError:
@@ -196,11 +197,11 @@ class EccwCompute(object):
         return ("%s() gets wrong %s for '%s': must be %s" % (class_name,
                 problem, who, solution))
 
-    def _d2r(self, value):
-        return value * pi / 180.
-
-    def _r2d(self, value):
-        return value / pi * 180.
+    # def _d2r(self, value):
+    #     return value * pi / 180.
+    # 
+    # def _r2d(self, value):
+    #     return value / pi * 180.
 
     def _set_density_ratio(self):
         """Ratio of mass densities of fluids over saturated rock.
@@ -347,8 +348,8 @@ class EccwCompute(object):
                     betas.append(b)
             beta1, beta2 = min(betas), max(betas)
             if deg:
-                beta1 = self._r2d(beta1)
-                beta2 = self._r2d(beta2)
+                beta1 = r2d(beta1)
+                beta2 = r2d(beta2)
             return beta1, beta2
         else:
             return None, None
@@ -374,8 +375,8 @@ class EccwCompute(object):
         alpha2 = self._newton_rapson_solve([alpha, psiD, psi0])
         alpha2 = self._test_alpha(alpha2)
         if deg:
-            alpha1 = self._r2d(alpha1) if alpha1 else None
-            alpha2 = self._r2d(alpha2) if alpha2 else None
+            alpha1 = r2d(alpha1) if alpha1 else None
+            alpha2 = r2d(alpha2) if alpha2 else None
         return alpha1, alpha2
 
     def compute_phiB(self, deg=True):
@@ -393,8 +394,8 @@ class EccwCompute(object):
         phiB2 = self._newton_rapson_solve([phiB, psiD, psi0])
         phiB2 = self._test_phiB(phiB2)
         if deg:
-            phiB1 = self._r2d(phiB1) if phiB1 else None
-            phiB2 = self._r2d(phiB2) if phiB2 else None
+            phiB1 = r2d(phiB1) if phiB1 else None
+            phiB2 = r2d(phiB2) if phiB2 else None
         return phiB1, phiB2
 
     def compute_phiD(self, deg=True):
@@ -412,8 +413,8 @@ class EccwCompute(object):
         phiD2 = self._newton_rapson_solve([phiD, psiD, psi0])
         phiD2 = self._test_phiD(phiD2)
         if deg:
-            phiD1 = self._r2d(phiD1) if phiD1 else None
-            phiD2 = self._r2d(phiD2) if phiD2 else None
+            phiD1 = r2d(phiD1) if phiD1 else None
+            phiD2 = r2d(phiD2) if phiD2 else None
         return phiD1, phiD2
 
     def compute(self, flag):
