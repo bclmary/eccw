@@ -8,7 +8,7 @@ import matplotlib.patheffects as pe
 from matplotlib.offsetbox import DrawingArea, AnnotationBbox
 from matplotlib import patches, lines
 
-from eccw.physics.compute import EccwCompute
+from eccw.physics.eccw_compute import EccwCompute
 from eccw.shared.tools import r2d, imin, imax
 
 
@@ -347,7 +347,6 @@ class EccwPlot(EccwCompute):
         # Renaming is cheapper than multiple access.
         alpha, beta = self._alpha, self._beta
         a_deg, b_deg = r2d(alpha), r2d(beta)
-        print(b_deg, a_deg)
         padding = self._padding
         # Surface of prism : arbitrary set, allows a cst looking.
         # Box distance from enveloppe.

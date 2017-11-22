@@ -9,7 +9,7 @@ from eccw.gui.shared.controllers.lineEdit import SwitchScalarRange
 from eccw.gui.shared.controllers.comboBox import ComboBoxContext
 from eccw.shared.print_tools import graph_print
 from eccw.gui.shared.wrappers import Wrapper, WrapperDict
-from eccw.physics.compute import EccwCompute
+from eccw.physics.eccw_compute import EccwCompute
 
 
 class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
