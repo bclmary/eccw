@@ -6,7 +6,7 @@ from math import pi, copysign, cos, sin, tan, atan, asin
 from collections import OrderedDict
 
 from eccw.shared.print_tools import graph_print
-from eccw.shared.tools import d2r, r2d
+from eccw.shared.tools import d2r, r2d, normalize_angle
 
 
 class EccwCompute(object):
@@ -197,12 +197,6 @@ class EccwCompute(object):
         return ("%s() gets wrong %s for '%s': must be %s" % (class_name,
                 problem, who, solution))
 
-    # def _d2r(self, value):
-    #     return value * pi / 180.
-    # 
-    # def _r2d(self, value):
-    #     return value / pi * 180.
-
     def _set_density_ratio(self):
         """Ratio of mass densities of fluids over saturated rock.
         equivalent to hydrostatic pressure.
@@ -246,10 +240,14 @@ class EccwCompute(object):
         return a if self._is_valid_taper(a, self._beta) else None
 
     def _test_phiB(self, phiB):
-        return phiB if 0. <= phiB <= pi/2. else None
+        return phiB if -pi < phiB < pi else float('nan')
+        # phiB = normalize_angle(phiB, -pi, pi)
+        return phiB #if 0. <= phiB <= pi/2 else None
 
     def _test_phiD(self, phiD):
-        return self._sign * phiD if copysign(1, phiD) == self._sign else None
+        # phiD = self._sign * phiD if copysign(1, phiD) == self._sign else None
+        # return phiD if phiD < float('inf') else None
+        return abs(phiD) if phiD < float('inf') else None
 
     def _runtime_alpha(self, alpha):
         lambdaB_D2 = self._convert_lambda(alpha, self._lambdaB)
@@ -272,6 +270,8 @@ class EccwCompute(object):
 
     def _function2(self, psiD, psi0, phiB, phiD, lambdaB_D2, lambdaD_D2):
         """Second function of function to root."""
+        if phiB == 0:
+            print("!!!ERROR phiB == 0.")
         f = sin(2 * psiD + phiD)
         f -= (1 - lambdaD_D2) * sin(phiD) / (1 - lambdaB_D2) / sin(phiB)
         f -= ((lambdaD_D2 - lambdaB_D2) * sin(phiD) * cos(2 * psi0)
@@ -319,9 +319,10 @@ class EccwCompute(object):
             invM = np.linalg.inv(M)
             X = X - invM.dot(F)  # Newton-Rapson iteration.
             F = self._function_to_root(X)
-            if count > 50:
-                print("!!! ERROR : More than 50 iteration to converge, abort.")
-                return None
+            if count > 99:
+                # print("!!!WARNING: More than 99 iteration to converge")
+                # print("    Current value is:", r2d(X[0]))
+                return float('nan')
         return X[0]
 
     # 'Public' methods ########################################################
@@ -339,18 +340,50 @@ class EccwCompute(object):
                                            self._lambdaB_D2, self._lambdaD_D2)
             psiD_21, psiD_22 = self._PSI_D(psi0_2, self._phiB, self._phiD,
                                            self._lambdaB_D2, self._lambdaD_D2)
-            beta_11 = psiD_11 - psi0_1 - self._alpha
-            beta_12 = psiD_12 - psi0_1 - self._alpha
-            beta_21 = psiD_21 - psi0_2 - self._alpha + pi  # Don't ask why +pi
-            beta_22 = psiD_22 - psi0_2 - self._alpha
-            for b in [beta_11, beta_12, beta_21, beta_22]:
+            beta_dl = psiD_11 - psi0_1 - self._alpha
+            beta_ur = psiD_12 - psi0_1 - self._alpha
+            beta_dr = psiD_21 - psi0_2 - self._alpha + pi  # Don't ask why +pi
+            beta_ul = psiD_22 - psi0_2 - self._alpha
+
+            for b in [beta_dl, beta_dr, beta_ul, beta_ur]:
                 if self._is_valid_taper(self._alpha, b):
                     betas.append(b)
             beta1, beta2 = min(betas), max(betas)
             if deg:
-                beta1 = r2d(beta1)
-                beta2 = r2d(beta2)
+                beta1 = r2d(beta1) if beta1 else None
+                beta2 = r2d(beta2) if beta2 else None
             return beta1, beta2
+        else:
+            return None, None
+
+    def compute_beta_dev(self, deg=True):
+        """Get critical basal slope beta as ECCW.
+        Return the 2 possible solutions in tectonic or  collapsing regime.
+        Return two None if no physical solutions.
+        """
+        beta_dw, beta_up = list(), list()
+        # weird if statement because asin in PSI_D is your ennemy !
+        if -self._phiB <= self._alpha_prime <= self._phiB:
+            psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
+            psiD_11, psiD_12 = self._PSI_D(psi0_1, self._phiB, self._phiD,
+                                           self._lambdaB_D2, self._lambdaD_D2)
+            psiD_21, psiD_22 = self._PSI_D(psi0_2, self._phiB, self._phiD,
+                                           self._lambdaB_D2, self._lambdaD_D2)
+            beta_dl = psiD_11 - psi0_1 - self._alpha
+            beta_ur = psiD_12 - psi0_1 - self._alpha
+            beta_dr = psiD_21 - psi0_2 - self._alpha + pi  # Don't ask why +pi
+            beta_ul = psiD_22 - psi0_2 - self._alpha
+
+            for b in [beta_dl, beta_dr]:
+                if self._is_valid_taper(self._alpha, b):
+                    beta_dw.append(b)
+            for b in [beta_ul, beta_ur]:
+                if self._is_valid_taper(self._alpha, b):
+                    beta_up.append(b)
+            if deg:
+                beta_dw = tuple(r2d(b) for b in beta_dw)
+                beta_up = tuple(r2d(b) for b in beta_up)
+            return beta_dw, beta_up
         else:
             return None, None
 
@@ -382,7 +415,7 @@ class EccwCompute(object):
     def compute_phiB(self, deg=True):
         self._set_at_runtime = self._runtime_phiB
         # Inital value of phiB for Newton-Rapson solution.
-        phiB = pi/3.
+        phiB = pi/7.
         # First solution of ECCW (lower).
         # Set initial values:
         psiD = pi
@@ -401,7 +434,7 @@ class EccwCompute(object):
     def compute_phiD(self, deg=True):
         self._set_at_runtime = self._runtime_phiD
         # Inital value of phiB for Newton-Rapson solution.
-        phiD = pi/3.
+        phiD = pi/4.
         # First solution of ECCW (lower).
         # Set initial values:
         psiD = pi
@@ -443,9 +476,37 @@ class EccwCompute(object):
 
 if __name__ == "__main__":
 
-    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.436, context="c")
+    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.4365, context="c")
+    print("\ndry_inverse")
+    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
+    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
+    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
+    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
 
-    print("alphas =", foo.compute("alpha"), "[3.4365, 23.9463]")
+    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=23.9463194, context="c")
+    print("\ndry_normal")
+    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
+    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
+    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
+    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
+
+    # foo = EccwCompute(phiB=30, phiD=10, beta=20, alpha=9.4113, context="e")
+    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.8353, context="c",
+                          rho_f=1000, rho_sr=3500,
+                          delta_lambdaB=0.50, delta_lambdaD=0.3)
+    print("\nfluids_inverse")
+    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
+    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
+    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
+    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
+
+
+    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=6.76084021, context="c",
+                          rho_f=1000, rho_sr=3500,
+                          delta_lambdaB=0.50, delta_lambdaD=0.3)
+    # print("\nextension")
+    print("\nfluids_normal")
+    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
     print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
     print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
     print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)

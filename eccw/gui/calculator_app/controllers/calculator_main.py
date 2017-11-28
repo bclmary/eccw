@@ -36,7 +36,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.alpha, self.beta, self.phiB, self.phiD,
             self.delta_lambdaB, self.delta_lambdaD, self.rho_f, self.rho_sr]
         self.context = ComboBoxContext()
-        self.results = Wrapper(action=self._set_results)
+        self.results = Wrapper(action=self._set_results, arg="")
         self.fluids = Wrapper(False, process=lambda x: eval(str(x)),
                               action=self.groupBox_fluids.setChecked)
         self.fluids_flag_list = ["delta_lambdaB", "delta_lambdaD",

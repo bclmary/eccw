@@ -21,7 +21,7 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         super(MainController, self).__init__(parent)
         self.setupUi(self)
         self.current_dir = QtCore.QDir.homePath()
-        self.current_dir = "/home/bmary/Programmation/eccw/eccw/test/"  # debug
+        self.current_dir = "/home/bmary/Programmation/eccw/eccw/tests/"  # debug
         self.mime_types = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
                            EccwFile.mime)
         # Set calculator tab.
@@ -93,12 +93,12 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
 
 if __name__ == "__main__":
     import sys
-    eccwf = EccwFile(filename="../../../test/test2.eccw")
+    eccwf = EccwFile(filename="../../../tests/test.eccw")
     params = eccwf.values
 
     try:
         app = QtGui.QApplication(sys.argv)
-        myapp = MainController(**params)
+        myapp = MainController() #**params)
         sys.exit(app.exec_())
     finally:
         print("params =")
