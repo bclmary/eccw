@@ -12,13 +12,14 @@ from eccw.shared.tools import d2r, r2d, normalize_angle
 class EccwCompute(object):
     """Solve any parameter of the critical coulomb wedge.
     """
+    _nan = float('nan')
     _numtol = 1e-9
     _h = 1e-5  # Arbitrary small value
     _sign = 1
-    _beta = None
-    _alpha = None
-    _phiB = None
-    _phiD = None
+    _beta = _nan
+    _alpha = _nan
+    _phiB = _nan
+    _phiD = _nan
     _rho_f = 0.
     _rho_sr = 0.
     _density_ratio = 0.
@@ -28,19 +29,22 @@ class EccwCompute(object):
     _lambdaD = 0.
     _lambdaB_D2 = 0.
     _lambdaD_D2 = 0.
-    _taper_min = float('-inf')
+    _taper_min = -_numtol
     _taper_max = float('inf')
+    _main_params_list = ['alpha', 'beta', 'phiB', 'phiD']
 
     def __init__(self, **kwargs):
-        self.alpha = kwargs.get("alpha", 0.)
-        self.beta = kwargs.get("beta", 0.)
-        self.phiB = kwargs.get("phiB", 0.)
-        self.phiD = kwargs.get("phiD", 0.)
-        self.rho_f = kwargs.get("rho_f", 0.)
-        self.rho_sr = kwargs.get("rho_sr", 0.)
-        self.delta_lambdaB = kwargs.get("delta_lambdaB", 0.)
-        self.delta_lambdaD = kwargs.get("delta_lambdaD", 0.)
-        self.context = kwargs.get("context", "c")
+        self.set_params(**kwargs)
+
+        # self.alpha = kwargs.get("alpha", 0.)
+        # self.beta = kwargs.get("beta", 0.)
+        # self.phiB = kwargs.get("phiB", 0.)
+        # self.phiD = kwargs.get("phiD", 0.)
+        # self.rho_f = kwargs.get("rho_f", 0.)
+        # self.rho_sr = kwargs.get("rho_sr", 0.)
+        # self.delta_lambdaB = kwargs.get("delta_lambdaB", 0.)
+        # self.delta_lambdaD = kwargs.get("delta_lambdaD", 0.)
+        # self.context = kwargs.get("context", "c")
 
     # Properties ##############################################################
 
@@ -79,6 +83,10 @@ class EccwCompute(object):
 
     @phiB.setter
     def phiB(self, value):
+        if value < 0:
+            raise TypeError(self._error_message('phiB', 'sign', '> 0'))
+        if value == 0:
+            raise TypeError(self._error_message('phiB', 'value', 'non zero'))
         try:
             self._phiB = d2r(value)
         except TypeError:
@@ -91,9 +99,10 @@ class EccwCompute(object):
 
     @phiD.setter
     def phiD(self, value):
+        if value < 0:
+            raise TypeError(self._error_message('phiD', 'sign', '>= 0'))
         try:
-            self._phiD = d2r(value)
-            self._taper_min = -self._numtol
+            self._phiD = d2r(value) * (self._sign if self._sign else 1.)
             self._taper_max = pi / 2. - self._phiD + self._numtol
         except TypeError:
             raise TypeError(self._error_message('phiD', 'type', 'a float'))
@@ -103,8 +112,10 @@ class EccwCompute(object):
         """Tectonic context: compression or extension."""
         if self._sign == 1:
             return "Compression"
-        else:
+        elif self._sign == -1:
             return "Extension"
+        else:
+            return None
 
     @context.setter
     def context(self, value):
@@ -473,40 +484,63 @@ class EccwCompute(object):
             ])
         graph_print(params)
 
+    def set_params(self, **kwargs):
+        try:
+            for key, value in kwargs.items():
+                # print(key, value)
+                if value is not None:
+                    setattr(self, key, value)
+        except TypeError:
+            raise
+            # raise TypeError("Wrong arguments", key)
+
 
 if __name__ == "__main__":
 
+    foo = EccwCompute()
+    foo.show_params()
+
     foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.4365, context="c")
+    foo.show_params()
     print("\ndry_inverse")
     print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
     print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
     print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
     print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
 
+    foo.set_params(phiB=30, phiD=10, beta=0, alpha=23.9463194, context="c")
+    print("\ndry_normal - set")
+    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
+    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
+    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
+    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
+
     foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=23.9463194, context="c")
-    print("\ndry_normal")
+    print("\ndry_normal - init")
     print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
     print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
     print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
     print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
 
     # foo = EccwCompute(phiB=30, phiD=10, beta=20, alpha=9.4113, context="e")
-    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.8353, context="c",
-                          rho_f=1000, rho_sr=3500,
-                          delta_lambdaB=0.50, delta_lambdaD=0.3)
-    print("\nfluids_inverse")
-    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
-    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
-    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
-    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
+    # foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.8353, context="c",
+    #                       rho_f=1000, rho_sr=3500,
+    #                       delta_lambdaB=0.50, delta_lambdaD=0.3)
+    # print("\nfluids_inverse")
+    # print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
+    # print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
+    # print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
+    # print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
+    # 
+    # 
+    # foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=6.76084021, context="c",
+    #                       rho_f=1000, rho_sr=3500,
+    #                       delta_lambdaB=0.50, delta_lambdaD=0.3)
+    # # print("\nextension")
+    # print("\nfluids_normal")
+    # print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
+    # print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
+    # print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
+    # print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
 
-
-    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=6.76084021, context="c",
-                          rho_f=1000, rho_sr=3500,
-                          delta_lambdaB=0.50, delta_lambdaD=0.3)
-    # print("\nextension")
-    print("\nfluids_normal")
-    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
-    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
-    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
-    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
+    foo.show_params()

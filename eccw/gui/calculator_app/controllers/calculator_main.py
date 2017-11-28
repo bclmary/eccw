@@ -156,17 +156,23 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         if errors != "":
             txt_result += errors
         else:
-            focus = self.focus.value
-            range_id = self.range.value
-            range_ = [None] if range_id is None else select[range_id]['value']
+            focus_parameter = self.focus.value
+            ranged_parameter = self.range.value
+            range_ = ([None] if ranged_parameter is None
+                      else select[ranged_parameter]['value'])
             result = []
-            for x in range_:
-                params = [select[flag]['value'] if flag != range_id else x
-                          for flag in self.param_flag_list]
-                self._load_params_in_compute_core(*params)
-                result.append(self.compute_core.compute(focus))
-            result = [(i, j, k) for i, (j, k) in zip(range_, result)]
-            txt_result += self._format_results(select, result)
+            try:
+                for x in range_:
+                    params = {flag: select[flag]['value']
+                              if flag != ranged_parameter else x
+                              for flag in self.param_flag_list}
+                    params['context'] = self.context.get_params()
+                    self.compute_core.set_params(**params)
+                    result.append(self.compute_core.compute(focus_parameter))
+                result = [(i, j, k) for i, (j, k) in zip(range_, result)]
+                txt_result += self._format_results(select, result)
+            except TypeError as err:
+                txt_result += self._format_raised_error(err)
         txt_result += "<br/></p>"
         self.textEdit_results.append(txt_result)
         self.results.value += txt_result
@@ -198,6 +204,13 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
                     errors += self.name_convert[p_name] + message
         return errors + ""
 
+    def _format_raised_error(self, error):
+        error = str(error)[19:]
+        i1 = error.find("'")
+        i2 = error.find("'", i1+1)
+        name = self.name_convert[error[i1+1:i2]]
+        return error[:i1] + name + error[i2+1:]
+
     def _get_resume_params(self, select):
         focus = self.focus.value
         context = " "+self.context.get_params()+" "
@@ -221,7 +234,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         text += "</table>"
         return text
 
-    def _load_params_in_compute_core(self, a, b, pB, pD, lB, lD, rf, rs):
+    def _load_params_in_compute_core_(self, a, b, pB, pD, lB, lD, rf, rs):
         try:
             self.compute_core.alpha = a if a else 0.
             self.compute_core.beta = b if b else 0.
