@@ -34,13 +34,7 @@ class EccwPlot(EccwCompute):
         EccwCompute.__init__(self, **kwargs)
         self.sketch_size_factor = kwargs.get('sketch_size_factor', 1.)
         self.legend = None
-        self.figure = plt.figure("ECCW", figsize=(8, 6))
-        self.axe = self.figure.gca()
-        self.axe.set_xlabel(r"Décollement angle $\beta$ [deg]", fontsize=12)
-        self.axe.set_ylabel(r"Critical slope $\alpha_c$ [deg]", fontsize=12)
-        self.axe.grid()
-        if self.legend:
-            self.add_legend()
+        self.reset_figure()
 
     @property
     def sketch_size_factor(self):
@@ -226,10 +220,25 @@ class EccwPlot(EccwCompute):
                 X.append(x)
                 Y.append(y)
 
+    def _get_curve_settings(self, **kwargs):
+        label = kwargs.get('label', '')
+        thickness = kwargs.get('thickness', 2)
+        style = kwargs.get('style', '-')
+        color = kwargs.get('color', 'k')
+        return label, thickness, style, color
+
     # Public methods
 
-    def show(self):
-        plt.show(self.figure)
+    def reset_figure(self):
+        self.figure = plt.figure("ECCW", figsize=(8, 6))
+        self.axe = self.figure.gca()
+        self.axe.set_xlabel(r"Décollement angle $\beta$ [deg]", fontsize=12)
+        self.axe.set_ylabel(r"Critical slope $\alpha_c$ [deg]", fontsize=12)
+        self.axe.grid(True)
+
+    def show(self, block=True):
+        # plt.show(self.figure, block=False)
+        plt.show(block=block)
 
     def add_title(self, title=''):
         self.axe.set_title(title, fontsize=16)
@@ -252,38 +261,26 @@ class EccwPlot(EccwCompute):
         """Plot complete solution plus a given solution.
         Use directe solution f(alpha) = beta.
         """
-        split = kwargs.get('split', False)
+        inverse = kwargs.get('inverse', dict())
+        normal = kwargs.get('normal', dict())
         alphamax = self._get_alphamax()
         alphas = np.arange(-alphamax, alphamax, alphamax * 2 / 1e4)
         bs_up, as_up, bs_dw, as_dw = self._compute_betas_alphas(alphas)
         betas, alphas = bs_up + bs_dw[::-1], as_up + as_dw[::-1]
-        if split:
-            label_inv = kwargs.get('label_norm', '')
-            label_norm = kwargs.get('label_inv', '')
-            thickness_inv = kwargs.get('thickness_inv', 2)
-            thickness_norm = kwargs.get('thickness_norm', 2)
-            style_inv = kwargs.get('style_inv', '-')
-            style_norm = kwargs.get('style_norm', '-')
-            color_inv = kwargs.get('color_inv', 'k')
-            color_norm = kwargs.get('color_norm', 'k')
-            # Upper line is normal mecanism.
-            path_effects = [pe.Stroke(linewidth=thickness_norm+0.5,
-                            foreground='k'), pe.Normal()]
-            plt.plot(bs_up, as_up, c=color_norm, label=label_norm,
-                     lw=thickness_norm, ls=style_norm, figure=self.figure,
-                     path_effects=path_effects)
+        if normal or inverse:
+            l_norm, t_norm, s_norm, c_norm = self._get_curve_settings(**normal)
+            l_inv, t_inv, s_inv, c_inv = self._get_curve_settings(**inverse)
+            path_effects = [pe.Stroke(linewidth=t_norm+0.5, foreground='k'),
+                            pe.Normal()]
+            plt.plot(bs_up, as_up, c=c_norm, label=l_norm, lw=t_norm,
+                     ls=s_norm, figure=self.figure, path_effects=path_effects)
             # Bottom line is inverse mecanism.
-            path_effects = [pe.Stroke(linewidth=thickness_inv+0.5,
-                            foreground='k'), pe.Normal()]
-            plt.plot(bs_dw, as_dw, c=color_inv, label=label_inv,
-                     lw=thickness_inv, ls=style_inv, figure=self.figure,
-                     path_effects=path_effects)
+            path_effects = [pe.Stroke(linewidth=t_inv+0.5, foreground='k'),
+                            pe.Normal()]
+            plt.plot(bs_dw, as_dw, c=c_inv, label=l_inv, lw=t_inv, ls=s_inv,
+                     figure=self.figure, path_effects=path_effects)
         else:
-            label = kwargs.get('label', '')
-            thickness = kwargs.get('thickness', 2)
-            style = kwargs.get('style', '-')
-            color = kwargs.get('color', 'k')
-            # betas, alphas = bs_up + bs_dw[::-1], as_up + as_dw[::-1]
+            label, thickness, style, color = self._get_curve_settings(**kwargs)
             path_effects = [pe.Stroke(linewidth=thickness+0.5,
                             foreground='k'), pe.Normal()]
             plt.plot(betas, alphas, c=color, label=label, lw=thickness,
@@ -494,13 +491,17 @@ if __name__ == "__main__":
     # foo.show_params()
 
     foo.context = 'e'
-    foo.add_curve(color_inv=(1, 0, 0, 1), label_inv="extension inverse",
-                  color_norm=(0, 0, 1, 1), label_norm="extension normal",
-                  split=True)
+    # foo.add_curve(color_inv=(1, 0, 0, 1), label_inv="extension inverse",
+    #               color_norm=(0, 0, 1, 1), label_norm="extension normal",
+    #               split=True)
+    foo.add_curve(
+        inverse={'color': (1, 0, 0, 1), 'label': "extension inverse"},
+        normal={'color': (0, 0, 1, 1), 'label': "extension normal"}
+        )
     foo.add_point(alpha=-8, style='o', color='c')  # , beta_max=60)
     foo.title = "my self.title"
     foo.add_title("my title")
     foo.add_refpoint(0, 0, color="w", label='star', style='*', size=10)
     foo.add_refpoint(2.5, -1.5)
     foo.add_legend()
-    foo.show()
+    foo.show(block=True)

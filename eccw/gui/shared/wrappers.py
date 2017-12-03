@@ -53,6 +53,21 @@ class WrapperDict(object):
         else:
             raise TypeError(name+"() awaits a dict as argument.")
 
+    # def check_params(self, parser, params):
+    #     name = self.__class__.__name__
+    #     if isinstance(params, dict):
+    #         for key, value in params.items():
+    #             try:
+    #                 if isinstance(value, dict):
+    #                     parser[key](**value)
+    #                 else:
+    #                     parser[key](value)
+    #             except KeyError:
+    #                 pass
+    #     else:
+    #         raise TypeError(name+"() awaits a dict as argument.")
+
+
 
 class WrapperList(object):
 

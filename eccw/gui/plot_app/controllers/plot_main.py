@@ -4,6 +4,7 @@
 from PyQt4 import QtCore, QtGui
 from os.path import dirname, realpath
 from collections import OrderedDict
+from matplotlib.cm import get_cmap
 import csv
 
 from eccw.gui.plot_app.viewers.plot_main import Ui_Form
@@ -11,6 +12,7 @@ from eccw.gui.plot_app.controllers.curve_settings import CurveController
 from eccw.gui.plot_app.controllers.point_settings import RefPointSettings
 from eccw.gui.shared.wrappers import Wrapper, WrapperDict, WrapperList
 # from eccw.shared.file_management import EccwFile
+from eccw.physics.eccw_plot import EccwPlot
 from eccw.shared.print_tools import graph_print
 
 
@@ -30,6 +32,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def __init__(self, **kwargs):
         super(PlotController, self).__init__()
         self.setupUi(self)
+        self.plot_core = EccwPlot()
         self.current_dir = QtCore.QDir.homePath()
         self.current_dir = "/home/bmary/Programmation/eccw/eccw/test/"
         # self.mimetypes = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
@@ -237,11 +240,40 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     # Main action !
 
     def plot_one(self):  # TODO
-        tmp = WrapperDict.get_select(self)
-        if len(self.curves.list) > 1:
-            i = self.tabWidget.currentIndex()
-            tmp["curves"] = tmp["curves"][i:i+1]
-        graph_print(tmp)
+        self.plot_core.reset_figure()
+        select = self.get_select()
+        main_params_list = ['phiB', 'phiD', 'delta_lambdaB', 'delta_lambdaD',
+                            'rho_f', 'rho_sr']
+        for curve in select['curves']:
+            settings_type = curve['settings']['type']
+            settings = curve['settings']['value']
+            if settings_type in ('default', 'double'):
+                params = {param: curve[param]['value']
+                          for param in main_params_list}
+                params['context'] = curve['context']
+                self.plot_core.set_params(**params)
+                self.plot_core.add_curve(**settings)
+            elif settings_type == 'range':
+                ranged_parameter = curve['range']
+                range_ = curve[ranged_parameter]['value']
+                cmap = get_cmap(settings.pop('colormap'))
+                Ncolor = len(range_) - 1
+                for i, x in enumerate(range_):
+                    params = {param: curve[param]['value']
+                              if param != ranged_parameter else x
+                              for param in main_params_list}
+                    params['context'] = curve['context']
+                    self.plot_core.set_params(**params)
+                    settings['color'] = cmap(i/Ncolor)
+                    self.plot_core.add_curve(**settings)
+
+        # params = {flag: select[flag]['value']
+        #           if flag != ranged_parameter else x
+        #           for flag in self.param_flag_list}
+        # params['context'] = self.context.get_params()
+        # self.plot_core.set_params(**params)
+        # self.plot_core.compute(focus_parameter))
+        self.plot_core.show(block=True)
 
     def plot_all(self):  # TODO
         graph_print(self.get_select())

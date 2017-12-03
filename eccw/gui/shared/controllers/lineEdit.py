@@ -177,6 +177,7 @@ class SwitchLineEdit(QtGui.QWidget, Ui_Form_switch, WrapperDict):
         self.scalar = ScalarLineEdit()
         self.multi = multiLineEdit()
         self.focus = Wrapper(self.scalar.id)
+        self.id = Wrapper(None)
         # Put them in self
         self.verticalLayout.addWidget(self.scalar)
         self.verticalLayout.addWidget(self.multi)
@@ -188,7 +189,8 @@ class SwitchLineEdit(QtGui.QWidget, Ui_Form_switch, WrapperDict):
         self.dict = OrderedDict([
             (self.scalar.id, self.scalar),
             (self.multi.id,  self.multi),
-            ("focus",        self.focus)
+            ("focus",        self.focus),
+            ("id",           self.id),
         ])
         # Fill values with kwargs
         if kwargs:
@@ -210,6 +212,7 @@ class SwitchLineEdit(QtGui.QWidget, Ui_Form_switch, WrapperDict):
         self._auto_set_visible()
 
     def set_params(self, **kwargs):
+        # self.id = kwargs.get('id', '')
         WrapperDict.set_params(self, **kwargs)
         if self.focus.value == self.scalar.id:
             self.pushButton.setChecked(False)
@@ -221,6 +224,7 @@ class SwitchLineEdit(QtGui.QWidget, Ui_Form_switch, WrapperDict):
         params = WrapperDict.get_select(self)
         ID = params["focus"]
         return OrderedDict([
+            ("id",    params['id']),
             ("type", ID),
             ("value", params[ID])
         ])
@@ -294,9 +298,8 @@ if __name__ == "__main__":
         # myapp = SwitchScalarBound(**params)
 
         params = {"range": {"begin": 1, "step": None, "end": 8},
-                  "scalar": 5, "focus": "range"}
+                  "scalar": 5, "focus": "range", 'id': 'my id'}
         myapp = SwitchScalarRange(**params)
-
         sys.exit(app.exec_())
     finally:
         print("params=")

@@ -50,15 +50,15 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.closed = False
         # Init additional objects
         # Mechanic.
-        self.phiB = SwitchScalarRange()
-        self.phiD = SwitchScalarRange()
+        self.phiB = SwitchScalarRange(id='phiB')
+        self.phiD = SwitchScalarRange(id='phiD')
         # Fluids.
         self.fluids = Wrapper(False, process=lambda x: eval(str(x)),
                               action=self.groupBox_fluids.setChecked)
-        self.delta_lambdaB = SwitchScalarRange()
-        self.delta_lambdaD = SwitchScalarRange()
-        self.rho_f = SwitchScalarRange()
-        self.rho_sr = SwitchScalarRange()
+        self.delta_lambdaB = SwitchScalarRange(id='delta_lambdaB')
+        self.delta_lambdaD = SwitchScalarRange(id='delta_lambdaD')
+        self.rho_f = SwitchScalarRange(id='rho_f')
+        self.rho_sr = SwitchScalarRange(id='rho_sr')
         self.context = ComboBoxContext()
         # Label
         self.label_label = Label("label")
@@ -67,6 +67,8 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.settings = SwitchCurveGraphicSettings()
         # Curve points
         self.points = WrapperList()
+        # Pointer on ranged parameter.
+        self.range = Wrapper(None)
         # Put additional elements in self.
         self.horizontalLayout_phiB.addWidget(self.phiB)
         self.horizontalLayout_phiD.addWidget(self.phiD)
@@ -99,6 +101,7 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
             ("label",         self.label),
             ("context",       self.context),
             ("fluids",        self.fluids),
+            ("range",        self.range),
             ("phiB",          self.phiB),
             ("phiD",          self.phiD),
             ("delta_lambdaB", self.delta_lambdaB),
@@ -133,6 +136,10 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
                         for Obj in self.param_object_list])
 
     def _there_can_be_only_one(self, elt):
+        if elt.focus.value == "scalar":
+            self.range.value = None
+        else:
+            self.range.value = elt.id.value
         for Obj in self.param_object_list:
             if Obj is not elt:
                 Obj.set_scalar_visible(True)

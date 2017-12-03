@@ -25,10 +25,15 @@ class EccwFile():
         if filename is not None:
             self.load(filename)
 
-    def _check(self, elt, key):
+    def _check_in(self, elt, key):
         if elt[key] == [None]:
             # No elts must be stored as an empty list entry.
             elt[key] = []
+
+    def _check_out(self, elt, key):
+        if elt[key] == []:
+            # Empty list has to be enlighted to be stored as xml.
+            elt[key] = [None]
 
     def load(self, filename):
         # Keywords that must be present in the result even if empty.
@@ -43,10 +48,12 @@ class EccwFile():
         try:
             self.values = tmp["session"]
             # Replace wrong formated elements by proper values.
-            self._check(self.values["plot"], "refpoints")
-            self._check(self.values["plot"], "curves")
+            if self.values["calculator"]['results'] is None:
+                self.values["calculator"]['results'] = ''
+            self._check_in(self.values["plot"], "refpoints")
+            self._check_in(self.values["plot"], "curves")
             for i in range(len(self.values["plot"]["curves"])):
-                self._check(self.values["plot"]["curves"][i], "points")
+                self._check_in(self.values["plot"]["curves"][i], "points")
         except KeyError:
             self.values = None
             return
@@ -62,20 +69,16 @@ class EccwFile():
     def xml(self, pretty=True):
         values = OrderedDict(self.values)
         # Replace empty list elements by [None] for xmltodict.
-        tmp1 = values["plot"].get("refpoints")
-        if tmp1 is not None:
-            if tmp1 == []:
-                tmp1 = [None]
-        tmp2 = values["plot"].get("curves")
-        if tmp2 is not None:
-            for elt in values["plot"]["curves"]:
-                if elt["points"] == []:
-                    elt["points"] = [None]
+        self._check_out(self.values["plot"], "refpoints")
+        self._check_out(self.values["plot"], "curves")
+        for i in range(len(self.values["plot"]["curves"])):
+            self._check_out(self.values["plot"]["curves"][i], "points")
+
         return xmltodict.unparse({"session": values}, pretty=pretty)
 
 
 if __name__ == "__main__":
 
     f = EccwFile()
-    f.load("../test/test.eccw")
+    f.load("../../tests/test.eccw")
     f.show()

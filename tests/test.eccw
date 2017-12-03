@@ -81,7 +81,7 @@
 	</calculator>
 	<plot>
 		<curves>
-			<label>Curve 1</label>
+			<label>KoRn</label>
 			<context>Compression</context>
 			<fluids>False</fluids>
 			<phiB>
@@ -96,11 +96,11 @@
 			<phiD>
 				<scalar>10.0</scalar>
 				<range>
-					<begin></begin>
-					<step></step>
-					<end></end>
+					<begin>6.0</begin>
+					<step>2.0</step>
+					<end>12.0</end>
 				</range>
-				<focus>scalar</focus>
+				<focus>range</focus>
 			</phiD>
 			<delta_lambdaB>
 				<scalar></scalar>
@@ -139,41 +139,42 @@
 				<focus>scalar</focus>
 			</rho_sr>
 			<settings>
-				<focus>default</focus>
+				<focus>range</focus>
 				<default>
-					<thickness>1.0</thickness>
-					<color>0.0</color>
-					<color>0.0</color>
-					<color>0.0</color>
+					<thickness>2.0</thickness>
+					<color>0.6666666666666666</color>
+					<color>0.6666666666666666</color>
 					<color>1.0</color>
-					<style>continuous</style>
+					<color>1.0</color>
+					<style>dotted</style>
 				</default>
 				<double>
 					<normal>
-						<thickness>1.0</thickness>
+						<thickness>2.0</thickness>
 						<color>0.0</color>
 						<color>0.0</color>
-						<color>0.0</color>
+						<color>1.0</color>
 						<color>1.0</color>
 						<style>continuous</style>
 					</normal>
 					<inverse>
-						<thickness>1.0</thickness>
-						<color>0.0</color>
-						<color>0.0</color>
+						<thickness>2.0</thickness>
+						<color>0.6666666666666666</color>
+						<color>0.3333333333333333</color>
 						<color>0.0</color>
 						<color>1.0</color>
 						<style>continuous</style>
 					</inverse>
 				</double>
 				<range>
-					<thickness>1.0</thickness>
-					<colormap>Gray</colormap>
+					<thickness>2.0</thickness>
+					<colormap>Hot</colormap>
 					<style>continuous</style>
 				</range>
 			</settings>
 			<points></points>
 		</curves>
+		<refpoints></refpoints>
 		<legend>False</legend>
 		<title>False</title>
 	</plot>

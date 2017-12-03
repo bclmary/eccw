@@ -492,7 +492,6 @@ class EccwCompute(object):
                     setattr(self, key, value)
         except TypeError:
             raise
-            # raise TypeError("Wrong arguments", key)
 
 
 if __name__ == "__main__":

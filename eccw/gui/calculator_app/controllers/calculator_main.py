@@ -18,14 +18,14 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         super(CalculatorController, self).__init__()
         self.setupUi(self)
         # Init local attributs.
-        self.alpha = SwitchScalarRange(scalar=3.44)
-        self.beta = SwitchScalarRange(scalar=0, range={'begin': -2, 'end': 2})
-        self.phiB = SwitchScalarRange(scalar=30)
-        self.phiD = SwitchScalarRange(scalar=10)
-        self.delta_lambdaB = SwitchScalarRange()
-        self.delta_lambdaD = SwitchScalarRange()
-        self.rho_f = SwitchScalarRange()
-        self.rho_sr = SwitchScalarRange()
+        self.alpha = SwitchScalarRange(id='alpha')
+        self.beta = SwitchScalarRange(id='beta')
+        self.phiB = SwitchScalarRange(id='phiB')
+        self.phiD = SwitchScalarRange(id='phiD')
+        self.delta_lambdaB = SwitchScalarRange(id='delta_lambdaB')
+        self.delta_lambdaD = SwitchScalarRange(id='delta_lambdaD')
+        self.rho_f = SwitchScalarRange(id='rho_f')
+        self.rho_sr = SwitchScalarRange(id='rho_sr')
         self.range = Wrapper(None)
         self.compute_core = EccwCompute()
         # List for SwitchScalarRange objects control.
@@ -36,7 +36,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.alpha, self.beta, self.phiB, self.phiD,
             self.delta_lambdaB, self.delta_lambdaD, self.rho_f, self.rho_sr]
         self.context = ComboBoxContext()
-        self.results = Wrapper(action=self._set_results, arg="")
+        self.results = Wrapper("", action=self._set_results)
         self.fluids = Wrapper(False, process=lambda x: eval(str(x)),
                               action=self.groupBox_fluids.setChecked)
         self.fluids_flag_list = ["delta_lambdaB", "delta_lambdaD",
@@ -62,10 +62,8 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.verticalLayout_context.addWidget(self.context)
         # Define behaviours
         tmp = lambda elt: lambda: self._there_can_be_only_one(elt)
-        for i, elt in enumerate(self.param_object_list):
+        for elt in self.param_object_list:
             elt.pushButton.clicked.connect(tmp(elt))
-            # param objects needs to be identified later.
-            elt.id = self.param_flag_list[i]
         for elt in self.focus_object_list:
             elt.clicked.connect(self._auto_set_focus)
         self.groupBox_fluids.clicked.connect(self._fluidsChanged)
@@ -121,7 +119,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         if elt.focus.value == "scalar":
             self.range.value = None
         else:
-            self.range.value = elt.id
+            self.range.value = elt.id.value
         for Obj in self.param_object_list:
             if Obj is not elt:
                 Obj.set_scalar_visible(True)
@@ -159,6 +157,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             focus_parameter = self.focus.value
             ranged_parameter = self.range.value
             range_ = ([None] if ranged_parameter is None
+                      or ranged_parameter == focus_parameter
                       else select[ranged_parameter]['value'])
             result = []
             try:
@@ -225,29 +224,14 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             value = select[elt]['value']
             if elt == focus:
                 value = "<span style='color: red'>⯅</span>"
-            if value is None:
+            elif value is None:
                 value = "-"
-            if select[elt]["type"] == "range":
+            elif select[elt]["type"] == "range":
                 value = "<span style='color: blue'>●</span>"
             values.append(str(value))
         text += self._make_result_table_line(values)
         text += "</table>"
         return text
-
-    def _load_params_in_compute_core_(self, a, b, pB, pD, lB, lD, rf, rs):
-        try:
-            self.compute_core.alpha = a if a else 0.
-            self.compute_core.beta = b if b else 0.
-            self.compute_core.phiB = pB if pB else 0.
-            self.compute_core.phiD = pD if pD else 0.
-            flag = self.fluids.value
-            self.compute_core.rho_f = rf if flag else 0.
-            self.compute_core.rho_sr = rs if flag else 0.
-            self.compute_core.delta_lambdaB = lB if flag else 0.
-            self.compute_core.delta_lambdaD = lD if flag else 0.
-        except TypeError:
-            print("Wrong arguments")
-        self.compute_core.context = self.context.get_params()
 
 
 if __name__ == "__main__":

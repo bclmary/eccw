@@ -21,7 +21,7 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         super(MainController, self).__init__(parent)
         self.setupUi(self)
         self.current_dir = QtCore.QDir.homePath()
-        self.current_dir = "/home/bmary/Programmation/eccw/eccw/tests/"  # debug
+        self.current_dir = "/home/bmary/Programmation/eccw/tests/"  # debug
         self.mime_types = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
                            EccwFile.mime)
         # Set calculator tab.
@@ -79,7 +79,6 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
                        "Chosen file must be a *.eccw mime type.")
             QtGui.QMessageBox.about(self, "Error", message)
             return
-        graph_print(eccwf.values)
         self.set_params(**eccwf.values)
 
     def save_session(self):
@@ -93,13 +92,14 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
 
 if __name__ == "__main__":
     import sys
-    eccwf = EccwFile(filename="../../../tests/test.eccw")
+    eccwf = EccwFile(filename="../../../../tests/test.eccw")
     params = eccwf.values
 
     try:
         app = QtGui.QApplication(sys.argv)
-        myapp = MainController() #**params)
+        myapp = MainController(**params)
         sys.exit(app.exec_())
     finally:
-        print("params =")
-        graph_print(myapp.get_select())
+        pass
+        # print("params =")
+        # graph_print(myapp.get_select())
