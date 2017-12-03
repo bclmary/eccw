@@ -13,6 +13,7 @@
 				<end></end>
 			</range>
 			<focus>scalar</focus>
+			<id>alpha</id>
 		</alpha>
 		<beta>
 			<scalar>0.0</scalar>
@@ -22,6 +23,7 @@
 				<end>2.0</end>
 			</range>
 			<focus>scalar</focus>
+			<id>beta</id>
 		</beta>
 		<phiB>
 			<scalar>30.0</scalar>
@@ -31,6 +33,7 @@
 				<end></end>
 			</range>
 			<focus>scalar</focus>
+			<id>phiB</id>
 		</phiB>
 		<phiD>
 			<scalar>10.0</scalar>
@@ -40,6 +43,7 @@
 				<end></end>
 			</range>
 			<focus>scalar</focus>
+			<id>phiD</id>
 		</phiD>
 		<delta_lambdaB>
 			<scalar></scalar>
@@ -49,6 +53,7 @@
 				<end></end>
 			</range>
 			<focus>scalar</focus>
+			<id>delta_lambdaB</id>
 		</delta_lambdaB>
 		<delta_lambdaD>
 			<scalar></scalar>
@@ -58,6 +63,7 @@
 				<end></end>
 			</range>
 			<focus>scalar</focus>
+			<id>delta_lambdaD</id>
 		</delta_lambdaD>
 		<rho_f>
 			<scalar></scalar>
@@ -67,6 +73,7 @@
 				<end></end>
 			</range>
 			<focus>scalar</focus>
+			<id>rho_f</id>
 		</rho_f>
 		<rho_sr>
 			<scalar></scalar>
@@ -76,6 +83,7 @@
 				<end></end>
 			</range>
 			<focus>scalar</focus>
+			<id>rho_sr</id>
 		</rho_sr>
 		<results></results>
 	</calculator>
@@ -84,6 +92,10 @@
 			<label>KoRn</label>
 			<context>Compression</context>
 			<fluids>False</fluids>
+			<range>phiD</range>
+			<split_curves>False</split_curves>
+			<auto_label>False</auto_label>
+			<reverse_cmap>True</reverse_cmap>
 			<phiB>
 				<scalar>30.0</scalar>
 				<range>
@@ -92,6 +104,7 @@
 					<end></end>
 				</range>
 				<focus>scalar</focus>
+				<id>phiB</id>
 			</phiB>
 			<phiD>
 				<scalar>10.0</scalar>
@@ -101,6 +114,7 @@
 					<end>12.0</end>
 				</range>
 				<focus>range</focus>
+				<id>phiD</id>
 			</phiD>
 			<delta_lambdaB>
 				<scalar></scalar>
@@ -110,6 +124,7 @@
 					<end></end>
 				</range>
 				<focus>scalar</focus>
+				<id>delta_lambdaB</id>
 			</delta_lambdaB>
 			<delta_lambdaD>
 				<scalar></scalar>
@@ -119,6 +134,7 @@
 					<end></end>
 				</range>
 				<focus>scalar</focus>
+				<id>delta_lambdaD</id>
 			</delta_lambdaD>
 			<rho_f>
 				<scalar></scalar>
@@ -128,6 +144,7 @@
 					<end></end>
 				</range>
 				<focus>scalar</focus>
+				<id>rho_f</id>
 			</rho_f>
 			<rho_sr>
 				<scalar></scalar>
@@ -137,6 +154,7 @@
 					<end></end>
 				</range>
 				<focus>scalar</focus>
+				<id>rho_sr</id>
 			</rho_sr>
 			<settings>
 				<focus>range</focus>

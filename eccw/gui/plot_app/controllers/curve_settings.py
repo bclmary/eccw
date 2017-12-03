@@ -60,6 +60,8 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.rho_f = SwitchScalarRange(id='rho_f')
         self.rho_sr = SwitchScalarRange(id='rho_sr')
         self.context = ComboBoxContext()
+        # store name of ranged parameter if any.
+        self.range = Wrapper(None)  # , process=self._set_ranged)
         # Label
         self.label_label = Label("label")
         self.label = StringLineEdit()
@@ -67,8 +69,6 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.settings = SwitchCurveGraphicSettings()
         # Curve points
         self.points = WrapperList()
-        # Pointer on ranged parameter.
-        self.range = Wrapper(None)
         # Put additional elements in self.
         self.horizontalLayout_phiB.addWidget(self.phiB)
         self.horizontalLayout_phiD.addWidget(self.phiD)
@@ -85,12 +85,22 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.phiB, self.phiD, self.delta_lambdaB,
             self.delta_lambdaD, self.rho_f, self.rho_sr
         ]
+        # Booleans
+        self.split_curves = Wrapper(False, process=lambda x: eval(str(x)),
+                            action=self.checkBox_splittedCurves.setChecked)
+        self.auto_label = Wrapper(False, process=lambda x: eval(str(x)),
+                            action=self.checkBox_autoLabel.setChecked)
+        self.reverse_cmap = Wrapper(False, process=lambda x: eval(str(x)),
+                            action=self.checkBox_reverseColormap.setChecked)
         # Define events
         self.pushButton_addCurvePoint.clicked.connect(self.add_curve_point)
         self.pushButton_killAllCurvePoints.clicked.connect(
             self.kill_all_curve_point)
         self.checkBox_splittedCurves.clicked.connect(self._auto_set_settings)
         self.groupBox_fluids.clicked.connect(self._fluids_changed)
+        self.checkBox_splittedCurves.clicked.connect(self._split_curve_changed)
+        self.checkBox_autoLabel.clicked.connect(self._auto_label_changed)
+        self.checkBox_reverseColormap.clicked.connect(self._reverse_cm_changed)
         tmp = lambda elt: lambda: self._there_can_be_only_one(elt)
         for elt in self.param_object_list:
             elt.pushButton.clicked.connect(tmp(elt))
@@ -101,7 +111,10 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
             ("label",         self.label),
             ("context",       self.context),
             ("fluids",        self.fluids),
-            ("range",        self.range),
+            ("range",         self.range),
+            ("split_curves",  self.split_curves),
+            ("auto_label",    self.auto_label),
+            ("reverse_cmap",  self.reverse_cmap),
             ("phiB",          self.phiB),
             ("phiD",          self.phiD),
             ("delta_lambdaB", self.delta_lambdaB),
@@ -125,6 +138,10 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         for i in range(N):
             self.add_curve_point()
         WrapperDict.set_params(self, **kwargs)
+        for obj in self.param_object_list:
+            if obj.focus.value == "range":
+                self._there_can_be_only_one(obj)
+                break
 
     # Events management.
 
@@ -166,6 +183,15 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     def _fluids_changed(self):
         self.fluids.value = self.groupBox_fluids.isChecked()
+
+    def _split_curve_changed(self):
+        self.split_curves.value = self.checkBox_splittedCurves.isChecked()
+
+    def _auto_label_changed(self):
+        self.auto_label.value = self.checkBox_autoLabel.isChecked()
+
+    def _reverse_cm_changed(self):
+        self.reverse_cmap.value = self.checkBox_reverseColormap.isChecked()
 
     def _set_auto_label(self):
         self.label.setDisabled(self.checkBox_autoLabel.isChecked())
@@ -213,7 +239,7 @@ if __name__ == "__main__":
                   "context": "Extension", "points": [point, point]}
 
         from eccw.shared.file_management import EccwFile
-        eccwf = EccwFile(filename="../../../test/test.eccw")
+        eccwf = EccwFile(filename="../../../../tests/test.eccw")
         params = eccwf.values['plot']['curves'][0]
         graph_print(params)
 

@@ -256,7 +256,10 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             elif settings_type == 'range':
                 ranged_parameter = curve['range']
                 range_ = curve[ranged_parameter]['value']
-                cmap = get_cmap(settings.pop('colormap'))
+                if curve['reverse_cmap']:
+                    cmap = get_cmap(settings.pop('colormap')+'_r')
+                else:
+                    cmap = get_cmap(settings.pop('colormap'))
                 Ncolor = len(range_) - 1
                 for i, x in enumerate(range_):
                     params = {param: curve[param]['value']
@@ -276,13 +279,13 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.plot_core.show(block=True)
 
     def plot_all(self):  # TODO
-        graph_print(self.get_select())
+        graph_print(self.get_params())
 
 
 if __name__ == "__main__":
     import sys
     from eccw.shared.file_management import EccwFile
-    eccwf = EccwFile(filename="../../../test/test2.eccw")
+    eccwf = EccwFile(filename="../../../../tests/test2.eccw")
     eccwf.show()
     params = eccwf.values['plot']
 
