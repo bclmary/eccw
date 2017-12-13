@@ -117,7 +117,7 @@
 				<id>phiD</id>
 			</phiD>
 			<delta_lambdaB>
-				<scalar></scalar>
+				<scalar>0.5</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -127,7 +127,7 @@
 				<id>delta_lambdaB</id>
 			</delta_lambdaB>
 			<delta_lambdaD>
-				<scalar></scalar>
+				<scalar>0.3</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -137,7 +137,7 @@
 				<id>delta_lambdaD</id>
 			</delta_lambdaD>
 			<rho_f>
-				<scalar></scalar>
+				<scalar>1000.0</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -147,7 +147,7 @@
 				<id>rho_f</id>
 			</rho_f>
 			<rho_sr>
-				<scalar></scalar>
+				<scalar>3500.0</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -190,9 +190,57 @@
 					<style>continuous</style>
 				</range>
 			</settings>
-			<points></points>
+			<points>
+				<beta>
+					<scalar>0.0</scalar>
+					<bound>
+						<min>-inf</min>
+						<max>inf</max>
+					</bound>
+					<focus>scalar</focus>
+					<id></id>
+				</beta>
+				<alpha>
+					<scalar></scalar>
+					<bound>
+						<min>-inf</min>
+						<max>inf</max>
+					</bound>
+					<focus>bound</focus>
+					<id></id>
+				</alpha>
+				<color>0.0</color>
+				<color>0.0</color>
+				<color>0.0</color>
+				<color>1.0</color>
+				<style>circle</style>
+				<size>3.0</size>
+				<label></label>
+				<sketch>False</sketch>
+			</points>
 		</curves>
-		<refpoints></refpoints>
+		<refpoints>
+			<beta>0.0</beta>
+			<alpha>2.0</alpha>
+			<color>0.0</color>
+			<color>0.0</color>
+			<color>1.0</color>
+			<color>1.0</color>
+			<style>circle</style>
+			<size>3.0</size>
+			<label></label>
+		</refpoints>
+		<refpoints>
+			<beta>-1.0</beta>
+			<alpha>1.0</alpha>
+			<color>0.3333333333333333</color>
+			<color>0.3333333333333333</color>
+			<color>1.0</color>
+			<color>1.0</color>
+			<style>star</style>
+			<size>3.0</size>
+			<label></label>
+		</refpoints>
 		<legend>False</legend>
 		<title>False</title>
 	</plot>

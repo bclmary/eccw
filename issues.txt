@@ -1,0 +1,6 @@
+
+Plot app
+
+[ ] spacing between refpoints settings is random when added
+[ ] check/uncheck fluid parameters group is not considered at ploting
+
