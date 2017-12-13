@@ -242,14 +242,16 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def plot_one(self):  # TODO
         self.plot_core.reset_figure()
         select = self.get_select()
-        main_params_list = ['phiB', 'phiD', 'delta_lambdaB', 'delta_lambdaD',
-                            'rho_f', 'rho_sr']
+        eccw_params_list = ['phiB', 'phiD']
         for curve in select['curves']:
+            if curve['fluids']:
+                eccw_params_list.extend(['delta_lambdaB', 'delta_lambdaD',
+                                         'rho_f', 'rho_sr'])
             settings_type = curve['settings']['type']
             settings = curve['settings']['value']
             if settings_type in ('default', 'double'):
                 params = {param: curve[param]['value']
-                          for param in main_params_list}
+                          for param in eccw_params_list}
                 params['context'] = curve['context']
                 self.plot_core.set_params(**params)
                 self.plot_core.add_curve(**settings)
@@ -264,7 +266,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                 for i, x in enumerate(range_):
                     params = {param: curve[param]['value']
                               if param != ranged_parameter else x
-                              for param in main_params_list}
+                              for param in eccw_params_list}
                     params['context'] = curve['context']
                     self.plot_core.set_params(**params)
                     settings['color'] = cmap(i/Ncolor)
