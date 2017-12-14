@@ -58,6 +58,10 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.radioButton_title.clicked.connect(self._set_title)
         self.pushButton_plotOne.clicked.connect(self.plot_one)
         self.pushButton_plotAll.clicked.connect(self.plot_all)
+        # Parameters list for dry and fluids cases.
+        self.params_list_dry = ('phiB', 'phiD')
+        self.params_list_fluids = ('phiB', 'phiD', 'delta_lambdaB',
+                                   'delta_lambdaD', 'rho_f', 'rho_sr')
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
             ("curves",    self.curves),
@@ -239,24 +243,40 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     # Main action !
 
+    def _format_point_params(self, point_params):
+        params = dict(point_params)
+        if point_params['beta']['type'] == 'scalar':
+            params['beta'] = point_params['beta']['value']
+            params['alpha'] = None
+            params['alpha_min'] = point_params['alpha']['value']['min']
+            params['alpha_max'] = point_params['alpha']['value']['max']
+        if point_params['alpha']['type'] == 'scalar':
+            params['beta'] = None
+            params['beta_min'] = point_params['beta']['value']['min']
+            params['beta_max'] = point_params['beta']['value']['max']
+            params['alpha'] = point_params['alpha']['value']
+        return params
+
     def plot_one(self):  # TODO
         self.plot_core.reset_figure()
         select = self.get_select()
-        eccw_params_list = ['phiB', 'phiD']
         for curve in select['curves']:
             if curve['fluids']:
-                eccw_params_list.extend(['delta_lambdaB', 'delta_lambdaD',
-                                         'rho_f', 'rho_sr'])
+                params_list = self.params_list_fluids
             else:
+                params_list = self.params_list_dry
                 self.plot_core.set_no_fluids()
             settings_type = curve['settings']['type']
             settings = curve['settings']['value']
             if settings_type in ('default', 'double'):
                 params = {param: curve[param]['value']
-                          for param in eccw_params_list}
+                          for param in params_list}
                 params['context'] = curve['context']
                 self.plot_core.set_params(**params)
                 self.plot_core.add_curve(**settings)
+                for point in curve['points']:
+                    params = self._format_point_params(point)
+                    self.plot_core.add_point(**params)
             elif settings_type == 'range':
                 ranged_parameter = curve['range']
                 range_ = curve[ranged_parameter]['value']
@@ -265,14 +285,33 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                 else:
                     cmap = get_cmap(settings.pop('colormap'))
                 Ncolor = len(range_) - 1
+                # Draw vertical or horizontal lines below curves
+                # if points with no bounds.
+                for point in curve['points']:
+                    a, b = point['alpha'], point['beta']
+                    beta = (b['value']
+                            if b['type'] == 'scalar'
+                            and a['value']['min'] == float('-inf')
+                            and a['value']['max'] == float('inf')
+                            else None)
+                    alpha = (a['value']
+                             if a['type'] == 'scalar'
+                             and b['value']['min'] == float('-inf')
+                             and b['value']['max'] == float('inf')
+                             else None)
+                    self.plot_core.add_line(beta=beta, alpha=alpha)
+                # Draw ranged curves.
                 for i, x in enumerate(range_):
                     params = {param: curve[param]['value']
                               if param != ranged_parameter else x
-                              for param in eccw_params_list}
+                              for param in params_list}
                     params['context'] = curve['context']
                     self.plot_core.set_params(**params)
                     settings['color'] = cmap(i/Ncolor)
                     self.plot_core.add_curve(**settings)
+                    for point in curve['points']:
+                        params = self._format_point_params(point)
+                        self.plot_core.add_point(line=False, **params)
         for refpoint in select['refpoints']:
             self.plot_core.add_refpoint(**refpoint)
         # params = {flag: select[flag]['value']

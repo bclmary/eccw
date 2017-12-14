@@ -308,13 +308,14 @@ class EccwPlot(EccwCompute):
         style = kwargs.get('style', 'o')
         color = kwargs.get('color', 'k')
         sketch = kwargs.get('sketch', False)
+        line = kwargs.get('line', True)
         path_effects = [pe.PathPatchEffect(edgecolor='k', facecolor=color,
                         linewidth=0.5)]
         betas, alphas = [], []
         if beta is not None:
             a_min = kwargs.get('alpha_min', float('-inf'))
             a_max = kwargs.get('alpha_max', float('inf'))
-            if a_min == float('-inf') and a_max == float('inf'):
+            if a_min == float('-inf') and a_max == float('inf') and line:
                 plt.axvline(beta, lw=1.5, c='gray', figure=self.figure)
             self.beta = beta
             alpha1, alpha2 = self.compute_alpha()
@@ -327,7 +328,7 @@ class EccwPlot(EccwCompute):
         elif alpha is not None:
             b_min = kwargs.get('beta_min', float('-inf'))
             b_max = kwargs.get('beta_max', float('inf'))
-            if b_min == float('-inf') and b_max == float('inf'):
+            if b_min == float('-inf') and b_max == float('inf') and line:
                 plt.axhline(alpha, lw=1, c='gray', figure=self.figure)
             self.alpha = alpha
             beta1, beta2 = self.compute_beta()
@@ -339,6 +340,19 @@ class EccwPlot(EccwCompute):
                     self.add_sketch(**kwargs)
         plt.plot(betas, alphas, ls='', marker=style, ms=size, label=label,
                  path_effects=path_effects, figure=self.figure)
+
+    def add_line(self, **kwargs):
+        beta = kwargs.get('beta', None)
+        alpha = kwargs.get('alpha', None)
+        thickness = kwargs.get('thickness', 1.5)
+        style = kwargs.get('style', '-')
+        color = kwargs.get('color', 'gray')
+        if beta is not None:
+            plt.axvline(beta, ls=style, lw=thickness, c=color,
+                        figure=self.figure)
+        if alpha is not None:
+            plt.axhline(alpha, ls=style, lw=thickness, c=color,
+                        figure=self.figure)
 
     def add_sketch(self, **kwargs):
         """Draw section sketch at current value [beta, alpha].
@@ -504,7 +518,8 @@ if __name__ == "__main__":
         inverse={'color': (1, 0, 0, 1), 'label': "extension inverse"},
         normal={'color': (0, 0, 1, 1), 'label': "extension normal"}
         )
-    foo.add_point(alpha=-8, style='o', color='c')  # , beta_max=60)
+    foo.add_line(alpha=-20, thickness=2, style=':')
+    foo.add_point(alpha=-8, style='o', color='c', line=False)  # , beta_max=60)
     foo.title = "my self.title"
     foo.add_title("my title")
     foo.add_refpoint(beta=0, alpha=0, color="w", label='star', style='*',
