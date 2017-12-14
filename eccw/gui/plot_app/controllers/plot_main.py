@@ -273,7 +273,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                     self.plot_core.set_params(**params)
                     settings['color'] = cmap(i/Ncolor)
                     self.plot_core.add_curve(**settings)
-
+        for refpoint in select['refpoints']:
+            self.plot_core.add_refpoint(**refpoint)
         # params = {flag: select[flag]['value']
         #           if flag != ranged_parameter else x
         #           for flag in self.param_flag_list}

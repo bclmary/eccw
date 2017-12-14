@@ -247,7 +247,13 @@ class EccwPlot(EccwCompute):
         self.legend = plt.legend(loc='best', fontsize='10')
         self.legend.draggable()
 
-    def add_refpoint(self, beta, alpha, **kwargs):
+    def add_refpoint(self, *args, **kwargs):
+        try:
+            beta = kwargs['beta']
+            alpha = kwargs['alpha']
+        except KeyError:
+            raise KeyError("EccwPlot.add_refpoint method awaits at least the "
+                           "following key word arguments: 'beta' and 'alpha'")
         label = kwargs.get('label', '')
         size = kwargs.get('size', 5)
         style = kwargs.get('style', 'o')
@@ -501,7 +507,8 @@ if __name__ == "__main__":
     foo.add_point(alpha=-8, style='o', color='c')  # , beta_max=60)
     foo.title = "my self.title"
     foo.add_title("my title")
-    foo.add_refpoint(0, 0, color="w", label='star', style='*', size=10)
-    foo.add_refpoint(2.5, -1.5)
+    foo.add_refpoint(beta=0, alpha=0, color="w", label='star', style='*',
+                     size=10)
+    foo.add_refpoint(beta=2.5, alpha=-1.5)
     foo.add_legend()
     foo.show(block=True)
