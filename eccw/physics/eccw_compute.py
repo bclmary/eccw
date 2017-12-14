@@ -143,6 +143,8 @@ class EccwCompute(object):
         try:
             self._rho_f = value + 0.  # +0 test value is a float.
             self._set_density_ratio()
+            self._set_lambdaB()
+            self._set_lambdaD()
         except TypeError:
             raise TypeError(self._error_message('rho_f', 'type', 'a float'))
 
@@ -156,6 +158,8 @@ class EccwCompute(object):
         try:
             self._rho_sr = value + 0.  # +0 test value is a float.
             self._set_density_ratio()
+            self._set_lambdaB()
+            self._set_lambdaD()
         except TypeError:
             raise TypeError(self._error_message('rho_sr', 'type', 'a float'))
 
@@ -169,11 +173,7 @@ class EccwCompute(object):
         try:
             if 0. <= value <= 1 - self._density_ratio:
                 self._delta_lambdaB = value
-                self._lambdaB = self._delta_lambdaB + self._density_ratio
-                self._lambdaB_D2 = self._convert_lambda(self._alpha,
-                                                        self._lambdaB)
-                self._alpha_prime = self._convert_alpha(self._alpha,
-                                                        self._lambdaB_D2)
+                self._set_lambdaB()
             else:
                 raise ValueError(self._error_message("delta_lambdaB", "value",
                                  "in [0 : %s]" % (1-self._density_ratio)))
@@ -191,9 +191,7 @@ class EccwCompute(object):
         try:
             if 0. <= value < 1 - self._density_ratio:
                 self._delta_lambdaD = value
-                self._lambdaD = self._delta_lambdaD + self._density_ratio
-                self._lambdaD_D2 = self._convert_lambda(self._alpha,
-                                                        self._lambdaD)
+                self._set_lambdaD()
             else:
                 raise ValueError(self._error_message("delta_lambdaD", "value",
                                  "in [0 : %s]" % (1-self._density_ratio)))
@@ -224,6 +222,15 @@ class EccwCompute(object):
                                                  "'rho_f' or rho_sr'", "value",
                                                  "lower than %s" % foo))
 
+    def _set_lambdaD(self):
+        self._lambdaD = self._delta_lambdaD + self._density_ratio
+        self._lambdaD_D2 = self._convert_lambda(self._alpha, self._lambdaD)
+
+    def _set_lambdaB(self):
+        self._lambdaB = self._delta_lambdaB + self._density_ratio
+        self._lambdaB_D2 = self._convert_lambda(self._alpha, self._lambdaB)
+        self._alpha_prime = self._convert_alpha(self._alpha, self._lambdaB_D2)
+
     def _convert_lambda(self, alpha, lambdaX):
         return (lambdaX / cos(alpha) ** 2. - self._density_ratio
                 * tan(alpha) ** 2.)
@@ -253,7 +260,7 @@ class EccwCompute(object):
     def _test_phiB(self, phiB):
         return phiB if -pi < phiB < pi else float('nan')
         # phiB = normalize_angle(phiB, -pi, pi)
-        return phiB #if 0. <= phiB <= pi/2 else None
+        return phiB  # if 0. <= phiB <= pi/2 else None
 
     def _test_phiD(self, phiD):
         # phiD = self._sign * phiD if copysign(1, phiD) == self._sign else None
@@ -493,6 +500,8 @@ class EccwCompute(object):
         except TypeError:
             raise
 
+    def set_no_fluids(self):
+        self.set_params(rho_f=0, rho_sr=0, delta_lambdaB=0, delta_lambdaD=0)
 
 if __name__ == "__main__":
 

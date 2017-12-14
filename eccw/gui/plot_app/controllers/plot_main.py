@@ -247,6 +247,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             if curve['fluids']:
                 eccw_params_list.extend(['delta_lambdaB', 'delta_lambdaD',
                                          'rho_f', 'rho_sr'])
+            else:
+                self.plot_core.set_no_fluids()
             settings_type = curve['settings']['type']
             settings = curve['settings']['value']
             if settings_type in ('default', 'double'):
@@ -287,7 +289,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 if __name__ == "__main__":
     import sys
     from eccw.shared.file_management import EccwFile
-    eccwf = EccwFile(filename="../../../../tests/test2.eccw")
+    eccwf = EccwFile(filename="../../../../tests/test.eccw")
     eccwf.show()
     params = eccwf.values['plot']
 
