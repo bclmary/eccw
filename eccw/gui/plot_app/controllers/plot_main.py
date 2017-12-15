@@ -69,6 +69,17 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             ("legend",    self.legend),
             ("title",     self.title)
         ])
+        # Additional variables
+        self.latex_convert = {
+            "alpha":         r"$\alpha$",
+            "beta":          r"$\beta$",
+            "phiB":          r"$\phi_{B}$",
+            "phiD":          r"$\phi_{D}$",
+            "delta_lambdaB": r"$\Delta \lambda_{B}$",
+            "delta_lambdaD": r"$\Delta \lambda_{D}$",
+            "rho_f":         r"\rho_{f}$",
+            "rho_sr":        r"\rho_{sr}$"
+        }
         # Fill values with kwargs
         if kwargs:
             self.set_params(**kwargs)
@@ -308,7 +319,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                               if param != ranged_parameter else x
                               for param in params_list}
                     params['context'] = curve['context']
-                    settings['label'] = curve['label']
+                    if curve['auto_label']:
+                        settings['label'] = self.latex_convert[curve['range']] + " = " + str(x)
                     self.plot_core.set_params(**params)
                     settings['color'] = cmap(i/Ncolor)
                     self.plot_core.add_curve(**settings)
