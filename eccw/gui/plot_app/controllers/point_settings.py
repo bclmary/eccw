@@ -26,7 +26,7 @@ class PointSettings(QtGui.QWidget, Ui_Form, WrapperDict):
         self.closed = False
         # Init additional objects
         self.labelSize = Label("size")
-        self.size = SpinBox(3)
+        self.size = SpinBox(5)
         self.color = ColorButton()
         self.style = ComboBoxPoint()
         self.labelLabel = Label("label")

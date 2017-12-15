@@ -272,6 +272,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                 params = {param: curve[param]['value']
                           for param in params_list}
                 params['context'] = curve['context']
+                settings['label'] = curve['label']
+                graph_print(params)
                 self.plot_core.set_params(**params)
                 self.plot_core.add_curve(**settings)
                 for point in curve['points']:
@@ -306,6 +308,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                               if param != ranged_parameter else x
                               for param in params_list}
                     params['context'] = curve['context']
+                    settings['label'] = curve['label']
                     self.plot_core.set_params(**params)
                     settings['color'] = cmap(i/Ncolor)
                     self.plot_core.add_curve(**settings)
@@ -314,12 +317,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                         self.plot_core.add_point(line=False, **params)
         for refpoint in select['refpoints']:
             self.plot_core.add_refpoint(**refpoint)
-        # params = {flag: select[flag]['value']
-        #           if flag != ranged_parameter else x
-        #           for flag in self.param_flag_list}
-        # params['context'] = self.context.get_params()
-        # self.plot_core.set_params(**params)
-        # self.plot_core.compute(focus_parameter))
+        if select['legend']:
+            self.plot_core.add_legend()
         self.plot_core.show(block=True)
 
     def plot_all(self):  # TODO

@@ -214,34 +214,34 @@
 				<color>0.0</color>
 				<color>1.0</color>
 				<style>circle</style>
-				<size>3.0</size>
 				<label></label>
+				<size>3.0</size>
 				<sketch>False</sketch>
 			</points>
 		</curves>
 		<refpoints>
-			<beta>0.0</beta>
-			<alpha>2.0</alpha>
+			<beta>-4.0</beta>
+			<alpha>1.0</alpha>
 			<color>0.0</color>
 			<color>0.0</color>
 			<color>1.0</color>
 			<color>1.0</color>
 			<style>circle</style>
-			<size>3.0</size>
 			<label></label>
+			<size>5.0</size>
 		</refpoints>
 		<refpoints>
-			<beta>-1.0</beta>
-			<alpha>1.0</alpha>
+			<beta>-2.0</beta>
+			<alpha>-2.0</alpha>
 			<color>0.3333333333333333</color>
 			<color>0.3333333333333333</color>
 			<color>1.0</color>
 			<color>1.0</color>
 			<style>star</style>
-			<size>3.0</size>
 			<label></label>
+			<size>7.0</size>
 		</refpoints>
-		<legend>False</legend>
+		<legend>True</legend>
 		<title>False</title>
 	</plot>
 </session>

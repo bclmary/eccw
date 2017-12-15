@@ -7,9 +7,13 @@ from matplotlib import pyplot as plt
 import matplotlib.patheffects as pe
 from matplotlib.offsetbox import DrawingArea, AnnotationBbox
 from matplotlib import patches, lines
+import warnings
 
 from eccw.physics.eccw_compute import EccwCompute
 from eccw.shared.tools import r2d, imin, imax
+
+
+warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 
 
 class EccwPlot(EccwCompute):
@@ -245,7 +249,8 @@ class EccwPlot(EccwCompute):
 
     def add_legend(self):
         self.legend = plt.legend(loc='best', fontsize='10')
-        self.legend.draggable()
+        if self.legend is not None:
+            self.legend.draggable()
 
     def add_refpoint(self, *args, **kwargs):
         try:
