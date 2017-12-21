@@ -94,8 +94,8 @@
 			<fluids>False</fluids>
 			<range>phiD</range>
 			<split_curves>False</split_curves>
-			<auto_label>False</auto_label>
-			<reverse_cmap>True</reverse_cmap>
+			<auto_label>True</auto_label>
+			<reverse_cmap>False</reverse_cmap>
 			<phiB>
 				<scalar>30.0</scalar>
 				<range>
@@ -209,39 +209,39 @@
 					<focus>bound</focus>
 					<id></id>
 				</alpha>
+				<style>circle</style>
+				<size>3.0</size>
+				<label></label>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
-				<style>circle</style>
-				<label></label>
-				<size>3.0</size>
 				<sketch>False</sketch>
 			</points>
 		</curves>
 		<refpoints>
 			<beta>-4.0</beta>
 			<alpha>1.0</alpha>
-			<color>0.0</color>
-			<color>0.0</color>
-			<color>1.0</color>
-			<color>1.0</color>
 			<style>circle</style>
-			<label></label>
 			<size>5.0</size>
+			<label></label>
+			<color>0.0</color>
+			<color>0.0</color>
+			<color>1.0</color>
+			<color>1.0</color>
 		</refpoints>
 		<refpoints>
 			<beta>-2.0</beta>
 			<alpha>-2.0</alpha>
-			<color>0.3333333333333333</color>
-			<color>0.3333333333333333</color>
-			<color>1.0</color>
-			<color>1.0</color>
 			<style>star</style>
-			<label></label>
 			<size>7.0</size>
+			<label></label>
+			<color>0.3333333333333333</color>
+			<color>0.3333333333333333</color>
+			<color>1.0</color>
+			<color>1.0</color>
 		</refpoints>
 		<legend>True</legend>
-		<title>False</title>
+		<title>True</title>
 	</plot>
 </session>

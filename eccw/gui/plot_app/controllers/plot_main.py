@@ -271,6 +271,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def plot_one(self):  # TODO
         self.plot_core.reset_figure()
         select = self.get_select()
+        
         for curve in select['curves']:
             if curve['fluids']:
                 params_list = self.params_list_fluids
@@ -331,6 +332,13 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.plot_core.add_refpoint(**refpoint)
         if select['legend']:
             self.plot_core.add_legend()
+        # if select['title']:
+        #     curve = self.tabWidget.currentWidget().get_select()
+        #     params = [self.latex_convert[curve[param]['value']
+        #               if param != ranged_parameter else x
+        #               for param in params_list}
+        #     title=", ".join(
+        #     self.plot_core.add_title()
         self.plot_core.show(block=True)
 
     def plot_all(self):  # TODO
