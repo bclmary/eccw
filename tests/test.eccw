@@ -208,13 +208,13 @@
 					<focus>bound</focus>
 					<id></id>
 				</alpha>
-				<label></label>
-				<style>circle</style>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
+				<style>circle</style>
 				<size>3.0</size>
+				<label>some</label>
 				<sketch>False</sketch>
 			</points>
 		</curves>
@@ -338,37 +338,37 @@
 					<focus>scalar</focus>
 					<id></id>
 				</alpha>
-				<label></label>
-				<style>circle</style>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
+				<style>square</style>
 				<size>5.0</size>
+				<label>square point</label>
 				<sketch>False</sketch>
 			</points>
 		</curves>
 		<refpoints>
 			<beta>-4.0</beta>
 			<alpha>1.0</alpha>
-			<label></label>
+			<color>0.0</color>
+			<color>0.0</color>
+			<color>1.0</color>
+			<color>1.0</color>
 			<style>circle</style>
-			<color>0.0</color>
-			<color>0.0</color>
-			<color>1.0</color>
-			<color>1.0</color>
 			<size>5.0</size>
+			<label></label>
 		</refpoints>
 		<refpoints>
 			<beta>-2.0</beta>
 			<alpha>-2.0</alpha>
-			<label></label>
+			<color>0.3333333333333333</color>
+			<color>0.3333333333333333</color>
+			<color>1.0</color>
+			<color>1.0</color>
 			<style>star</style>
-			<color>0.3333333333333333</color>
-			<color>0.3333333333333333</color>
-			<color>1.0</color>
-			<color>1.0</color>
 			<size>7.0</size>
+			<label></label>
 		</refpoints>
 		<legend>True</legend>
 		<range_point>True</range_point>

@@ -262,9 +262,10 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     # Main action !
 
-    def _format_point_params(self, point_params):
+    def _format_point_params(self, point_params, no_label=False):
         if point_params['beta']['type'] == 'scalar':
             params = {
+                **point_params,
                 'beta':      point_params['beta']['value'],
                 'alpha':     None,
                 'alpha_min': point_params['alpha']['value']['min'],
@@ -272,11 +273,14 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                 }
         if point_params['alpha']['type'] == 'scalar':
             params = {
+                **point_params,
                 'beta': None,
                 'beta_min': point_params['beta']['value']['min'],
                 'beta_max': point_params['beta']['value']['max'],
                 'alpha':    point_params['alpha']['value'],
                 }
+        if no_label:
+            params.pop('label')
         return params
 
     def plot_one(self):  # TODO
@@ -318,7 +322,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             **{param: selected_params[param]['value'] for param in params_list}
             }
         graphic_settings = {
-            'label': selected_params['label'],
+            'label':  selected_params['label'],
             **selected_params['settings']['value']
             }
         self.plot_core.set_params(**params)
@@ -346,11 +350,6 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         else:
             cmap = get_cmap(graphic_settings.pop('colormap'))
         number_of_color = len(range_) - 1
-        # Draw vertical or horizontal lines that visualize point intervals
-        if self.range_point.value is True:
-            for point in selected_params['points']:
-                params = self._format_point_params(point)
-                self.plot_core.add_line(**params)
         # Ghost element that will be used as a title in the legend.
         self.plot_core.add_point(style='', label=selected_params["label"])
         # Draw ranged curves.
@@ -370,8 +369,17 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                 })
             self.plot_core.add_curve(**graphic_settings)
             for point in selected_params['points']:
-                params = self._format_point_params(point)
+                params = self._format_point_params(point, no_label=True)
                 self.plot_core.add_point(**params)
+        for point in selected_params['points']:
+            params = self._format_point_params(point)
+            # Dummy element that will be used as legend for points to avoid
+            # repetition.
+            self.plot_core.add_point(**params)
+            # Draw vertical or horizontal lines that visualize point intervals
+            if self.range_point.value is True:
+                self.plot_core.add_line(**params)
+
 
 if __name__ == "__main__":
     import sys

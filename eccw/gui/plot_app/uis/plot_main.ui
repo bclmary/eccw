@@ -138,6 +138,9 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
+       <property name="movable">
+        <bool>true</bool>
+       </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
          <string/>
@@ -359,6 +362,9 @@
             </property>
             <property name="text">
              <string>show curve point range</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
             </property>
            </widget>
           </item>

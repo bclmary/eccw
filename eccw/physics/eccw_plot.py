@@ -225,11 +225,12 @@ class EccwPlot(EccwCompute):
                 Y.append(y)
 
     def _get_curve_settings(self, **kwargs):
-        label = kwargs.get('label', '')
-        thickness = kwargs.get('thickness', 2)
-        style = kwargs.get('style', '-')
-        color = kwargs.get('color', 'k')
-        return label, thickness, style, color
+        return {
+            'c':      kwargs.get('color', 'k'),
+            'lw':     kwargs.get('thickness', 2),
+            'ls':     kwargs.get('style', '-'),
+            'figure': self.figure
+            }
 
     # Public methods
 
@@ -274,28 +275,30 @@ class EccwPlot(EccwCompute):
         """
         inverse = kwargs.get('inverse', dict())
         normal = kwargs.get('normal', dict())
+        label = kwargs.get('label', '')
         alphamax = self._get_alphamax()
         alphas = np.arange(-alphamax, alphamax, alphamax * 2 / 1e4)
         bs_up, as_up, bs_dw, as_dw = self._compute_betas_alphas(alphas)
         betas, alphas = bs_up + bs_dw[::-1], as_up + as_dw[::-1]
         if normal or inverse:
-            l_norm, t_norm, s_norm, c_norm = self._get_curve_settings(**normal)
-            l_inv, t_inv, s_inv, c_inv = self._get_curve_settings(**inverse)
-            path_effects = [pe.Stroke(linewidth=t_norm+0.5, foreground='k'),
-                            pe.Normal()]
-            plt.plot(bs_up, as_up, c=c_norm, label=l_norm, lw=t_norm,
-                     ls=s_norm, figure=self.figure, path_effects=path_effects)
-            # Bottom line is inverse mecanism.
-            path_effects = [pe.Stroke(linewidth=t_inv+0.5, foreground='k'),
-                            pe.Normal()]
-            plt.plot(bs_dw, as_dw, c=c_inv, label=l_inv, lw=t_inv, ls=s_inv,
-                     figure=self.figure, path_effects=path_effects)
-        else:
-            label, thickness, style, color = self._get_curve_settings(**kwargs)
-            path_effects = [pe.Stroke(linewidth=thickness+0.5,
+            n_settings = self._get_curve_settings(**normal)
+            i_settings = self._get_curve_settings(**inverse)
+            l_norm, l_inv = label + " normal", label + " inverse"
+            path_effects = [pe.Stroke(linewidth=n_settings['lw']+0.5,
                             foreground='k'), pe.Normal()]
-            plt.plot(betas, alphas, c=color, label=label, lw=thickness,
-                     ls=style, path_effects=path_effects, figure=self.figure)
+            plt.plot(bs_up, as_up, label=l_norm, path_effects=path_effects,
+                     **n_settings)
+            # Bottom line is inverse mecanism.
+            path_effects = [pe.Stroke(linewidth=i_settings['lw']+0.5,
+                            foreground='k'), pe.Normal()]
+            plt.plot(bs_dw, as_dw, label=l_inv, path_effects=path_effects,
+                     **i_settings)
+        else:
+            settings = self._get_curve_settings(**kwargs)
+            path_effects = [pe.Stroke(linewidth=settings['lw']+0.5,
+                            foreground='k'), pe.Normal()]
+            plt.plot(betas, alphas, label=label, path_effects=path_effects,
+                     **settings)
 
         # Get bounding and central points (used by sketch).
         b, a = self._get_centroid(betas, alphas)
