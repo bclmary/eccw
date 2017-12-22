@@ -272,63 +272,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def plot_one(self):  # TODO
         self.plot_core.reset_figure()
         select = self.get_select()
-        
         for curve in select['curves']:
-            if curve['fluids']:
-                params_list = self.params_list_fluids
-            else:
-                params_list = self.params_list_dry
-                self.plot_core.set_no_fluids()
-            settings_type = curve['settings']['type']
-            settings = curve['settings']['value']
-            if settings_type in ('default', 'double'):
-                params = {param: curve[param]['value']
-                          for param in params_list}
-                params['context'] = curve['context']
-                settings['label'] = curve['label']
-                graph_print(params)
-                self.plot_core.set_params(**params)
-                self.plot_core.add_curve(**settings)
-                for point in curve['points']:
-                    params = self._format_point_params(point)
-                    self.plot_core.add_point(**params)
-            elif settings_type == 'range':
-                ranged_parameter = curve['range']
-                range_ = curve[ranged_parameter]['value']
-                if curve['reverse_cmap']:
-                    cmap = get_cmap(settings.pop('colormap')+'_r')
-                else:
-                    cmap = get_cmap(settings.pop('colormap'))
-                Ncolor = len(range_) - 1
-                # Draw vertical or horizontal lines below curves
-                # if points with no bounds.
-                for point in curve['points']:
-                    a, b = point['alpha'], point['beta']
-                    beta = (b['value']
-                            if b['type'] == 'scalar'
-                            and a['value']['min'] == float('-inf')
-                            and a['value']['max'] == float('inf')
-                            else None)
-                    alpha = (a['value']
-                             if a['type'] == 'scalar'
-                             and b['value']['min'] == float('-inf')
-                             and b['value']['max'] == float('inf')
-                             else None)
-                    self.plot_core.add_line(beta=beta, alpha=alpha)
-                # Draw ranged curves.
-                for i, x in enumerate(range_):
-                    params = {param: curve[param]['value']
-                              if param != ranged_parameter else x
-                              for param in params_list}
-                    params['context'] = curve['context']
-                    if curve['auto_label']:
-                        settings['label'] = self.latex_convert[curve['range']] + " = " + str(x)
-                    self.plot_core.set_params(**params)
-                    settings['color'] = cmap(i/Ncolor)
-                    self.plot_core.add_curve(**settings)
-                    for point in curve['points']:
-                        params = self._format_point_params(point)
-                        self.plot_core.add_point(line=False, **params)
+            self._plot_curve(curve)
         for refpoint in select['refpoints']:
             self.plot_core.add_refpoint(**refpoint)
         if select['legend']:
@@ -345,6 +290,73 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def plot_all(self):  # TODO
         graph_print(self.get_params())
 
+    def _plot_curve(self, selected_params):
+        settings_type = selected_params['settings']['type']
+        if settings_type in ('default', 'double'):
+            self._plot_single_curve(selected_params)
+        elif settings_type == 'range':
+            self._plot_ranged_curves(selected_params)
+
+    def _plot_single_curve(self, selected_params):
+        if selected_params['fluids']:
+            params_list = self.params_list_fluids
+        else:
+            params_list = self.params_list_dry
+            self.plot_core.set_no_fluids()
+        params = {param: selected_params[param]['value']
+                  for param in params_list}
+        params['context'] = selected_params['context']
+        graphic_settings = selected_params['settings']['value']
+        graphic_settings['label'] = selected_params['label']
+        self.plot_core.set_params(**params)
+        self.plot_core.add_curve(**graphic_settings)
+        for point in selected_params['points']:
+            params = self._format_point_params(point)
+            self.plot_core.add_point(**params)
+
+    def _plot_ranged_curves(self, selected_params):
+        if selected_params['fluids']:
+            params_list = self.params_list_fluids
+        else:
+            params_list = self.params_list_dry
+            self.plot_core.set_no_fluids()
+        graphic_settings = selected_params['settings']['value']
+        ranged_parameter = selected_params['range']
+        range_ = selected_params[ranged_parameter]['value']
+        if selected_params['reverse_cmap']:
+            cmap = get_cmap(graphic_settings.pop('colormap')+'_r')
+        else:
+            cmap = get_cmap(graphic_settings.pop('colormap'))
+        Ncolor = len(range_) - 1
+        # Draw vertical or horizontal lines below curves
+        # if points with no bounds.
+        for point in selected_params['points']:
+            a, b = point['alpha'], point['beta']
+            beta = (b['value']
+                    if b['type'] == 'scalar'
+                    and a['value']['min'] == float('-inf')
+                    and a['value']['max'] == float('inf')
+                    else None)
+            alpha = (a['value']
+                     if a['type'] == 'scalar'
+                     and b['value']['min'] == float('-inf')
+                     and b['value']['max'] == float('inf')
+                     else None)
+            self.plot_core.add_line(beta=beta, alpha=alpha)
+        # Draw ranged curves.
+        for i, x in enumerate(range_):
+            params = {param: selected_params[param]['value']
+                      if param != ranged_parameter else x
+                      for param in params_list}
+            params['context'] = selected_params['context']
+            if selected_params['auto_label'] is True:
+                graphic_settings['label'] = self.latex_convert[selected_params['range']] + " = " + str(x)
+            self.plot_core.set_params(**params)
+            graphic_settings['color'] = cmap(i/Ncolor)
+            self.plot_core.add_curve(**graphic_settings)
+            for point in selected_params['points']:
+                params = self._format_point_params(point)
+                self.plot_core.add_point(line=False, **params)
 
 if __name__ == "__main__":
     import sys

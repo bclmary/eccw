@@ -94,7 +94,7 @@
 			<fluids>False</fluids>
 			<range>phiD</range>
 			<split_curves>False</split_curves>
-			<auto_label>True</auto_label>
+			<auto_label>False</auto_label>
 			<reverse_cmap>False</reverse_cmap>
 			<phiB>
 				<scalar>30.0</scalar>
@@ -211,35 +211,139 @@
 				</alpha>
 				<style>circle</style>
 				<size>3.0</size>
-				<label></label>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
+				<label></label>
 				<sketch>False</sketch>
 			</points>
+		</curves>
+		<curves>
+			<label>Curve 1</label>
+			<context>Compression</context>
+			<fluids>False</fluids>
+			<range></range>
+			<split_curves>True</split_curves>
+			<auto_label>False</auto_label>
+			<reverse_cmap>False</reverse_cmap>
+			<phiB>
+				<scalar>30.0</scalar>
+				<range>
+					<begin></begin>
+					<step></step>
+					<end></end>
+				</range>
+				<focus>scalar</focus>
+				<id>phiB</id>
+			</phiB>
+			<phiD>
+				<scalar>25.0</scalar>
+				<range>
+					<begin></begin>
+					<step></step>
+					<end></end>
+				</range>
+				<focus>scalar</focus>
+				<id>phiD</id>
+			</phiD>
+			<delta_lambdaB>
+				<scalar></scalar>
+				<range>
+					<begin></begin>
+					<step></step>
+					<end></end>
+				</range>
+				<focus>scalar</focus>
+				<id>delta_lambdaB</id>
+			</delta_lambdaB>
+			<delta_lambdaD>
+				<scalar></scalar>
+				<range>
+					<begin></begin>
+					<step></step>
+					<end></end>
+				</range>
+				<focus>scalar</focus>
+				<id>delta_lambdaD</id>
+			</delta_lambdaD>
+			<rho_f>
+				<scalar></scalar>
+				<range>
+					<begin></begin>
+					<step></step>
+					<end></end>
+				</range>
+				<focus>scalar</focus>
+				<id>rho_f</id>
+			</rho_f>
+			<rho_sr>
+				<scalar></scalar>
+				<range>
+					<begin></begin>
+					<step></step>
+					<end></end>
+				</range>
+				<focus>scalar</focus>
+				<id>rho_sr</id>
+			</rho_sr>
+			<settings>
+				<focus>double</focus>
+				<default>
+					<thickness>1.0</thickness>
+					<color>0.0</color>
+					<color>0.0</color>
+					<color>0.0</color>
+					<color>1.0</color>
+					<style>continuous</style>
+				</default>
+				<double>
+					<normal>
+						<thickness>3.0</thickness>
+						<color>0.0</color>
+						<color>0.0</color>
+						<color>1.0</color>
+						<color>1.0</color>
+						<style>continuous</style>
+					</normal>
+					<inverse>
+						<thickness>3.0</thickness>
+						<color>1.0</color>
+						<color>0.0</color>
+						<color>0.0</color>
+						<color>1.0</color>
+						<style>continuous</style>
+					</inverse>
+				</double>
+				<range>
+					<thickness>1.0</thickness>
+					<colormap>Gray</colormap>
+					<style>continuous</style>
+				</range>
+			</settings>
+			<points></points>
 		</curves>
 		<refpoints>
 			<beta>-4.0</beta>
 			<alpha>1.0</alpha>
 			<style>circle</style>
 			<size>5.0</size>
+			<color>0.0</color>
+			<color>0.0</color>
+			<color>1.0</color>
+			<color>1.0</color>
 			<label></label>
-			<color>0.0</color>
-			<color>0.0</color>
-			<color>1.0</color>
-			<color>1.0</color>
 		</refpoints>
 		<refpoints>
 			<beta>-2.0</beta>
 			<alpha>-2.0</alpha>
 			<style>star</style>
 			<size>7.0</size>
+			<color>0.3333333333333333</color>
+			<color>0.3333333333333333</color>
+			<color>1.0</color>
+			<color>1.0</color>
 			<label></label>
-			<color>0.3333333333333333</color>
-			<color>0.3333333333333333</color>
-			<color>1.0</color>
-			<color>1.0</color>
 		</refpoints>
 		<legend>True</legend>
 		<title>True</title>
