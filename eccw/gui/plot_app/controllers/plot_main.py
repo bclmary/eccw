@@ -343,7 +343,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             params = self._format_point_params(point)
             self.plot_core.add_line(**params)
         # Ghost element that will be used as a title in the legend.
-        # self.plot_core.add_point(style='', label=selected_params["label"])
+        self.plot_core.add_point(style='', label=selected_params["label"])
         # Draw ranged curves.
         for i, x in enumerate(range_):
             params = {
@@ -356,8 +356,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             # graphic_settings['color'] = cmap(i/number_of_color)
             graphic_settings.update({
                 'label': (latex_ranged_parameter + " = " + str(x)
-                          if selected_params['auto_label'] is True
-                          else ''),
+                          if selected_params['label'] else ''),
                 'color': cmap(i/number_of_color)
                 })
             self.plot_core.add_curve(**graphic_settings)

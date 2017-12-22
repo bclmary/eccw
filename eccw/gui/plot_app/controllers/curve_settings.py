@@ -88,8 +88,6 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         # Booleans
         self.split_curves = Wrapper(False, process=lambda x: eval(str(x)),
                             action=self.checkBox_splittedCurves.setChecked)
-        self.auto_label = Wrapper(False, process=lambda x: eval(str(x)),
-                            action=self.checkBox_autoLabel.setChecked)
         self.reverse_cmap = Wrapper(False, process=lambda x: eval(str(x)),
                             action=self.checkBox_reverseColormap.setChecked)
         # Define events
@@ -99,12 +97,10 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.checkBox_splittedCurves.clicked.connect(self._auto_set_settings)
         self.groupBox_fluids.clicked.connect(self._fluids_changed)
         self.checkBox_splittedCurves.clicked.connect(self._split_curve_changed)
-        self.checkBox_autoLabel.clicked.connect(self._auto_label_changed)
         self.checkBox_reverseColormap.clicked.connect(self._reverse_cm_changed)
         tmp = lambda elt: lambda: self._there_can_be_only_one(elt)
         for elt in self.param_object_list:
             elt.pushButton.clicked.connect(tmp(elt))
-        # self.checkBox_autoLabel.clicked.connect(self._set_auto_label)
         self.pushButton_kill.clicked.connect(self._set_closed)
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
@@ -113,7 +109,6 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
             ("fluids",        self.fluids),
             ("range",         self.range),
             ("split_curves",  self.split_curves),
-            ("auto_label",    self.auto_label),
             ("reverse_cmap",  self.reverse_cmap),
             ("phiB",          self.phiB),
             ("phiD",          self.phiD),
@@ -168,15 +163,10 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
         if self._is_range_activated():
             self.settings.set_visible_manual("range")
             self.checkBox_splittedCurves.setEnabled(False)
-            self.checkBox_autoLabel.setEnabled(True)
             self.checkBox_reverseColormap.setEnabled(True)
-            self.label.setEnabled(False)
-            # self._set_auto_label()
         else:
             self.checkBox_splittedCurves.setEnabled(True)
-            self.checkBox_autoLabel.setEnabled(False)
             self.checkBox_reverseColormap.setEnabled(False)
-            self.label.setEnabled(True)
             if self.checkBox_splittedCurves.isChecked():
                 self.settings.set_visible_manual("double")
             else:
@@ -188,14 +178,8 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
     def _split_curve_changed(self):
         self.split_curves.value = self.checkBox_splittedCurves.isChecked()
 
-    def _auto_label_changed(self):
-        self.auto_label.value = self.checkBox_autoLabel.isChecked()
-
     def _reverse_cm_changed(self):
         self.reverse_cmap.value = self.checkBox_reverseColormap.isChecked()
-
-    # def _set_auto_label(self):
-    #     self.label.setDisabled(self.checkBox_autoLabel.isChecked())
 
     # Curve Points management.
 

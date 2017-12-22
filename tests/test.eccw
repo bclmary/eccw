@@ -94,7 +94,6 @@
 			<fluids>False</fluids>
 			<range>phiD</range>
 			<split_curves>False</split_curves>
-			<auto_label>False</auto_label>
 			<reverse_cmap>False</reverse_cmap>
 			<phiB>
 				<scalar>30.0</scalar>
@@ -225,7 +224,6 @@
 			<fluids>False</fluids>
 			<range></range>
 			<split_curves>True</split_curves>
-			<auto_label>False</auto_label>
 			<reverse_cmap>False</reverse_cmap>
 			<phiB>
 				<scalar>30.0</scalar>
