@@ -44,9 +44,11 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.curves = WrapperList()
         self.refpoints = WrapperList()
         self.legend = Wrapper(False, process=lambda x: eval(str(x)),
-                              action=self.radioButton_legend.setChecked)
+                                action=self.radioButton_legend.setChecked)
+        self.range_point = Wrapper(False, process=lambda x: eval(str(x)),
+                                action=self.radioButton_pointRange.setChecked)
         self.title = Wrapper(False, process=lambda x: eval(str(x)),
-                             action=self.radioButton_title.setChecked)
+                                action=self.radioButton_title.setChecked)
         # Init events
         self.pushButton_addRefPoint.clicked.connect(self.add_ref_point)
         self.pushButton_killAllRefPoints.clicked.connect(
@@ -55,6 +57,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.pushButton_addCurve.clicked.connect(self.add_curve_tab)
         self.pushButton_killAllCurves.clicked.connect(self.kill_all_curves)
         self.radioButton_legend.clicked.connect(self._set_legend)
+        self.radioButton_pointRange.clicked.connect(self._set_range_point)
         self.radioButton_title.clicked.connect(self._set_title)
         self.pushButton_plotOne.clicked.connect(self.plot_one)
         self.pushButton_plotAll.clicked.connect(self.plot_all)
@@ -64,10 +67,11 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                                    'delta_lambdaD', 'rho_f', 'rho_sr')
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
-            ("curves",    self.curves),
-            ("refpoints", self.refpoints),
-            ("legend",    self.legend),
-            ("title",     self.title)
+            ("curves",      self.curves),
+            ("refpoints",   self.refpoints),
+            ("legend",      self.legend),
+            ("range_point", self.range_point),
+            ("title",       self.title)
         ])
         # Additional variables
         self.latex_convert = {
@@ -101,6 +105,9 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     def _set_legend(self):
         self.legend.value = self.radioButton_legend.isChecked()
+
+    def _set_range_point(self):
+        self.range_point.value = self.radioButton_pointRange.isChecked()
 
     def _set_title(self):
         self.title.value = self.radioButton_title.isChecked()
@@ -321,7 +328,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         for point in selected_params['points']:
             params = self._format_point_params(point)
             self.plot_core.add_point(**params)
-            self.plot_core.add_line(**params)
+            if self.range_point.value is True:
+                self.plot_core.add_line(**params)
 
     def _plot_ranged_curves(self, selected_params):
         if selected_params['fluids']:
@@ -339,9 +347,10 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             cmap = get_cmap(graphic_settings.pop('colormap'))
         number_of_color = len(range_) - 1
         # Draw vertical or horizontal lines that visualize point intervals
-        for point in selected_params['points']:
-            params = self._format_point_params(point)
-            self.plot_core.add_line(**params)
+        if self.range_point.value is True:
+            for point in selected_params['points']:
+                params = self._format_point_params(point)
+                self.plot_core.add_line(**params)
         # Ghost element that will be used as a title in the legend.
         self.plot_core.add_point(style='', label=selected_params["label"])
         # Draw ranged curves.

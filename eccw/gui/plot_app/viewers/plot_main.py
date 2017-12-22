@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(1032, 350)
+        Form.resize(1032, 381)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -175,6 +175,9 @@ class Ui_Form(object):
         self.radioButton_legend.setAutoExclusive(False)
         self.radioButton_legend.setObjectName(_fromUtf8("radioButton_legend"))
         self.verticalLayout_5.addWidget(self.radioButton_legend)
+        self.radioButton_pointRange = QtGui.QRadioButton(self.widget_showParams)
+        self.radioButton_pointRange.setObjectName(_fromUtf8("radioButton_pointRange"))
+        self.verticalLayout_5.addWidget(self.radioButton_pointRange)
         self.radioButton_title = QtGui.QRadioButton(self.widget_showParams)
         self.radioButton_title.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.radioButton_title.setAutoExclusive(False)
@@ -225,6 +228,8 @@ class Ui_Form(object):
         self.pushButton_killAllRefPoints.setText(_translate("Form", "Clear all", None))
         self.radioButton_legend.setToolTip(_translate("Form", "Check to add legend on plot", None))
         self.radioButton_legend.setText(_translate("Form", "show legend", None))
+        self.radioButton_pointRange.setToolTip(_translate("Form", "Check to show range as a light gray line under curve points", None))
+        self.radioButton_pointRange.setText(_translate("Form", "show curve point range", None))
         self.radioButton_title.setToolTip(_translate("Form", "Check to add title resuming constant parameters", None))
         self.radioButton_title.setText(_translate("Form", "constant parameters as title", None))
         self.pushButton_plotOne.setToolTip(_translate("Form", "Plot current curve and reference points (Crtl+P)", None))
