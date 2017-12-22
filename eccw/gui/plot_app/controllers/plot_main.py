@@ -256,17 +256,20 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     # Main action !
 
     def _format_point_params(self, point_params):
-        params = dict(point_params)
         if point_params['beta']['type'] == 'scalar':
-            params['beta'] = point_params['beta']['value']
-            params['alpha'] = None
-            params['alpha_min'] = point_params['alpha']['value']['min']
-            params['alpha_max'] = point_params['alpha']['value']['max']
+            params = {
+                'beta':      point_params['beta']['value'],
+                'alpha':     None,
+                'alpha_min': point_params['alpha']['value']['min'],
+                'alpha_max': point_params['alpha']['value']['max'],
+                }
         if point_params['alpha']['type'] == 'scalar':
-            params['beta'] = None
-            params['beta_min'] = point_params['beta']['value']['min']
-            params['beta_max'] = point_params['beta']['value']['max']
-            params['alpha'] = point_params['alpha']['value']
+            params = {
+                'beta': None,
+                'beta_min': point_params['beta']['value']['min'],
+                'beta_max': point_params['beta']['value']['max'],
+                'alpha':    point_params['alpha']['value'],
+                }
         return params
 
     def plot_one(self):  # TODO
@@ -303,16 +306,22 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         else:
             params_list = self.params_list_dry
             self.plot_core.set_no_fluids()
-        params = {param: selected_params[param]['value']
-                  for param in params_list}
-        params['context'] = selected_params['context']
-        graphic_settings = selected_params['settings']['value']
-        graphic_settings['label'] = selected_params['label']
+        params = {
+            'context': selected_params['context'],
+            **{param: selected_params[param]['value'] for param in params_list}
+            }
+        graphic_settings = {
+            'label': selected_params['label'],
+            **selected_params['settings']['value']
+            }
         self.plot_core.set_params(**params)
         self.plot_core.add_curve(**graphic_settings)
+        # Draw points on line
+        # and vertical or horizontal lines that visualize point intervals.
         for point in selected_params['points']:
             params = self._format_point_params(point)
             self.plot_core.add_point(**params)
+            self.plot_core.add_line(**params)
 
     def _plot_ranged_curves(self, selected_params):
         if selected_params['fluids']:
@@ -322,41 +331,39 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             self.plot_core.set_no_fluids()
         graphic_settings = selected_params['settings']['value']
         ranged_parameter = selected_params['range']
+        latex_ranged_parameter = self.latex_convert[ranged_parameter]
         range_ = selected_params[ranged_parameter]['value']
         if selected_params['reverse_cmap']:
             cmap = get_cmap(graphic_settings.pop('colormap')+'_r')
         else:
             cmap = get_cmap(graphic_settings.pop('colormap'))
-        Ncolor = len(range_) - 1
-        # Draw vertical or horizontal lines below curves
-        # if points with no bounds.
+        number_of_color = len(range_) - 1
+        # Draw vertical or horizontal lines that visualize point intervals
         for point in selected_params['points']:
-            a, b = point['alpha'], point['beta']
-            beta = (b['value']
-                    if b['type'] == 'scalar'
-                    and a['value']['min'] == float('-inf')
-                    and a['value']['max'] == float('inf')
-                    else None)
-            alpha = (a['value']
-                     if a['type'] == 'scalar'
-                     and b['value']['min'] == float('-inf')
-                     and b['value']['max'] == float('inf')
-                     else None)
-            self.plot_core.add_line(beta=beta, alpha=alpha)
+            params = self._format_point_params(point)
+            self.plot_core.add_line(**params)
+        # Ghost element that will be used as a title in the legend.
+        # self.plot_core.add_point(style='', label=selected_params["label"])
         # Draw ranged curves.
         for i, x in enumerate(range_):
-            params = {param: selected_params[param]['value']
-                      if param != ranged_parameter else x
-                      for param in params_list}
-            params['context'] = selected_params['context']
-            if selected_params['auto_label'] is True:
-                graphic_settings['label'] = self.latex_convert[selected_params['range']] + " = " + str(x)
+            params = {
+                'context': selected_params['context'],
+                **{param: selected_params[param]['value']
+                    if param != ranged_parameter else x
+                    for param in params_list}
+                }
             self.plot_core.set_params(**params)
-            graphic_settings['color'] = cmap(i/Ncolor)
+            # graphic_settings['color'] = cmap(i/number_of_color)
+            graphic_settings.update({
+                'label': (latex_ranged_parameter + " = " + str(x)
+                          if selected_params['auto_label'] is True
+                          else ''),
+                'color': cmap(i/number_of_color)
+                })
             self.plot_core.add_curve(**graphic_settings)
             for point in selected_params['points']:
                 params = self._format_point_params(point)
-                self.plot_core.add_point(line=False, **params)
+                self.plot_core.add_point(**params)
 
 if __name__ == "__main__":
     import sys

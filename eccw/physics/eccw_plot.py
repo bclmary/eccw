@@ -307,21 +307,32 @@ class EccwPlot(EccwCompute):
         self._point_left = (bs_up[0], as_up[0])
         self._point_right = (bs_up[-1], as_up[-1])
 
-    def add_point(self, beta=None, alpha=None, **kwargs):
-        label = kwargs.get('label', '')
-        size = kwargs.get('size', 5)
-        style = kwargs.get('style', 'o')
-        color = kwargs.get('color', 'k')
+    def add_point(self, **kwargs):
+        beta = kwargs.get('beta', None)
+        alpha = kwargs.get('alpha', None)
         sketch = kwargs.get('sketch', False)
-        line = kwargs.get('line', True)
-        path_effects = [pe.PathPatchEffect(edgecolor='k', facecolor=color,
-                        linewidth=0.5)]
+        # line = kwargs.get('line', True)
+        settings = {
+            'linestyle':    '',
+            'marker':       kwargs.get('style', 'o'),
+            'markersize':   kwargs.get('size', 5),
+            'label':        kwargs.get('label', ''),
+            'path_effects': [
+                pe.PathPatchEffect(
+                    edgecolor='k',
+                    facecolor=kwargs.get('color', 'k'),
+                    linewidth=0.5
+                    )
+                ],
+            'figure':       self.figure
+            }
         betas, alphas = [], []
+        pinf, minf = float('inf'), float('-inf')
         if beta is not None:
-            a_min = kwargs.get('alpha_min', float('-inf'))
-            a_max = kwargs.get('alpha_max', float('inf'))
-            if a_min == float('-inf') and a_max == float('inf') and line:
-                plt.axvline(beta, lw=1.5, c='gray', figure=self.figure)
+            a_min = kwargs.get('alpha_min', minf)
+            a_max = kwargs.get('alpha_max', pinf)
+            # if a_min == minf and a_max == pinf and line:
+            #     plt.axvline(beta, lw=1.5, c='gray', figure=self.figure)
             self.beta = beta
             alpha1, alpha2 = self.compute_alpha()
             self._test_value(alpha1, beta, alphas, betas, a_min, a_max)
@@ -331,10 +342,10 @@ class EccwPlot(EccwCompute):
                     self.alpha = alpha
                     self.add_sketch(**kwargs)
         elif alpha is not None:
-            b_min = kwargs.get('beta_min', float('-inf'))
-            b_max = kwargs.get('beta_max', float('inf'))
-            if b_min == float('-inf') and b_max == float('inf') and line:
-                plt.axhline(alpha, lw=1, c='gray', figure=self.figure)
+            b_min = kwargs.get('beta_min', minf)
+            b_max = kwargs.get('beta_max', pinf)
+            # if b_min == minf and b_max == pinf and line:
+            #     plt.axhline(alpha, lw=1, c='gray', figure=self.figure)
             self.alpha = alpha
             beta1, beta2 = self.compute_beta()
             self._test_value(beta1, alpha, betas, alphas, b_min, b_max)
@@ -343,21 +354,51 @@ class EccwPlot(EccwCompute):
                 for beta in betas:
                     self.beta = beta
                     self.add_sketch(**kwargs)
-        plt.plot(betas, alphas, ls='', marker=style, ms=size, label=label,
-                 path_effects=path_effects, figure=self.figure)
+        plt.plot(betas, alphas, **settings)
 
     def add_line(self, **kwargs):
         beta = kwargs.get('beta', None)
         alpha = kwargs.get('alpha', None)
-        thickness = kwargs.get('thickness', 1.5)
-        style = kwargs.get('style', '-')
-        color = kwargs.get('color', 'gray')
+        setting = {
+            'ls':     '-',
+            'lw':     2.,
+            'c':      (0.8, 0.8, 0.8, 1),
+            'zorder': -10,
+            'figure': self.figure
+            }
+        xmin, xmax = self.axe.get_xlim()
+        ymin, ymax = self.axe.get_ylim()
+        pinf, minf = float('inf'), float('-inf')
         if beta is not None:
-            plt.axvline(beta, ls=style, lw=thickness, c=color,
-                        figure=self.figure)
+            a_min = kwargs.get('alpha_min', minf)
+            a_max = kwargs.get('alpha_max', pinf)
+            if a_min == minf and a_max == pinf:
+                plt.axvline(beta, **setting)
+            elif a_min == minf:
+                x = (a_max - xmin) / (xmax - xmin) - 0.1
+                plt.axvline(beta, xmax=x, **setting)
+                plt.plot((beta, beta), (xmin, a_max), **setting)
+            elif a_max == pinf:
+                x = (a_min - xmin) / (xmax - xmin) + 0.1
+                plt.axvline(beta, xmin=x, **setting)
+                plt.plot((beta, beta), (a_min, xmax), **setting)
+            else:
+                plt.plot((beta, beta), (a_min, a_max), **setting)
         if alpha is not None:
-            plt.axhline(alpha, ls=style, lw=thickness, c=color,
-                        figure=self.figure)
+            b_min = kwargs.get('beta_min', minf)
+            b_max = kwargs.get('beta_max', pinf)
+            if b_min == minf and b_max == pinf:
+                plt.axhline(alpha, **setting)
+            elif b_min == minf:
+                x = (b_max - xmin) / (xmax - xmin) - 0.1
+                plt.axhline(alpha, xmax=x, **setting)
+                plt.plot((xmin, b_max), (alpha, alpha), **setting)
+            elif b_max == pinf:
+                x = (b_min - xmin) / (xmax - xmin) + 0.1
+                plt.axhline(alpha, xmin=x, **setting)
+                plt.plot((b_min, xmax), (alpha, alpha), **setting)
+            else:
+                plt.plot((b_min, b_max), (alpha, alpha), **setting)
 
     def add_sketch(self, **kwargs):
         """Draw section sketch at current value [beta, alpha].
@@ -510,9 +551,10 @@ class EccwPlot(EccwCompute):
 if __name__ == "__main__":
 
     foo = EccwPlot(phiB=30, phiD=10, context="c")
+    foo.add_point(style='', label=r"$\bf{ghost}$")
     foo.add_curve(color=(0.1, 1, 0.1, 1), label="compression", thickness=3)
     foo.add_point(beta=20, style='s', sketch=True)  # alpha=[-9.7921, 29.5148]
-    foo.add_point(alpha=10, style='^', size=8, sketch=True, beta_min=50)
+    foo.add_point(alpha=10, style='^', size=8, sketch=True, beta_min=50, color='r')
     # foo.show_params()
 
     foo.context = 'e'
@@ -523,8 +565,8 @@ if __name__ == "__main__":
         inverse={'color': (1, 0, 0, 1), 'label': "extension inverse"},
         normal={'color': (0, 0, 1, 1), 'label': "extension normal"}
         )
-    foo.add_line(alpha=-20, thickness=2, style=':')
-    foo.add_point(alpha=-8, style='o', color='c', line=False)  # , beta_max=60)
+    foo.add_line(alpha=20, beta_max=20)
+    foo.add_point(alpha=-8, style='o', color='y')  # , beta_max=60)
     foo.title = "my self.title"
     foo.add_title("my title")
     foo.add_refpoint(beta=0, alpha=0, color="w", label='star', style='*',

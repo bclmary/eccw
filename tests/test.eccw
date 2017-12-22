@@ -192,7 +192,7 @@
 			</settings>
 			<points>
 				<beta>
-					<scalar>0.0</scalar>
+					<scalar>5.0</scalar>
 					<bound>
 						<min>-inf</min>
 						<max>inf</max>
@@ -321,7 +321,34 @@
 					<style>continuous</style>
 				</range>
 			</settings>
-			<points></points>
+			<points>
+				<beta>
+					<scalar></scalar>
+					<bound>
+						<min>10.0</min>
+						<max>40.0</max>
+					</bound>
+					<focus>bound</focus>
+					<id></id>
+				</beta>
+				<alpha>
+					<scalar>-10.0</scalar>
+					<bound>
+						<min>-inf</min>
+						<max>inf</max>
+					</bound>
+					<focus>scalar</focus>
+					<id></id>
+				</alpha>
+				<style>circle</style>
+				<size>5.0</size>
+				<color>0.0</color>
+				<color>0.0</color>
+				<color>0.0</color>
+				<color>1.0</color>
+				<label></label>
+				<sketch>False</sketch>
+			</points>
 		</curves>
 		<refpoints>
 			<beta>-4.0</beta>
