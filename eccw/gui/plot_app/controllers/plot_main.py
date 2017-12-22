@@ -93,7 +93,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.kill_all_refpoints()
         N = len(kwargs['curves'])
         for i in range(N):
-            self.add_curve_tab(kwargs['curves'][i]['label'])
+            self.add_curve_tab(label=kwargs['curves'][i]['label'])
         N = len(kwargs['refpoints'])
         for i in range(N):
             self.add_ref_point()
@@ -163,7 +163,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     def add_curve_tab(self, label=None):
         self.curve_count += 1
-        name = "Curve "+str(self.curve_count) if label is None else label
+        name = ("Curve " + str(self.curve_count) if label in (None, False)
+                else label)
         newCurve = CurveController(label=name)
         self.curves.list.append(newCurve)
         ncurve = len(self.curves.list)
@@ -349,7 +350,7 @@ if __name__ == "__main__":
     import sys
     from eccw.shared.file_management import EccwFile
     eccwf = EccwFile(filename="../../../../tests/test.eccw")
-    eccwf.show()
+    # eccwf.show()
     params = eccwf.values['plot']
 
     try:
