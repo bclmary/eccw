@@ -61,6 +61,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.radioButton_title.clicked.connect(self._set_title)
         self.pushButton_plotOne.clicked.connect(self.plot_one)
         self.pushButton_plotAll.clicked.connect(self.plot_all)
+        self.tabWidget.tabBar().tabMoved.connect(self._tab_moved)
         # Parameters list for dry and fluids cases.
         self.params_list_dry = ('phiB', 'phiD')
         self.params_list_fluids = ('phiB', 'phiD', 'delta_lambdaB',
@@ -111,6 +112,10 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     def _set_title(self):
         self.title.value = self.radioButton_title.isChecked()
+
+    def _tab_moved(self):
+        self.curves.list = [self.tabWidget.widget(i)
+                            for i in range(self.tabWidget.count())]
 
     def import_ref_points(self):
         """Add ref points using data from csv file.
