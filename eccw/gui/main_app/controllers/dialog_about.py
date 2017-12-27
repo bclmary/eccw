@@ -4,7 +4,7 @@
 
 from PyQt4 import QtGui
 
-from eccw.gui.main_app.viewers.dialogue_about import Ui_Dialog_About
+from eccw.gui.main_app.viewers.dialog_about import Ui_Dialog_About
 import eccw.version as version
 import eccw.authors as authors
 

@@ -10,6 +10,7 @@ import csv
 from eccw.gui.plot_app.viewers.plot_main import Ui_Form
 from eccw.gui.plot_app.controllers.curve_settings import CurveController
 from eccw.gui.plot_app.controllers.point_settings import RefPointSettings
+from eccw.gui.plot_app.controllers.dialog_errors import Errors
 from eccw.gui.shared.wrappers import Wrapper, WrapperDict, WrapperList
 # from eccw.shared.file_management import EccwFile
 from eccw.physics.eccw_plot import EccwPlot
@@ -66,6 +67,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.params_list_dry = ('phiB', 'phiD')
         self.params_list_fluids = ('phiB', 'phiD', 'delta_lambdaB',
                                    'delta_lambdaD', 'rho_f', 'rho_sr')
+        self.params_list_refpoints = ('alpha', 'beta')
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
             ("curves",      self.curves),
@@ -84,6 +86,16 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             "delta_lambdaD": r"$\Delta \lambda_{D}$",
             "rho_f":         r"\rho_{f}$",
             "rho_sr":        r"\rho_{sr}$"
+        }
+        self.html_convert = {
+            "alpha":         "α",
+            "beta":          "β",
+            "phiB":          "Φ<sub>B</sub>",
+            "phiD":          "Φ<sub>D</sub>",
+            "delta_lambdaB": "∆λ<sub>B</sub>",
+            "delta_lambdaD": "∆λ<sub>D</sub>",
+            "rho_f":         "ρ<sub>f</sub>",
+            "rho_sr":        "ρ<sub>sr</sub>"
         }
         # Fill values with kwargs
         if kwargs:
@@ -267,20 +279,56 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     # Main action !
 
-    def plot_all(self):  # TODO
-        self.plot_core.reset_figure()
-        select = self.get_select()
-        for curve in select['curves']:
-            self._plot_curve(curve)
-        self._plot_other_stuffs(select)
+    def plot_all(self):
+        if len(self.curves.list) > 0:
+            self.plot_core.reset_figure()
+            selected_params = self.get_select()
+            errors = self._check_params(selected_params)
+            if not errors:
+                for curve in selected_params['curves']:
+                    self._plot_curve(curve)
+                self._plot_other_stuffs(selected_params)
+            else:
+                self.errors = Errors(errors)
 
-    def plot_one(self):  # TODO
-        self.plot_core.reset_figure()
-        select = self.get_select()
-        i = self.tabWidget.currentIndex()
-        curve = select['curves'][i]
-        self._plot_curve(curve)
-        self._plot_other_stuffs(select)
+    def plot_one(self):
+        if len(self.curves.list) > 0:
+            self.plot_core.reset_figure()
+            selected_params = self.get_select()
+            i = self.tabWidget.currentIndex()
+            curve = selected_params['curves'][i]
+            errors = self._check_params(selected_params, index=i)
+            if not errors:
+                self._plot_curve(curve)
+                self._plot_other_stuffs(selected_params)
+            else:
+                self.errors = Errors(errors)
+
+    def _check_params(self, selected_params, index=None):
+        errors = ""
+        message = " gets empty or invalid value<br/>"
+        iterable = [index] if index else range(len(self.curves.list))
+        for i in iterable:
+            error = ""
+            curve = selected_params['curves'][i]
+            for p_name in self.params_list_dry:
+                if curve[p_name]["value"] is None:
+                    error += self.html_convert[p_name] + message
+            if curve['fluids']:
+                for p_name in self.params_list_fluids:
+                    if curve[p_name]["value"] is None:
+                        error += self.html_convert[p_name] + message
+            if error:
+                errors += "<b>" + curve['label'] + "</b><br/>" + error
+        for i, refpoints in enumerate(selected_params['refpoints']):
+            error = ""
+            for p_name in self.params_list_refpoints:
+                if refpoints[p_name] is None:
+                    error += self.html_convert[p_name] + message
+            if error:
+                label = refpoints['label'] or i + 1
+                errors += "<b>Reference points %s</b><br/>" % (label) + error
+        return errors
 
     def _plot_other_stuffs(self, selected_params):
         for refpoint in selected_params['refpoints']:
@@ -320,9 +368,10 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def _plot_curve(self, selected_params):
         settings_type = selected_params['settings']['type']
         if settings_type in ('default', 'double'):
-            self._plot_single_curve(selected_params)
+            out = self._plot_single_curve(selected_params)
         elif settings_type == 'range':
-            self._plot_ranged_curves(selected_params)
+            out = self._plot_ranged_curves(selected_params)
+        return out
 
     def _plot_single_curve(self, selected_params):
         if selected_params['fluids']:
@@ -340,6 +389,12 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             }
         self.plot_core.set_params(**params)
         self.plot_core.add_curve(**graphic_settings)
+        # try:
+        #     self.plot_core.set_params(**params)
+        #     self.plot_core.add_curve(**graphic_settings)
+        # except ValueError:
+        #     self.errors = Errors("")
+        #     return False
         # Draw points on line
         # and vertical or horizontal lines that visualize point intervals.
         for point in selected_params['points']:

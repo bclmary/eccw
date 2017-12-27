@@ -2,7 +2,7 @@
 <session>
 	<calculator>
 		<context>Compression</context>
-		<fluids>False</fluids>
+		<fluids>True</fluids>
 		<focus>alpha</focus>
 		<range></range>
 		<alpha>
@@ -46,7 +46,7 @@
 			<id>phiD</id>
 		</phiD>
 		<delta_lambdaB>
-			<scalar></scalar>
+			<scalar>0.5</scalar>
 			<range>
 				<begin></begin>
 				<step></step>
@@ -56,7 +56,7 @@
 			<id>delta_lambdaB</id>
 		</delta_lambdaB>
 		<delta_lambdaD>
-			<scalar></scalar>
+			<scalar>0.1</scalar>
 			<range>
 				<begin></begin>
 				<step></step>
@@ -66,7 +66,7 @@
 			<id>delta_lambdaD</id>
 		</delta_lambdaD>
 		<rho_f>
-			<scalar></scalar>
+			<scalar>1000.0</scalar>
 			<range>
 				<begin></begin>
 				<step></step>
@@ -76,7 +76,7 @@
 			<id>rho_f</id>
 		</rho_f>
 		<rho_sr>
-			<scalar></scalar>
+			<scalar>3500.0</scalar>
 			<range>
 				<begin></begin>
 				<step></step>
@@ -208,20 +208,20 @@
 					<focus>bound</focus>
 					<id></id>
 				</alpha>
+				<style>circle</style>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
-				<style>circle</style>
-				<size>3.0</size>
 				<label>some</label>
+				<size>3.0</size>
 				<sketch>False</sketch>
 			</points>
 		</curves>
 		<curves>
 			<label>Curve 1</label>
 			<context>Compression</context>
-			<fluids>False</fluids>
+			<fluids>True</fluids>
 			<range></range>
 			<split_curves>True</split_curves>
 			<reverse_cmap>False</reverse_cmap>
@@ -246,7 +246,7 @@
 				<id>phiD</id>
 			</phiD>
 			<delta_lambdaB>
-				<scalar></scalar>
+				<scalar>0.5</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -256,7 +256,7 @@
 				<id>delta_lambdaB</id>
 			</delta_lambdaB>
 			<delta_lambdaD>
-				<scalar></scalar>
+				<scalar>0.1</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -266,7 +266,7 @@
 				<id>delta_lambdaD</id>
 			</delta_lambdaD>
 			<rho_f>
-				<scalar></scalar>
+				<scalar>1000.0</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -276,7 +276,7 @@
 				<id>rho_f</id>
 			</rho_f>
 			<rho_sr>
-				<scalar></scalar>
+				<scalar>3500.0</scalar>
 				<range>
 					<begin></begin>
 					<step></step>
@@ -338,37 +338,37 @@
 					<focus>scalar</focus>
 					<id></id>
 				</alpha>
+				<style>square</style>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
-				<style>square</style>
-				<size>5.0</size>
 				<label>square point</label>
+				<size>5.0</size>
 				<sketch>False</sketch>
 			</points>
 		</curves>
 		<refpoints>
 			<beta>-4.0</beta>
 			<alpha>1.0</alpha>
-			<color>0.0</color>
-			<color>0.0</color>
-			<color>1.0</color>
-			<color>1.0</color>
 			<style>circle</style>
-			<size>5.0</size>
+			<color>0.0</color>
+			<color>0.0</color>
+			<color>1.0</color>
+			<color>1.0</color>
 			<label></label>
+			<size>5.0</size>
 		</refpoints>
 		<refpoints>
 			<beta>-2.0</beta>
 			<alpha>-2.0</alpha>
-			<color>0.3333333333333333</color>
-			<color>0.3333333333333333</color>
-			<color>1.0</color>
-			<color>1.0</color>
 			<style>star</style>
-			<size>7.0</size>
+			<color>0.3333333333333333</color>
+			<color>0.3333333333333333</color>
+			<color>1.0</color>
+			<color>1.0</color>
 			<label></label>
+			<size>7.0</size>
 		</refpoints>
 		<legend>True</legend>
 		<range_point>True</range_point>

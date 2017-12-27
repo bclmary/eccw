@@ -70,6 +70,7 @@ class EccwPlot(EccwCompute):
 
     def _compute_betas_alphas(self, alphas):
         """Return nested lists of valid values of beta, alpha"""
+        # self._check_params()
         betas_ul, betas_ur, betas_dr, betas_dl = [], [], [], []
         alphas_ul, alphas_ur, alphas_dr, alphas_dl = [], [], [], []
         for alpha in alphas:

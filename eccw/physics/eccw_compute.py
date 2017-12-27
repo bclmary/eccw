@@ -171,12 +171,12 @@ class EccwCompute(object):
     @delta_lambdaB.setter
     def delta_lambdaB(self, value):
         try:
-            if 0. <= value <= 1 - self._density_ratio:
+            # if 0. <= value <= 1 - self._density_ratio:
                 self._delta_lambdaB = value
                 self._set_lambdaB()
-            else:
-                raise ValueError(self._error_message("delta_lambdaB", "value",
-                                 "in [0 : %s]" % (1-self._density_ratio)))
+            # else:
+            #     raise ValueError(self._error_message("delta_lambdaB", "value",
+            #                      "in [0 : %s]" % (1-self._density_ratio)))
         except TypeError:
             raise TypeError(self._error_message("delta_lambdaB", "type",
                                                 "a float"))
@@ -189,17 +189,33 @@ class EccwCompute(object):
     @delta_lambdaD.setter
     def delta_lambdaD(self, value):
         try:
-            if 0. <= value < 1 - self._density_ratio:
+            # if 0. <= value < 1 - self._density_ratio:
                 self._delta_lambdaD = value
                 self._set_lambdaD()
-            else:
-                raise ValueError(self._error_message("delta_lambdaD", "value",
-                                 "in [0 : %s]" % (1-self._density_ratio)))
+            # else:
+            #     raise ValueError(self._error_message("delta_lambdaD", "value",
+            #                      "in [0 : %s]" % (1-self._density_ratio)))
         except TypeError:
             raise TypeError(self._error_message("delta_lambdaD", "type",
                                                 "a float"))
 
     # 'Private' methods #######################################################
+
+    def _check_params(self):
+        out = self.check_params()
+        if out:
+            raise ValueError(out)
+
+    def check_params(self):
+        errors = ""
+        if not (0. <= self._delta_lambdaD < 1 - self._density_ratio):
+            errors += self._error_message("delta_lambdaD", "value",
+                "in [0 : %s]\n" % (1-self._density_ratio))
+        if not (0. <= self._delta_lambdaB <= 1 - self._density_ratio):
+            errors +=  self._error_message("delta_lambdaB", "value",
+                "in [0 : %s]\n" % (1-self._density_ratio))
+        return errors
+
 
     def _error_message(self, who, problem, solution):
         class_name = self.__class__.__name__
@@ -212,15 +228,15 @@ class EccwCompute(object):
         """
         self._density_ratio = (self._rho_f / self._rho_sr if self._rho_sr
                                != 0. else 0.)
-        foo = 1 - self._density_ratio
-        if foo < self.delta_lambdaB:
-            raise ValueError(self._error_message("delta_lambdaB' after setting"
-                                                 "'rho_f' or rho_sr'", "value",
-                                                 "lower than %s" % foo))
-        if foo < self.delta_lambdaD:
-            raise ValueError(self._error_message("delta_lambdaD' after setting"
-                                                 "'rho_f' or rho_sr'", "value",
-                                                 "lower than %s" % foo))
+        # foo = 1 - self._density_ratio
+        # if foo < self.delta_lambdaB:
+        #     raise ValueError(self._error_message("delta_lambdaB' after setting"
+        #                                          "'rho_f' or rho_sr'", "value",
+        #                                          "lower than %s" % foo))
+        # if foo < self.delta_lambdaD:
+        #     raise ValueError(self._error_message("delta_lambdaD' after setting"
+        #                                          "'rho_f' or rho_sr'", "value",
+        #                                          "lower than %s" % foo))
 
     def _set_lambdaD(self):
         self._lambdaD = self._delta_lambdaD + self._density_ratio
@@ -243,6 +259,8 @@ class EccwCompute(object):
         dum = (1. - lambdaD_D2) * sin(phiD) / (1. - lambdaB_D2) / sin(phiB)
         dum += ((lambdaD_D2 - lambdaB_D2) * sin(phiD) * cos(2. * psi0)
                 / (1. - lambdaB_D2))
+        if dum > 1:
+            return 0., 0.  # TODO
         return (asin(dum) - phiD) / 2., (pi - asin(dum) - phiD) / 2.
 
     def _PSI_0(self, alpha_prime, phiB):
@@ -350,6 +368,7 @@ class EccwCompute(object):
         Return the 2 possible solutions in tectonic or  collapsing regime.
         Return two None if no physical solutions.
         """
+        self._check_params()
         betas = list()
         # weird if statement because asin in PSI_D is your ennemy !
         if -self._phiB <= self._alpha_prime <= self._phiB:
@@ -379,6 +398,7 @@ class EccwCompute(object):
         Return the 2 possible solutions in tectonic or  collapsing regime.
         Return two None if no physical solutions.
         """
+        self._check_params()
         beta_dw, beta_up = list(), list()
         # weird if statement because asin in PSI_D is your ennemy !
         if -self._phiB <= self._alpha_prime <= self._phiB:
@@ -406,6 +426,7 @@ class EccwCompute(object):
             return None, None
 
     def compute_alpha(self, deg=True):
+        self._check_params()
         """Get critical topographic slope alpha as ECCW.
         Return the 2 possible solutions in tectonic or collapsing regime.
         Return two None if no physical solutions.
@@ -431,6 +452,7 @@ class EccwCompute(object):
         return alpha1, alpha2
 
     def compute_phiB(self, deg=True):
+        self._check_params()
         self._set_at_runtime = self._runtime_phiB
         # Inital value of phiB for Newton-Rapson solution.
         phiB = pi/7.
@@ -450,6 +472,7 @@ class EccwCompute(object):
         return phiB1, phiB2
 
     def compute_phiD(self, deg=True):
+        self._check_params()
         self._set_at_runtime = self._runtime_phiD
         # Inital value of phiB for Newton-Rapson solution.
         phiD = pi/4.

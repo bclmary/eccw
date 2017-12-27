@@ -6,7 +6,7 @@ from collections import OrderedDict
 from os.path import dirname, realpath
 
 from eccw.gui.main_app.viewers.main import Ui_Form
-from eccw.gui.main_app.controllers.dialogue_about import About
+from eccw.gui.main_app.controllers.dialog_about import About
 from eccw.gui.calculator_app.controllers.calculator_main import (
      CalculatorController)
 from eccw.gui.plot_app.controllers.plot_main import PlotController
