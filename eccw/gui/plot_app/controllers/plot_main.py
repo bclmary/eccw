@@ -262,6 +262,35 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     # Main action !
 
+    def plot_all(self):  # TODO
+        self.plot_core.reset_figure()
+        select = self.get_select()
+        for curve in select['curves']:
+            self._plot_curve(curve)
+        self._plot_other_stuffs(select)
+
+    def plot_one(self):  # TODO
+        self.plot_core.reset_figure()
+        select = self.get_select()
+        i = self.tabWidget.currentIndex()
+        curve = select['curves'][i]
+        self._plot_curve(curve)
+        self._plot_other_stuffs(select)
+
+    def _plot_other_stuffs(self, selected_params):
+        for refpoint in selected_params['refpoints']:
+            self.plot_core.add_refpoint(**refpoint)
+        if selected_params['legend']:
+            self.plot_core.add_legend()
+        # if selected_params['title']:
+        #     curve = self.tabWidget.currentWidget().get_select()
+        #     params = [self.latex_convert[curve[param]['value']
+        #               if param != ranged_parameter else x
+        #               for param in params_list}
+        #     title=", ".join(
+        #     self.plot_core.add_title()
+        self.plot_core.show(block=True)
+
     def _format_point_params(self, point_params, no_label=False):
         if point_params['beta']['type'] == 'scalar':
             params = {
@@ -282,27 +311,6 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         if no_label:
             params.pop('label')
         return params
-
-    def plot_one(self):  # TODO
-        self.plot_core.reset_figure()
-        select = self.get_select()
-        for curve in select['curves']:
-            self._plot_curve(curve)
-        for refpoint in select['refpoints']:
-            self.plot_core.add_refpoint(**refpoint)
-        if select['legend']:
-            self.plot_core.add_legend()
-        # if select['title']:
-        #     curve = self.tabWidget.currentWidget().get_select()
-        #     params = [self.latex_convert[curve[param]['value']
-        #               if param != ranged_parameter else x
-        #               for param in params_list}
-        #     title=", ".join(
-        #     self.plot_core.add_title()
-        self.plot_core.show(block=True)
-
-    def plot_all(self):  # TODO
-        graph_print(self.get_params())
 
     def _plot_curve(self, selected_params):
         settings_type = selected_params['settings']['type']
