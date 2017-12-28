@@ -286,7 +286,11 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             errors = self._check_params(selected_params)
             if not errors:
                 for curve in selected_params['curves']:
-                    self._plot_curve(curve)
+                    out = self._plot_curve(curve)
+                    if out is not None:
+                        self.plot_core.figure.clear()
+                        self.errors = Errors(out)
+                        return
                 self._plot_other_stuffs(selected_params)
             else:
                 self.errors = Errors(errors)
@@ -299,7 +303,11 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             curve = selected_params['curves'][i]
             errors = self._check_params(selected_params, index=i)
             if not errors:
-                self._plot_curve(curve)
+                out = self._plot_curve(curve)
+                if out is not None:
+                    self.plot_core.figure.clear()
+                    self.errors = Errors(out)
+                    return
                 self._plot_other_stuffs(selected_params)
             else:
                 self.errors = Errors(errors)
@@ -307,17 +315,18 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def _check_params(self, selected_params, index=None):
         errors = ""
         message = " gets empty or invalid value<br/>"
-        iterable = [index] if index else range(len(self.curves.list))
+        iterable = ([index] if index is not None
+                    else range(len(self.curves.list)))
         for i in iterable:
             error = ""
             curve = selected_params['curves'][i]
-            for p_name in self.params_list_dry:
+            if curve['fluids']:
+                params_list = self.params_list_fluids
+            else:
+                params_list = self.params_list_dry
+            for p_name in params_list:
                 if curve[p_name]["value"] is None:
                     error += self.html_convert[p_name] + message
-            if curve['fluids']:
-                for p_name in self.params_list_fluids:
-                    if curve[p_name]["value"] is None:
-                        error += self.html_convert[p_name] + message
             if error:
                 errors += "<b>" + curve['label'] + "</b><br/>" + error
         for i, refpoints in enumerate(selected_params['refpoints']):
@@ -388,6 +397,11 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             **selected_params['settings']['value']
             }
         self.plot_core.set_params(**params)
+        # TEST
+        errors = self.plot_core.check_params()
+        if errors:
+            return errors
+        # END TEST
         self.plot_core.add_curve(**graphic_settings)
         # try:
         #     self.plot_core.set_params(**params)
