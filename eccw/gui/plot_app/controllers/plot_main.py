@@ -156,6 +156,9 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                       "<br>" % file_name]
             for i, row in enumerate(parsed_data):
                 row = [elt.strip() for elt in row]
+                if len(row) < 2:
+                    errors.append("%s, " % (i+1))
+                    continue
                 self.add_ref_point()
                 params = {}
                 params['beta'] = row[0]
