@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtCore, QtGui
-from os.path import dirname, realpath
 from collections import OrderedDict
 from matplotlib.cm import get_cmap
 import csv
@@ -10,6 +9,7 @@ import csv
 from eccw.gui.plot_app.viewers.plot_main import Ui_Form
 from eccw.gui.plot_app.controllers.curve_settings import CurveController
 from eccw.gui.plot_app.controllers.point_settings import RefPointSettings
+from eccw.gui.plot_app.controllers.title_settings import TitleEdit
 from eccw.gui.plot_app.controllers.dialog_errors import Errors
 from eccw.gui.shared.wrappers import Wrapper, WrapperDict, WrapperList
 # from eccw.shared.file_management import EccwFile
@@ -48,8 +48,8 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                                 action=self.radioButton_legend.setChecked)
         self.range_point = Wrapper(False, process=lambda x: eval(str(x)),
                                 action=self.radioButton_pointRange.setChecked)
-        self.title = Wrapper(False, process=lambda x: eval(str(x)),
-                                action=self.radioButton_title.setChecked)
+        self.title = TitleEdit()
+        self.horizontalLayout_title.addWidget(self.title)
         # Init events
         self.pushButton_addRefPoint.clicked.connect(self.add_ref_point)
         self.pushButton_killAllRefPoints.clicked.connect(
@@ -59,7 +59,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.pushButton_killAllCurves.clicked.connect(self.kill_all_curves)
         self.radioButton_legend.clicked.connect(self._set_legend)
         self.radioButton_pointRange.clicked.connect(self._set_range_point)
-        self.radioButton_title.clicked.connect(self._set_title)
+        # self.radioButton_title.clicked.connect(self._set_title)
         self.pushButton_plotOne.clicked.connect(self.plot_one)
         self.pushButton_plotAll.clicked.connect(self.plot_all)
         self.tabWidget.tabBar().tabMoved.connect(self._tab_moved)
@@ -122,9 +122,6 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
     def _set_range_point(self):
         self.range_point.value = self.radioButton_pointRange.isChecked()
 
-    def _set_title(self):
-        self.title.value = self.radioButton_title.isChecked()
-
     def _tab_moved(self):
         self.curves.list = [self.tabWidget.widget(i)
                             for i in range(self.tabWidget.count())]
@@ -148,9 +145,6 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         if file_name == "":
             return None  # Squip if no file selected.
         with open(file_name, 'r') as csvfile:
-            # dialect = csv.Sniffer().sniff(csvfile.read(1024),
-            #                               delimiters=';,\t')
-            # csvfile.seek(0)
             parsed_data = csv.reader(csvfile)  # , dialect)
             errors = ["datas from file<br>%s<br> gets wrong items at lines:"
                       "<br>" % file_name]
@@ -342,18 +336,13 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                 errors += "<b>Reference points %s</b><br/>" % (label) + error
         return errors
 
-    def _plot_other_stuffs(self, selected_params):
+    def _plot_other_stuffs(self, selected_params, index=None):
         for refpoint in selected_params['refpoints']:
             self.plot_core.add_refpoint(**refpoint)
         if selected_params['legend']:
             self.plot_core.add_legend()
-        # if selected_params['title']:
-        #     curve = self.tabWidget.currentWidget().get_select()
-        #     params = [self.latex_convert[curve[param]['value']
-        #               if param != ranged_parameter else x
-        #               for param in params_list}
-        #     title=", ".join(
-        #     self.plot_core.add_title()
+        if selected_params['title']:
+            self.plot_core.add_title(selected_params['title'])
         self.plot_core.show(block=True)
 
     def _format_point_params(self, point_params, no_label=False):
