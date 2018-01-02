@@ -35,9 +35,6 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.setupUi(self)
         self.plot_core = EccwPlot()
         self.current_dir = QtCore.QDir.homePath()
-        self.current_dir = "/home/bmary/Programmation/eccw/eccw/test/"
-        # self.mimetypes = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
-        #                   EccwFile.mime)
         self.import_mimetypes = ("Fichiers texte (*.txt *.dat *.csv);;"
                                  "Tout les Fichiers (*.*)")
         # Init local attributs.
@@ -465,6 +462,7 @@ if __name__ == "__main__":
     try:
         app = QtGui.QApplication(sys.argv)
         myapp = PlotController(**params)
+        myapp.current_dir = "/home/bmary/Programmation/eccw/tests/"
         sys.exit(app.exec_())
     finally:
         print("params =")

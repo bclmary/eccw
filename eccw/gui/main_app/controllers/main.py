@@ -22,7 +22,6 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         super(MainController, self).__init__(parent)
         self.setupUi(self)
         self.current_dir = QtCore.QDir.homePath()
-        self.current_dir = "/home/bmary/Programmation/eccw/tests/"  # debug
         self.mime_types = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
                            EccwFile.mime)
         # Set calculator tab.
@@ -100,6 +99,8 @@ if __name__ == "__main__":
     try:
         app = QtGui.QApplication(sys.argv)
         myapp = MainController(**params)
+        myapp.current_dir = "/home/bmary/Programmation/eccw/tests/"
+        myapp.plot.current_dir = "/home/bmary/Programmation/eccw/tests/"
         sys.exit(app.exec_())
     finally:
         pass
