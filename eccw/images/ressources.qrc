@@ -5,6 +5,7 @@
     <file>line_dashed.png</file>
     <file>line_dotted.png</file>
   </qresource>
+  <qresource prefix="newPrefix"/>
   <qresource prefix="illustrations">
     <file>illustration_calculator.png</file>
   </qresource>

@@ -4,11 +4,12 @@
 from PyQt4 import QtGui, QtCore
 from collections import OrderedDict
 from os.path import dirname, realpath
+import sys
+import webbrowser
 
 from eccw.gui.main_app.viewers.main import Ui_Form
 from eccw.gui.main_app.controllers.dialog_about import About
-from eccw.gui.calculator_app.controllers.calculator_main import (
-     CalculatorController)
+from eccw.gui.calculator_app.controllers.calculator_main import CalculatorController
 from eccw.gui.plot_app.controllers.plot_main import PlotController
 from eccw.gui.shared.wrappers import WrapperDict
 from eccw.shared.print_tools import graph_print
@@ -60,8 +61,9 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.about = About()
 
     def click_doc(self):
-        file_name = "../../../documentation/ECCW.pdf"
-        import webbrowser
+        file_name = "/eccw/documentation/ECCW.pdf"
+        file_name = "".join([p for p in sys.path if p[-4:] == "eccw"]
+                            + [file_name])
         webbrowser.open(file_name, new=0, autoraise=True)
 
     # Save and load file management.
