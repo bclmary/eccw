@@ -238,7 +238,7 @@ if __name__ == "__main__":
     import sys
     try:
         from eccw.shared.file_management import EccwFile
-        eccwf = EccwFile(filename="../../../test/test.eccw")
+        eccwf = EccwFile(filename="../../../../tests/test.eccw")
         params = eccwf.values['calculator']
 
         app = QtGui.QApplication(sys.argv)
