@@ -15,25 +15,24 @@ Last edited Nov 6 2017
 """
 
 import sys
-import os
+# import os
 from PyQt4 import QtGui
 
-from main_app import MainController
-import main_app
+from eccw.gui.main_app.controllers.main import MainController
 
-print(sys.path[0])
-
-# pathes of the ECCW modules
-if sys.path[0]=='':  # if ECCW is called from python interpreter
-    sys.path.append('main_app/')
-    sys.path.append('shared/')
-    sys.path.append('plot_app/')
-    sys.path.append('calculator_app/')
-else: # if ECCW is called from a terminal
-    sys.path.append(sys.path[0]+'/main_app/')
-    sys.path.append(sys.path[0]+'/shared/')
-    sys.path.append(sys.path[0]+'/plot_app/')
-    sys.path.append(sys.path[0]+'/calculator_app/')
+# print(sys.path[0])
+# 
+# # pathes of the ECCW modules
+# if sys.path[0]=='':  # if ECCW is called from python interpreter
+#     sys.path.append('main_app/')
+#     sys.path.append('shared/')
+#     sys.path.append('plot_app/')
+#     sys.path.append('calculator_app/')
+# else: # if ECCW is called from a terminal
+#     sys.path.append(sys.path[0]+'/main_app/')
+#     sys.path.append(sys.path[0]+'/shared/')
+#     sys.path.append(sys.path[0]+'/plot_app/')
+#     sys.path.append(sys.path[0]+'/calculator_app/')
 
 
 

@@ -33,8 +33,8 @@
        <string>continuous</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_line_continuous.png</normaloff>../../../images/icon_line_continuous.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/lines/line_continuous.png</normaloff>:/lines/line_continuous.png</iconset>
       </property>
      </item>
      <item>
@@ -42,8 +42,8 @@
        <string>dotted</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_line_dotted.png</normaloff>../../../images/icon_line_dotted.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/lines/line_dotted.png</normaloff>:/lines/line_dotted.png</iconset>
       </property>
      </item>
      <item>
@@ -51,8 +51,8 @@
        <string>dashed</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_line_dashed.png</normaloff>../../../images/icon_line_dashed.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/lines/line_dashed.png</normaloff>:/lines/line_dashed.png</iconset>
       </property>
      </item>
      <item>
@@ -60,14 +60,16 @@
        <string>dash dotted</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_line_dash_dotted.png</normaloff>../../../images/icon_line_dash_dotted.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/lines/line_dash_dotted.png</normaloff>:/lines/line_dash_dotted.png</iconset>
       </property>
      </item>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

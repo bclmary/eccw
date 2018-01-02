@@ -32,25 +32,25 @@ class Ui_Form(object):
         self.comboBox = QtGui.QComboBox(Form)
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_marker_circle.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/markers/marker_circle.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon, _fromUtf8(""))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_marker_square.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/markers/marker_square.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon1, _fromUtf8(""))
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_marker_diamond.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/markers/marker_diamond.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon2, _fromUtf8(""))
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_marker_triangle.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8(":/markers/marker_triangle.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon3, _fromUtf8(""))
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_marker_star.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(_fromUtf8(":/markers/marker_star.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon4, _fromUtf8(""))
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_marker_cross.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(_fromUtf8(":/markers/marker_cross.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon5, _fromUtf8(""))
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_marker_pentagone.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(_fromUtf8(":/markers/marker_pentagone.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon6, _fromUtf8(""))
         self.horizontalLayout.addWidget(self.comboBox)
 
@@ -68,6 +68,7 @@ class Ui_Form(object):
         self.comboBox.setItemText(5, _translate("Form", "cross", None))
         self.comboBox.setItemText(6, _translate("Form", "pentagon", None))
 
+import eccw.images.ressources_rc
 
 if __name__ == "__main__":
     import sys

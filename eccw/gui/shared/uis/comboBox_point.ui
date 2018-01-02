@@ -27,8 +27,8 @@
        <string>circle</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_marker_circle.png</normaloff>../../../images/icon_marker_circle.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/markers/marker_circle.png</normaloff>:/markers/marker_circle.png</iconset>
       </property>
      </item>
      <item>
@@ -36,8 +36,8 @@
        <string>square</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_marker_square.png</normaloff>../../../images/icon_marker_square.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/markers/marker_square.png</normaloff>:/markers/marker_square.png</iconset>
       </property>
      </item>
      <item>
@@ -45,8 +45,8 @@
        <string>diamond</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_marker_diamond.png</normaloff>../../../images/icon_marker_diamond.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/markers/marker_diamond.png</normaloff>:/markers/marker_diamond.png</iconset>
       </property>
      </item>
      <item>
@@ -54,8 +54,8 @@
        <string>triangle</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_marker_triangle.png</normaloff>../../../images/icon_marker_triangle.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/markers/marker_triangle.png</normaloff>:/markers/marker_triangle.png</iconset>
       </property>
      </item>
      <item>
@@ -63,8 +63,8 @@
        <string>star</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_marker_star.png</normaloff>../../../images/icon_marker_star.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/markers/marker_star.png</normaloff>:/markers/marker_star.png</iconset>
       </property>
      </item>
      <item>
@@ -72,8 +72,8 @@
        <string>cross</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_marker_cross.png</normaloff>../../../images/icon_marker_cross.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/markers/marker_cross.png</normaloff>:/markers/marker_cross.png</iconset>
       </property>
      </item>
      <item>
@@ -81,14 +81,16 @@
        <string>pentagon</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_marker_pentagone.png</normaloff>../../../images/icon_marker_pentagone.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/markers/marker_pentagone.png</normaloff>:/markers/marker_pentagone.png</iconset>
       </property>
      </item>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

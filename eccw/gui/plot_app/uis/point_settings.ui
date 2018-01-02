@@ -129,14 +129,16 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>../../../images/icon_close.png</normaloff>../../../images/icon_close.png</iconset>
+      <iconset resource="../../../images/ressources.qrc">
+       <normaloff>:/buttons/button_close.png</normaloff>:/buttons/button_close.png</iconset>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>pushButton_kill</sender>

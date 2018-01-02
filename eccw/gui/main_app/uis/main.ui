@@ -33,8 +33,8 @@
         <string>Open</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../images/icon_open.png</normaloff>../../../images/icon_open.png</iconset>
+        <iconset resource="../../../images/ressources.qrc">
+         <normaloff>:/buttons/button_open.png</normaloff>:/buttons/button_open.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+O</string>
@@ -50,8 +50,8 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../images/icon-save.png</normaloff>../../../images/icon-save.png</iconset>
+        <iconset resource="../../../images/ressources.qrc">
+         <normaloff>:/buttons/button_save.png</normaloff>:/buttons/button_save.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+S</string>
@@ -76,8 +76,8 @@
         <string>Export</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../images/icon-export.png</normaloff>../../../images/icon-export.png</iconset>
+        <iconset resource="../../../images/ressources.qrc">
+         <normaloff>:/buttons/button_export.png</normaloff>:/buttons/button_export.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+E</string>
@@ -106,8 +106,8 @@
         <string>About</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../images/icon_about.png</normaloff>../../../images/icon_about.png</iconset>
+        <iconset resource="../../../images/ressources.qrc">
+         <normaloff>:/buttons/button_about.png</normaloff>:/buttons/button_about.png</iconset>
        </property>
       </widget>
      </item>
@@ -120,8 +120,8 @@
         <string>Documentation</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../images/icon_documentation.png</normaloff>../../../images/icon_documentation.png</iconset>
+        <iconset resource="../../../images/ressources.qrc">
+         <normaloff>:/buttons/button_documentation.png</normaloff>:/buttons/button_documentation.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+D</string>
@@ -160,7 +160,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideLeft</enum>
@@ -176,8 +176,8 @@
        <bool>true</bool>
       </property>
       <attribute name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_calculate.png</normaloff>../../../images/icon_calculate.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/tabs/tab_calculate.png</normaloff>:/tabs/tab_calculate.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Calculator                    </string>
@@ -188,8 +188,8 @@
        <bool>true</bool>
       </property>
       <attribute name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_plot.png</normaloff>../../../images/icon_plot.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/tabs/tab_plot.png</normaloff>:/tabs/tab_plot.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Plot                              </string>
@@ -199,6 +199,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

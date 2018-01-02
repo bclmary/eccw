@@ -53,7 +53,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../../../images/calculator_drawing.png</pixmap>
+        <pixmap resource="../../../images/ressources.qrc">:/illustrations/illustration_calculator.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -229,7 +229,7 @@
            <string>Basal friction angle [deg]</string>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_phiD.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_phiD.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -257,7 +257,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_phiB.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_phiB.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -293,7 +293,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_alpha.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_alpha.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -321,7 +321,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_beta.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_beta.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -385,7 +385,7 @@
            <string>Bulk fluids overpressure ratio</string>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_lamdaB.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_lamdaB.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -420,7 +420,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_rhof.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_rhof.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -455,7 +455,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_lamdaD.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_lamdaD.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -490,7 +490,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>../../../images/icon_params_rhosr.png</pixmap>
+           <pixmap resource="../../../images/ressources.qrc">:/params/params_rhosr.png</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -595,8 +595,8 @@
         <string>Go</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../images/icon_compute.png</normaloff>../../../images/icon_compute.png</iconset>
+        <iconset resource="../../../images/ressources.qrc">
+         <normaloff>:/buttons/button_compute.png</normaloff>:/buttons/button_compute.png</iconset>
        </property>
        <property name="shortcut">
         <string>Ctrl+G</string>
@@ -710,6 +710,8 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

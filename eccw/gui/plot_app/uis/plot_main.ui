@@ -402,8 +402,8 @@
           <string>Plot</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>../images/icon_plotOne.png</normaloff>../images/icon_plotOne.png</iconset>
+          <iconset resource="../../../images/ressources.qrc">
+           <normaloff>:/buttons/button_plotOne.png</normaloff>:/buttons/button_plotOne.png</iconset>
          </property>
          <property name="shortcut">
           <string>Ctrl+P</string>
@@ -428,8 +428,8 @@
           <string>Plot all</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>../images/icon_plotAll.png</normaloff>../images/icon_plotAll.png</iconset>
+          <iconset resource="../../../images/ressources.qrc">
+           <normaloff>:/buttons/button_plotAll.png</normaloff>:/buttons/button_plotAll.png</iconset>
          </property>
          <property name="shortcut">
           <string>Ctrl+A</string>
@@ -471,6 +471,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

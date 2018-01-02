@@ -43,10 +43,10 @@ class Ui_Form(object):
         self.comboBox.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon-compression.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/buttons/button_compression.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon, _fromUtf8(""))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon-extension.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/buttons/button_extension.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.comboBox.addItem(icon1, _fromUtf8(""))
         self.horizontalLayout.addWidget(self.comboBox)
 
@@ -59,6 +59,7 @@ class Ui_Form(object):
         self.comboBox.setItemText(0, _translate("Form", "Compression", None))
         self.comboBox.setItemText(1, _translate("Form", "Extension", None))
 
+import eccw.images.ressources_rc
 
 if __name__ == "__main__":
     import sys

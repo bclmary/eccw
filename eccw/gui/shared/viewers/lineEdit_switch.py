@@ -45,8 +45,8 @@ class Ui_Form(object):
         self.pushButton.setMaximumSize(QtCore.QSize(26, 30))
         self.pushButton.setText(_fromUtf8(""))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_range_on.png")), QtGui.QIcon.Active, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_range_off.png")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/buttons/button_range_on.png")), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/buttons/button_range_off.png")), QtGui.QIcon.Active, QtGui.QIcon.Off)
         self.pushButton.setIcon(icon)
         self.pushButton.setCheckable(True)
         self.pushButton.setChecked(False)
@@ -61,6 +61,7 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.pushButton.setToolTip(_translate("Form", "Switch input mode : scalar / interval", None))
 
+import eccw.images.ressources_rc
 
 if __name__ == "__main__":
     import sys

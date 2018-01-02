@@ -43,8 +43,8 @@
        <string>Compression</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon-compression.png</normaloff>../../../images/icon-compression.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/buttons/button_compression.png</normaloff>:/buttons/button_compression.png</iconset>
       </property>
      </item>
      <item>
@@ -52,14 +52,16 @@
        <string>Extension</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon-extension.png</normaloff>../../../images/icon-extension.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/buttons/button_extension.png</normaloff>:/buttons/button_extension.png</iconset>
       </property>
      </item>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

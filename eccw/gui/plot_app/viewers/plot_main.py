@@ -188,7 +188,7 @@ class Ui_Form(object):
         self.pushButton_plotOne = QtGui.QPushButton(Form)
         self.pushButton_plotOne.setMaximumSize(QtCore.QSize(90, 32))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../images/icon_plotOne.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/buttons/button_plotOne.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_plotOne.setIcon(icon)
         self.pushButton_plotOne.setObjectName(_fromUtf8("pushButton_plotOne"))
         self.gridLayout_Go.addWidget(self.pushButton_plotOne, 0, 1, 1, 1)
@@ -198,7 +198,7 @@ class Ui_Form(object):
         self.pushButton_plotAll = QtGui.QPushButton(Form)
         self.pushButton_plotAll.setMaximumSize(QtCore.QSize(90, 32))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("../images/icon_plotAll.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/buttons/button_plotAll.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_plotAll.setIcon(icon1)
         self.pushButton_plotAll.setObjectName(_fromUtf8("pushButton_plotAll"))
         self.gridLayout_Go.addWidget(self.pushButton_plotAll, 0, 2, 1, 1)
@@ -238,6 +238,7 @@ class Ui_Form(object):
         self.pushButton_plotAll.setText(_translate("Form", "Plot all", None))
         self.pushButton_plotAll.setShortcut(_translate("Form", "Ctrl+A", None))
 
+import eccw.images.ressources_rc
 
 if __name__ == "__main__":
     import sys

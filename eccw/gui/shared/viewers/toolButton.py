@@ -35,6 +35,8 @@ class Ui_Form(object):
         self.toolButton.setToolTip(_fromUtf8(""))
         self.toolButton.setText(_fromUtf8(""))
         self.toolButton.setIconSize(QtCore.QSize(23, 23))
+        self.toolButton.setAutoRaise(False)
+        self.toolButton.setArrowType(QtCore.Qt.NoArrow)
         self.toolButton.setObjectName(_fromUtf8("toolButton"))
         self.verticalLayout.addWidget(self.toolButton)
 

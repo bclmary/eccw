@@ -51,8 +51,8 @@
        <string>Gray</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_gray.png</normaloff>../../../images/icon_colormap_gray.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_gray.png</normaloff>:/colormaps/colormap_gray.png</iconset>
       </property>
      </item>
      <item>
@@ -60,8 +60,8 @@
        <string>Hot</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_hot.png</normaloff>../../../images/icon_colormap_hot.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_hot.png</normaloff>:/colormaps/colormap_hot.png</iconset>
       </property>
      </item>
      <item>
@@ -69,8 +69,8 @@
        <string>Winter</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_winter.png</normaloff>../../../images/icon_colormap_winter.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_winter.png</normaloff>:/colormaps/colormap_winter.png</iconset>
       </property>
      </item>
      <item>
@@ -78,8 +78,8 @@
        <string>Gnuplot</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_gnuplot.png</normaloff>../../../images/icon_colormap_gnuplot.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_gnuplot.png</normaloff>:/colormaps/colormap_gnuplot.png</iconset>
       </property>
      </item>
      <item>
@@ -87,8 +87,8 @@
        <string>Gnuplot2</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_gnuplot2.png</normaloff>../../../images/icon_colormap_gnuplot2.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_gnuplot2.png</normaloff>:/colormaps/colormap_gnuplot2.png</iconset>
       </property>
      </item>
      <item>
@@ -96,8 +96,8 @@
        <string>Magma</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_magma.png</normaloff>../../../images/icon_colormap_magma.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_magma.png</normaloff>:/colormaps/colormap_magma.png</iconset>
       </property>
      </item>
      <item>
@@ -105,8 +105,8 @@
        <string>Inferno</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_inferno.png</normaloff>../../../images/icon_colormap_inferno.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_inferno.png</normaloff>:/colormaps/colormap_inferno.png</iconset>
       </property>
      </item>
      <item>
@@ -114,8 +114,8 @@
        <string>Plasma</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_plasma.png</normaloff>../../../images/icon_colormap_plasma.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_plasma.png</normaloff>:/colormaps/colormap_plasma.png</iconset>
       </property>
      </item>
      <item>
@@ -123,14 +123,16 @@
        <string>Viridis</string>
       </property>
       <property name="icon">
-       <iconset>
-        <normaloff>../../../images/icon_colormap_viridis.png</normaloff>../../../images/icon_colormap_viridis.png</iconset>
+       <iconset resource="../../../images/ressources.qrc">
+        <normaloff>:/colormaps/colormap_viridis.png</normaloff>:/colormaps/colormap_viridis.png</iconset>
       </property>
      </item>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

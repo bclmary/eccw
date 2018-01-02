@@ -75,7 +75,7 @@ class Ui_Form(object):
         self.pushButton_kill.setMaximumSize(QtCore.QSize(28, 28))
         self.pushButton_kill.setText(_fromUtf8(""))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_close.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/buttons/button_close.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_kill.setIcon(icon)
         self.pushButton_kill.setObjectName(_fromUtf8("pushButton_kill"))
         self.horizontalLayout.addWidget(self.pushButton_kill)
@@ -90,6 +90,7 @@ class Ui_Form(object):
         self.label_alpha.setToolTip(_translate("Form", "Surface slope [deg]", None))
         self.pushButton_kill.setToolTip(_translate("Form", "Delete this point", None))
 
+import eccw.images.ressources_rc
 
 if __name__ == "__main__":
     import sys

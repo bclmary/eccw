@@ -61,8 +61,8 @@
      </property>
      <property name="icon">
       <iconset>
-       <activeoff>../../../images/icon_range_off.png</activeoff>
-       <activeon>../../../images/icon_range_on.png</activeon>
+       <activeoff>:/buttons/button_range_off.png</activeoff>
+       <activeon>:/buttons/button_range_on.png</activeon>
       </iconset>
      </property>
      <property name="checkable">
@@ -78,6 +78,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../images/ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>

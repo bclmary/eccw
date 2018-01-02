@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '../uis/dialogue_about.ui'
+# Form implementation generated from reading ui file '../uis/dialog_about.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -44,7 +44,7 @@ class Ui_Dialog_About(object):
         self.label_logo = QtGui.QLabel(Dialog_About)
         self.label_logo.setMaximumSize(QtCore.QSize(128, 128))
         self.label_logo.setText(_fromUtf8(""))
-        self.label_logo.setPixmap(QtGui.QPixmap(_fromUtf8("../../../images/icon_eccw.png")))
+        self.label_logo.setPixmap(QtGui.QPixmap(_fromUtf8(":/icons/icon_eccw.png")))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName(_fromUtf8("label_logo"))
         self.horizontalLayout.addWidget(self.label_logo)
@@ -101,6 +101,7 @@ class Ui_Dialog_About(object):
         self.label2.setText(_translate("Dialog_About", "<html><head/><body><p align=\"center\"><span style=\" font-weight:600;\">Authors</span></p></body></html>", None))
         self.label_authors.setText(_translate("Dialog_About", "authors", None))
 
+import eccw.images.ressources_rc
 
 if __name__ == "__main__":
     import sys
