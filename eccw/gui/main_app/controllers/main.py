@@ -92,10 +92,8 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
 
 
 if __name__ == "__main__":
-    import sys
     eccwf = EccwFile(filename="../../../../tests/test.eccw")
     params = eccwf.values
-
     try:
         app = QtGui.QApplication(sys.argv)
         myapp = MainController(**params)

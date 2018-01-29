@@ -29,4 +29,3 @@ def imin(iterable):
 
 def imax(iterable):
     return max(range(len(iterable)), key=iterable.__getitem__)
-

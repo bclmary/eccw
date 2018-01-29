@@ -17,8 +17,10 @@ Exact Critical Coulomb Wedge
 Installation
 ============
 
-Dependeancies
+Dependancies
 +++++++++++++
+
+The folowing dependancies are availables on ubuntu and debian repositories:
 
     | python3-pyqt4
     | canberra-gtk-module
@@ -29,9 +31,25 @@ Dependeancies
 Steps for installation
 ++++++++++++++++++++++
 
+Unzip eccw.zip somewhere in your home.
+
+Add the location of 'eccw' folder to the environment variable $PYTHONPATH
+
+    export PYTHONPATH=${PYTHONPATH}:${HOME}/path/to/eccw/
+
+Adding this line (correctly setted to suit your system) in your ``.bashrc`` file will permanently set  available the access to eccw module to your local python.
+
+Before to try to launch *eccw*, make sure that the file ``eccw/eccw/bin/eccw`` is executable
+
+    chmod +x ${HOME}/path/to/eccw/eccw/bin/eccw
+
+with ``${HOME}/path/to/`` replaced by your path to the *eccw* folder on your system.
 
 Usage
 =====
+
+
+To launch eccw, run ``./eccw`` in a shell which current working directory is setted to ``${HOME}/path/to/eccw/eccw/bin`` (with ``${HOME}/path/to/`` replaced by your path to the *eccw* folder on your system)
 
 .. TODO Need a brief tuto here
 

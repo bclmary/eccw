@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from os.path import dirname, realpath
 from PyQt4 import QtCore, QtGui
 from collections import OrderedDict
 from matplotlib.cm import get_cmap
@@ -141,6 +142,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                                self.import_mimetypes)
         if file_name == "":
             return None  # Squip if no file selected.
+        self.current_dir = dirname(realpath(file_name))
         with open(file_name, 'r') as csvfile:
             parsed_data = csv.reader(csvfile)  # , dialect)
             errors = ["datas from file<br>%s<br> gets wrong items at lines:"
@@ -385,6 +387,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
             'label':  selected_params['label'],
             **selected_params['settings']['value']
             }
+        self.plot_core.reset()
         self.plot_core.set_params(**params)
         # TEST
         errors = self.plot_core.check_params()

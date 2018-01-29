@@ -15,25 +15,28 @@ class EccwCompute(object):
     _nan = float('nan')
     _numtol = 1e-9
     _h = 1e-5  # Arbitrary small value
-    _sign = 1
-    _beta = _nan
-    _alpha = _nan
-    _phiB = _nan
-    _phiD = _nan
-    _rho_f = 0.
-    _rho_sr = 0.
-    _density_ratio = 0.
-    _delta_lambdaB = 0.
-    _delta_lambdaD = 0.
-    _lambdaB = 0.
-    _lambdaD = 0.
-    _lambdaB_D2 = 0.
-    _lambdaD_D2 = 0.
-    _taper_min = -_numtol
-    _taper_max = float('inf')
     _main_params_list = ['alpha', 'beta', 'phiB', 'phiD']
 
+    def reset(self):
+        self._sign = 1
+        self._beta = self._nan
+        self._alpha = self._nan
+        self._phiB = self._nan
+        self._phiD = self._nan
+        self._rho_f = 0.
+        self._rho_sr = 0.
+        self._density_ratio = 0.
+        self._delta_lambdaB = 0.
+        self._delta_lambdaD = 0.
+        self._lambdaB = 0.
+        self._lambdaD = 0.
+        self._lambdaB_D2 = 0.
+        self._lambdaD_D2 = 0.
+        self._taper_min = -self._numtol
+        self._taper_max = float('inf')
+
     def __init__(self, **kwargs):
+        self.reset()
         self.set_params(**kwargs)
 
         # self.alpha = kwargs.get("alpha", 0.)
@@ -363,7 +366,7 @@ class EccwCompute(object):
 
     # 'Public' methods ########################################################
 
-    def compute_beta(self, deg=True):
+    def compute_beta_old(self, deg=True):
         """Get critical basal slope beta as ECCW.
         Return the 2 possible solutions in tectonic or  collapsing regime.
         Return two None if no physical solutions.
@@ -393,7 +396,7 @@ class EccwCompute(object):
         else:
             return None, None
 
-    def compute_beta_dev(self, deg=True):
+    def compute_beta(self, deg=True):
         """Get critical basal slope beta as ECCW.
         Return the 2 possible solutions in tectonic or  collapsing regime.
         Return two None if no physical solutions.
@@ -552,6 +555,14 @@ if __name__ == "__main__":
     print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
     print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
     print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
+
+    foo = EccwCompute(phiB=30, phiD=10, alpha=0., context="c")
+    print("\nbetas")
+    print("alpha =   0., betas =", foo.compute("beta"))
+    foo.alpha = 20
+    print("alpha =  20., betas =", foo.compute("beta"))
+    foo.alpha = -20
+    print("alpha = -20., betas =", foo.compute("beta"))
 
     # foo = EccwCompute(phiB=30, phiD=10, beta=20, alpha=9.4113, context="e")
     # foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.8353, context="c",

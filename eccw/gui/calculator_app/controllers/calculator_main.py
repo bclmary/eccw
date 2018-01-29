@@ -29,14 +29,18 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.range = Wrapper(None)
         self.compute_core = EccwCompute()
         # List for SwitchScalarRange objects control.
-        self.param_flag_list = [
+        self.params_list_dry = (
+            'alpha', 'beta', 'phiB', 'phiD')
+        self.params_list_fluids = (
+            'delta_lambdaB', 'delta_lambdaD', 'rho_f', 'rho_sr')
+        self.param_list_all = [
             "alpha", "beta", "phiB", "phiD",
             "delta_lambdaB", "delta_lambdaD", "rho_f", "rho_sr"]
         self.param_object_list = [
             self.alpha, self.beta, self.phiB, self.phiD,
             self.delta_lambdaB, self.delta_lambdaD, self.rho_f, self.rho_sr]
         self.context = ComboBoxContext()
-        self.results = Wrapper("", action=self._set_results)
+        self.results = Wrapper("", action=self._init_results_slider_position)
         self.fluids = Wrapper(False, process=lambda x: eval(str(x)),
                               action=self.groupBox_fluids.setChecked)
         self.fluids_flag_list = ["delta_lambdaB", "delta_lambdaD",
@@ -97,7 +101,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
             "rho_sr":        "ρ<sub>sr</sub>"
         }
         self._result_table_header = self._make_result_table_line(
-            [self.name_convert[elt] for elt in self.param_flag_list])
+            [self.name_convert[elt] for elt in self.param_list_all])
         # Fill values with kwargs
         if kwargs:
             self.set_params(**kwargs)
@@ -105,12 +109,13 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
 
     # Methods.
 
-    def _set_results(self, x):
+    def _init_results_slider_position(self, x):
         self.textEdit_results.setText(x)
         scroll_bar = self.textEdit_results.verticalScrollBar()
         scroll_bar.setSliderPosition(scroll_bar.maximum())
 
     def _make_result_table_line(self, iterable, arg=""):
+        """Format iterable using html tag; return a html table line."""
         td = "<td align='center', "+arg+">"
         dttd = "</td>" + td
         return "<tr>" + td + dttd.join(iterable) + "</td></tr>"
@@ -150,6 +155,10 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
     def click_compute(self):
         txt_result = "<p align='center'>"
         select = self.get_select()
+        if select['fluids']:
+            params_list = self.param_list_all
+        else:
+            params_list = self.params_list_dry
         errors = self._check_arguments(select)
         if errors != "":
             txt_result += errors
@@ -164,13 +173,14 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
                 for x in range_:
                     params = {flag: select[flag]['value']
                               if flag != ranged_parameter else x
-                              for flag in self.param_flag_list}
+                              for flag in params_list}
                     params['context'] = self.context.get_params()
+                    self.compute_core.reset()
                     self.compute_core.set_params(**params)
                     result.append(self.compute_core.compute(focus_parameter))
                 result = [(i, j, k) for i, (j, k) in zip(range_, result)]
                 txt_result += self._format_results(select, result)
-            except TypeError as err:
+            except (TypeError, ValueError) as err:
                 txt_result += self._format_raised_error(err)
         txt_result += "<br/></p>"
         self.textEdit_results.append(txt_result)
@@ -180,15 +190,34 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
         i = 1 if len(results) == 1 else 0
         txt = self._get_resume_params(select)
         txt += "<table width='" + str((5-i)*10) + "%'>"
-        headers = ["●", "inverse", "normal"]
+        headers = ("●", "inverse", "normal")
         txt += self._make_result_table_line(headers[i:],
                                             arg="style='color: blue'")
         for res in results:
-            txt += self._make_result_table_line([str(round(elt, 4))
+            txt += self._make_result_table_line([self._str_round(elt, 4)
                                                  if elt is not None else "-"
                                                  for elt in res[i:]])
         txt += "</table>"
         return txt
+
+    def _str_round(self, may_be_iterable, ndigits=None):
+        """
+        Apply round intrinsic function to
+        * floats;
+        * iterable containing floats.
+        Return a string.
+        """
+        try:
+            return str(round(may_be_iterable, ndigits))
+        except TypeError:
+            # All this concerns exclusively beta computation.
+            if len(may_be_iterable) > 1:
+                return ", ".join([str(round(elt, ndigits))
+                                  for elt in may_be_iterable])
+            elif len(may_be_iterable) == 1:
+                return str(round(may_be_iterable[0], ndigits))
+            else:
+                return '-'
 
     def _check_arguments(self, select):
         errors = ""
@@ -220,7 +249,7 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
                                              "style='color: blue'")
         text += self._result_table_header
         values = []
-        for elt in self.param_flag_list:
+        for elt in self.param_list_all:
             value = select[elt]['value']
             if elt == focus:
                 value = "<span style='color: red'>⯅</span>"
@@ -228,6 +257,8 @@ class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
                 value = "-"
             elif select[elt]["type"] == "range":
                 value = "<span style='color: blue'>●</span>"
+            elif not select['fluids'] and elt in self.params_list_fluids:
+                value = "-"
             values.append(str(value))
         text += self._make_result_table_line(values)
         text += "</table>"

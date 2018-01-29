@@ -351,7 +351,7 @@ class EccwPlot(EccwCompute):
             # if b_min == minf and b_max == pinf and line:
             #     plt.axhline(alpha, lw=1, c='gray', figure=self.figure)
             self.alpha = alpha
-            beta1, beta2 = self.compute_beta()
+            beta1, beta2 = self.compute_beta_old()
             self._test_value(beta1, alpha, betas, alphas, b_min, b_max)
             self._test_value(beta2, alpha, betas, alphas, b_min, b_max)
             if sketch is True:
