@@ -17,7 +17,7 @@ def _extract_metadata(package_name, metadata_name):
     try:
         # ECCW is installed with pip.
         return getattr(pkg_resources.get_distribution(package_name), metadata_name)
-    except pkg_resources.DistributionNotFound:
+    except (AttributeError, pkg_resources.DistributionNotFound):
         # Not installed ? Go read what you need at proper place.
         _conf = read_configuration(path.join(
             path.dirname(path.dirname(__file__)), 'setup.cfg')
@@ -27,10 +27,9 @@ def _extract_metadata(package_name, metadata_name):
 
 __version__ = _extract_metadata("eccw", "version")
 
-#__authors__ = _extract_metadata("eccw", "author")
-#__authors__ = list(set(__authors__.split('\n')) - {''})
-#__authors__.sort()
-__authors__ = ('moa')
+__authors__ = _extract_metadata("eccw", "author")
+__authors__ = list(set(__authors__.split('\n')) - {''})
+__authors__.sort()
 
 __all__ = [
     'EccwCompute',
