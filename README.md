@@ -19,11 +19,9 @@ All are availables on *ubuntu* and *debian* repositories.
 
 	numpy
 	matplotlib
-	python3-pyqt4
-	canberra-gtk-module
+	python3-pyqt5
 	python3-xmltodict
-	numpy
-	pyqt4-dev-tools (pyuic4)
+	canberra-gtk-module (?)
 
 ## Steps for installation
 
@@ -133,6 +131,9 @@ Have a look on the plot obtained in next section to understand the previous resu
 
 # Contributing
 
+## Dependancies
+
+	pyqt5-dev-tools (pyuic5, pyrcc5)
 
 ## Informations for developpers
 
