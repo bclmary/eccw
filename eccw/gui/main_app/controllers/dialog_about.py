@@ -5,17 +5,18 @@
 from PyQt4 import QtGui
 
 from eccw.gui.main_app.viewers.dialog_about import Ui_Dialog_About
-import eccw.version as version
-import eccw.authors as authors
-
+#import eccw.version as version
+#import eccw.authors as authors
+from eccw import __version__
+from eccw import __authors__
 
 class About(QtGui.QWidget, Ui_Dialog_About):
     """Widget for software informations display."""
     def __init__(self, parent=None):
         super(About, self).__init__(parent)
         self.setupUi(self)
-        self.label_version.setText(version.__version__)
-        self.label_authors.setText('\n'.join(authors.__authors_list__))
+        self.label_version.setText(__version__)
+        self.label_authors.setText("\n".join(__authors__))
         self.show()
 
 

@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # -*-coding:utf-8 -*
 
+"""
+Elements dedicated to plot physics.
+"""
+
+
 import numpy as np
 from math import pi, tan, atan, cos, sin, sqrt, asin
 from matplotlib import pyplot as plt
@@ -17,7 +22,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 
 
 class EccwPlot(EccwCompute):
-
+    """
+    Plot critical enveloppes of the critical coulomb wedge.
+    """
     _point_center = (0., 0.)
     _point_top = (0., 0.)
     _point_bottom = (0., 0.)

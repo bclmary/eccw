@@ -2,5 +2,5 @@
 # -*-coding:utf-8 -*
 
 """
-Elements shared by the differents parts of the GUI.
+All needed by the TUI (Textual User Interface)
 """

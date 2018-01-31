@@ -13,7 +13,7 @@ from eccw.gui.calculator_app.controllers.calculator_main import CalculatorContro
 from eccw.gui.plot_app.controllers.plot_main import PlotController
 from eccw.gui.shared.wrappers import WrapperDict
 from eccw.shared.print_tools import graph_print
-from eccw.shared.file_management import EccwFile
+from eccw.shared.file_management import EccwFile, open_pdf
 
 
 class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
@@ -60,10 +60,7 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.about = About()
 
     def click_doc(self):
-        file_name = "/eccw/documentation/ECCW.pdf"
-        file_name = "".join([p for p in sys.path if p[-4:] == "eccw"]
-                            + [file_name])
-        webbrowser.open(file_name, new=0, autoraise=True)
+        open_pdf("/eccw/documentation/ECCW.pdf")
 
     # Save and load file management.
 
@@ -102,5 +99,5 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     finally:
         pass
-        # print("params =")
-        # graph_print(myapp.get_select())
+        print("params =")
+        graph_print(myapp.get_select())

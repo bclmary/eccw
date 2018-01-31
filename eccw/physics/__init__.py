@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*-coding:utf-8 -*
 
-__all__ = [
-    "eccw_compute",
-    "eccw_plot",
-    ]
+"""
+Core module of eccw library.
+Contains elements to compute and display what matters : physics !
+"""

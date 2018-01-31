@@ -1,2 +1,6 @@
-include README.rst
-include images/*.png
+include *.md *.txt
+global-exclude *.py[co] *.svg *.qrc *.ui
+graft eccw/bin
+recursive-include eccw/documentation *.pdf
+recursive-include eccw/images *.py *.png
+

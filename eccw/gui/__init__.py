@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*-coding:utf-8 -*
 
-__all__ = ['calculator_app',
-           'main_app',
-           'plot_app',
-           'shared',
-          ]
+"""
+All needed by the GUI (Graphical User Interface)
+"""

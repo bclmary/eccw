@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 # -*-coding:utf-8 -*
 
+"""
+Elements dedicated to solve physics.
+"""
+
 import numpy as np
-from math import pi, copysign, cos, sin, tan, atan, asin
+from math import pi, cos, sin, tan, atan, asin
 from collections import OrderedDict
 
 from eccw.shared.print_tools import graph_print
-from eccw.shared.tools import d2r, r2d, normalize_angle
+from eccw.shared.tools import d2r, r2d
 
 
 class EccwCompute(object):
-    """Solve any parameter of the critical coulomb wedge.
+    """
+    Solve any parameter of the critical coulomb wedge.
     """
     _nan = float('nan')
     _numtol = 1e-9

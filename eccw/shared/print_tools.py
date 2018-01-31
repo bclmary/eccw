@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Functions dedicated to print specific data structures.
+"""
 
-def is_leaf(elt):
+def _is_leaf(elt):
     """Return True if elt if not an iterable."""
     if isinstance(elt, dict):
         return False
@@ -59,7 +62,7 @@ How list and tuple are printed
     elif isinstance(elt, list) or isinstance(elt, tuple):
         A = "[" if isinstance(elt, list) else "("
         Z = "]" if isinstance(elt, list) else ")"
-        if all([is_leaf(e) for e in elt]):
+        if all([_is_leaf(e) for e in elt]):
             print(repr(elt), end="")
         else:
             for i, e in enumerate(elt):

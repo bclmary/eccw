@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 # -*-coding:utf-8 -*
 
+"""
+Tools and objects dedicated to manage inputs/outputs files.
+"""
 
 from collections import OrderedDict
 import xmltodict
 from xml.parsers.expat import ExpatError
+import webbrowser
+import sys
 
 from eccw.shared.print_tools import graph_print
 
@@ -76,6 +81,11 @@ class EccwFile():
 
         return xmltodict.unparse({"session": values}, pretty=pretty)
 
+
+def open_pdf(file_name):
+    file_name = "".join([p for p in sys.path if p[-4:] == "eccw"]
+                        + [file_name])
+    webbrowser.open(file_name, new=0, autoraise=True)
 
 if __name__ == "__main__":
 

@@ -1,0 +1,24 @@
+Metadata-Version: 1.1
+Name: eccw
+Version: 2.0.0
+Summary: Exact Critical Coulomb Wedge : tools to compute and display the exact solution of any parameter of Critical Coulomb Wedge
+Home-page: http://github.com/???'
+Author: 
+BCL Mary
+Xiaoping Yuan
+YM Leroy
+Pauline Souloumiac
+Chong Wu
+Author-email: bclmary@mailoo.org
+License: UNKNOWN
+Description-Content-Type: UNKNOWN
+Description: UNKNOWN
+Keywords: geology,accretionnary prism
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: X11 Applications :: Qt
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Topic :: Scientific/Engineering :: Geology

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*-coding:utf-8 -*
 
+"""
+Explore values returned by EccwCompute object for phiB parameter.
+"""
+
 import numpy as np
 from math import pi, tan, atan, cos, sin, sqrt, asin
 from matplotlib import pyplot as plt

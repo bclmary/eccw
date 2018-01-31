@@ -1,0 +1,3 @@
+[console_scripts]
+eccw = eccw.bin.eccw:main
+

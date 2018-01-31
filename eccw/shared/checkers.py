@@ -19,19 +19,3 @@ def str_check(value, default=''):
     else:
         return str(value)
 
-#TODO : this function is deprecated : it is now found in WrapperDict class (where it is used).
-def params_check(obj, parser, params):
-    """Check integrity of eccw.gui.shared.wrappers structure."""
-    name = obj.__class__.__name__
-    if isinstance(params, dict):
-        try:
-            for key, value in params.items():
-                if isinstance(value, dict):
-                    parser[key](**value)
-                else:
-                    parser[key](value)
-        except KeyError:
-            raise TypeError(name+"() gets unknown keyword argument '" + str(key) + "'.")
-    else:
-        raise TypeError(name+"() awaits a dict as argument.")
-

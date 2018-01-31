@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Wrappers used on the base elements of the GUI.
+They add automated setting and getting of needed parameters.
+Wrapped parameters are iteratively setted / gotten.
+This allows saving and loading sessions with the GUI.
+"""
+
+
 from collections import OrderedDict
 
 
 class Wrapper(object):
+    """Wrapping non iterable parameter."""
+
     def __init__(self, arg=None, action=lambda x: None, process=lambda x: x):
         self.process = process
         self.action = action
@@ -22,6 +32,7 @@ class Wrapper(object):
 
 
 class WrapperDict(object):
+    """Wrapping parameters stored in a dictionary."""
 
     def __init__(self, arg=OrderedDict()):
         self.dict = arg
@@ -53,23 +64,9 @@ class WrapperDict(object):
         else:
             raise TypeError(name+"() awaits a dict as argument.")
 
-    # def check_params(self, parser, params):
-    #     name = self.__class__.__name__
-    #     if isinstance(params, dict):
-    #         for key, value in params.items():
-    #             try:
-    #                 if isinstance(value, dict):
-    #                     parser[key](**value)
-    #                 else:
-    #                     parser[key](value)
-    #             except KeyError:
-    #                 pass
-    #     else:
-    #         raise TypeError(name+"() awaits a dict as argument.")
-
-
 
 class WrapperList(object):
+    """Wrapping parameters stored in a list."""
 
     def __init__(self, arg=[]):
         self.list = list(arg)
