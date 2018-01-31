@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 from eccw.gui.plot_app.viewers.dialog_errors import Ui_Dialog_Errors
 
 
-class Errors(QtGui.QWidget, Ui_Dialog_Errors):
+class Errors(QtWidgets.QWidget, Ui_Dialog_Errors):
     """Widget for software informations display."""
     def __init__(self, message="", parent=None):
         super(Errors, self).__init__(parent)
@@ -21,6 +21,6 @@ class Errors(QtGui.QWidget, Ui_Dialog_Errors):
 
 if __name__ == "__main__":
     import sys
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     myapp = Errors("Des erreurs")
     sys.exit(app.exec_())

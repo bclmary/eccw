@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
+
 
 from eccw.gui.shared.viewers.comboBox_line import Ui_Form as UiLine
 from eccw.gui.shared.viewers.comboBox_point import Ui_Form as UiPoint
@@ -29,7 +30,7 @@ class ComboBox(object):
         return self.parser[self.get_params()]
 
 
-class ComboBoxLine(QtGui.QWidget, UiLine, ComboBox):
+class ComboBoxLine(QtWidgets.QWidget, UiLine, ComboBox):
     """Combo box widget for line style settings.
 
     Arguments:
@@ -56,7 +57,7 @@ class ComboBoxLine(QtGui.QWidget, UiLine, ComboBox):
         self.show()
 
 
-class ComboBoxPoint(QtGui.QWidget, UiPoint, ComboBox):
+class ComboBoxPoint(QtWidgets.QWidget, UiPoint, ComboBox):
     """Combo box widget for point style settings.
 
     Arguments:
@@ -96,7 +97,7 @@ class ComboBoxPoint(QtGui.QWidget, UiPoint, ComboBox):
         ComboBoxLine.set_params(self, value)
 
 
-class ComboBoxColorMap(QtGui.QWidget, UiCmap, ComboBox):
+class ComboBoxColorMap(QtWidgets.QWidget, UiCmap, ComboBox):
     """Combo box widget for colormap settings.
 
     Arguments:
@@ -134,7 +135,7 @@ class ComboBoxColorMap(QtGui.QWidget, UiCmap, ComboBox):
         self.show()
 
 
-class ComboBoxContext(QtGui.QWidget, UiContext, ComboBox):
+class ComboBoxContext(QtWidgets.QWidget, UiContext, ComboBox):
     """Combo box widget for tectonic context settings.
 
     Arguments:
@@ -160,7 +161,7 @@ class ComboBoxContext(QtGui.QWidget, UiContext, ComboBox):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
 #        myapp = ComboBoxContext("Extension")
 #        myapp = ComboBoxColorMap("Inferno")
 #        myapp = ComboBoxPoint('*')

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from eccw.gui.shared.viewers.toolButton import Ui_Form
 from eccw.shared.checkers import float_check
 from eccw.gui.shared.wrappers import Wrapper
 
 
-class ColorButton(QtGui.QWidget, Ui_Form, Wrapper):
+class ColorButton(QtWidgets.QWidget, Ui_Form, Wrapper):
     """Color button widget.
 
     Arguments:
@@ -42,7 +42,7 @@ class ColorButton(QtGui.QWidget, Ui_Form, Wrapper):
         self.show()
 
     def showDialog(self):
-        col = QtGui.QColorDialog.getColor()
+        col = QtWidgets.QColorDialog.getColor()
         if col.isValid():
             self.change_color(col)
             self.value = col.getRgbF()
@@ -85,7 +85,7 @@ class ColorButton(QtGui.QWidget, Ui_Form, Wrapper):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         myapp = ColorButton("0", "1", "0", "1")
         myapp.set_params(("0", "1", "0", "1"))
         sys.exit(app.exec_())

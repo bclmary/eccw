@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 from eccw.gui.shared.viewers.verticalLayout import Ui_Form as UiV
 from eccw.gui.shared.viewers.horizontalLayout import Ui_Form as UiH
 
 
-class VerticalLayout(QtGui.QWidget, UiV):
+class VerticalLayout(QtWidgets.QWidget, UiV):
     """Vertical layout widget.
     This is a Qt derived object.
     """
@@ -17,7 +17,7 @@ class VerticalLayout(QtGui.QWidget, UiV):
         self.show()
 
 
-class HorizontalLayout(QtGui.QWidget, UiH):
+class HorizontalLayout(QtWidgets.QWidget, UiH):
     """Horizontal layout widget.
     This is a Qt derived object.
     """
@@ -29,6 +29,6 @@ class HorizontalLayout(QtGui.QWidget, UiH):
 
 if __name__ == "__main__":
     import sys
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     myapp = VerticalLayout()
     sys.exit(app.exec_())

@@ -1,6 +1,6 @@
 LICENCE.txt
 MANIFEST.in
-README.md
+README.rst
 requirements.txt
 setup.cfg
 setup.py
@@ -65,6 +65,9 @@ eccw/gui/shared/viewers/radioButton.py
 eccw/gui/shared/viewers/spinBox.py
 eccw/gui/shared/viewers/toolButton.py
 eccw/gui/shared/viewers/verticalLayout.py
+eccw/images/EccwPlot_example.png
+eccw/images/app-calculator_screen-copy.png
+eccw/images/app-plot_screen-copy.png
 eccw/images/button_about.png
 eccw/images/button_close.png
 eccw/images/button_compression.png

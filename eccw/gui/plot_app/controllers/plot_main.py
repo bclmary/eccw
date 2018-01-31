@@ -463,7 +463,7 @@ class PlotController(QtWidgets.QWidget, Ui_Form, WrapperDict):
 if __name__ == "__main__":
     import sys
     from eccw.shared.file_management import EccwFile
-    eccwf = EccwFile(filename="../../../../tests/test.eccw")
+    eccwf = EccwFile(filename="../../../../tests/data/test.eccw")
     # eccwf.show()
     params = eccwf.values['plot']
 

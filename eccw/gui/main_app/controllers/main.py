@@ -94,7 +94,7 @@ class MainController(QtWidgets.QWidget, Ui_Form, WrapperDict):
 
 
 if __name__ == "__main__":
-    eccwf = EccwFile(filename="../../../../tests/test.eccw")
+    eccwf = EccwFile(filename="../../../../tests/data/test.eccw")
     params = eccwf.values
     try:
         app = QtWidgets.QApplication(sys.argv)

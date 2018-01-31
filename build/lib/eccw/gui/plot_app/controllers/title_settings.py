@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt4 import QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from eccw.gui.plot_app.viewers.title_settings import Ui_Form
 from eccw.shared.print_tools import graph_print
 from eccw.shared.checkers import str_check
 
 
-class TitleEdit(QtGui.QWidget, Ui_Form):
+class TitleEdit(QtWidgets.QWidget, Ui_Form):
     """Title edit widget.
 
     Arguments:
@@ -43,7 +43,7 @@ class TitleEdit(QtGui.QWidget, Ui_Form):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
 
         myapp = TitleEdit("Random Title")
         sys.exit(app.exec_())

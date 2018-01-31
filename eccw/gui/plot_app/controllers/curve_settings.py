@@ -224,7 +224,7 @@ if __name__ == "__main__":
                   "context": "Extension", "points": [point, point]}
 
         from eccw.shared.file_management import EccwFile
-        eccwf = EccwFile(filename="../../../../tests/test.eccw")
+        eccwf = EccwFile(filename="../../../../tests/data/test.eccw")
         params = eccwf.values['plot']['curves'][0]
         graph_print(params)
 

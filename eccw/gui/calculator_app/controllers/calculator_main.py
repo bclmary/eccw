@@ -269,7 +269,7 @@ if __name__ == "__main__":
     import sys
     try:
         from eccw.shared.file_management import EccwFile
-        eccwf = EccwFile(filename="../../../../tests/test.eccw")
+        eccwf = EccwFile(filename="../../../../tests/data/test.eccw")
         params = eccwf.values['calculator']
 
         app = QtWidgets.QApplication(sys.argv)

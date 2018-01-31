@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 from collections import OrderedDict
 
 from eccw.gui.plot_app.viewers.curve_graphicSettings import Ui_Form
@@ -14,7 +14,7 @@ from eccw.gui.shared.wrappers import Wrapper, WrapperDict
 from eccw.shared.print_tools import graph_print
 
 
-class CurveGraphicSettings(QtGui.QWidget, Ui_Form, WrapperDict):
+class CurveGraphicSettings(QtWidgets.QWidget, Ui_Form, WrapperDict):
     """Widget for curve settings entry.
 
     Keyword arguments:
@@ -160,7 +160,7 @@ class SwitchCurveGraphicSettings(VerticalLayout, WrapperDict):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
 
         p1 = {"thickness": 3.0, "style": "dashed", "color": (1, 0, 0, 1)}
         p2 = {"thickness": 3.0, "style": "dotted", "color": (1, 0, 1, 1)}

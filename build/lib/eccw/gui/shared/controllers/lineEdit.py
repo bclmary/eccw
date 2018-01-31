@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 from collections import OrderedDict
 from numpy import arange
 
@@ -15,7 +15,7 @@ from eccw.gui.shared.wrappers import Wrapper, WrapperDict
 from eccw.shared.print_tools import graph_print
 
 
-class LineEdit(QtGui.QWidget, Ui_Form):
+class LineEdit(QtWidgets.QWidget, Ui_Form):
     """Line edit widget.
 
     Arguments:
@@ -77,7 +77,7 @@ class ScalarLineEdit(LineEdit):
         return float_check(self.lineEdit.text())
 
 
-class BoundLineEdit(QtGui.QWidget, Ui_Form_bound, WrapperDict):
+class BoundLineEdit(QtWidgets.QWidget, Ui_Form_bound, WrapperDict):
     """Line edit widget for number bounds entry.
 
     Keyword arguments:
@@ -117,7 +117,7 @@ class BoundLineEdit(QtGui.QWidget, Ui_Form_bound, WrapperDict):
         self.lineEdit_max.clear()
 
 
-class RangeLineEdit(QtGui.QWidget, Ui_Form_range, WrapperDict):
+class RangeLineEdit(QtWidgets.QWidget, Ui_Form_range, WrapperDict):
     """Line edit widget for number range entry.
 
     Keyword arguments:
@@ -168,7 +168,7 @@ class RangeLineEdit(QtGui.QWidget, Ui_Form_range, WrapperDict):
         self.lineEdit_end.clear()
 
 
-class SwitchLineEdit(QtGui.QWidget, Ui_Form_switch, WrapperDict):
+class SwitchLineEdit(QtWidgets.QWidget, Ui_Form_switch, WrapperDict):
     """Abstract class."""
     def __init__(self, multiLineEdit, **kwargs):
         super(SwitchLineEdit, self).__init__()
@@ -279,27 +279,28 @@ class SwitchScalarRange(SwitchLineEdit):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
 
-        # myapp = LineEdit(10)
+#        myapp = LineEdit(10)
 
-        # myapp = StringLineEdit("poulpe")
+#        myapp = StringLineEdit("poulpe")
 
-        # params = {"min":-1, "max":1}
-        # myapp = BoundLineEdit(**params)
+#        params = {"min":-1, "max":1}
+#        myapp = BoundLineEdit(**params)
 
-        # params = {"begin": 1, "end": 8, "step": 2}
-        # myapp = RangeLineEdit(**params)
+#        params = {"begin": 1, "end": 8, "step": 2}
+#        myapp = RangeLineEdit(**params)
 
-        # params = {"bound": {"min": -1, "max": 1},
-        #           "scalar": 5, "focus": "bound"}
-        # params = {"bound": {"min": '-inf', "max": 'inf'},
-        #           "scalar": 5, "focus": "bound"}
-        # myapp = SwitchScalarBound(**params)
+#        params = {"bound": {"min": -1, "max": 1},
+#                  "scalar": 5, "focus": "bound"}
+#        params = {"bound": {"min": '-inf', "max": 'inf'},
+#                  "scalar": 5, "focus": "bound"}
+#        myapp = SwitchScalarBound(**params)
 
         params = {"range": {"begin": 1, "step": None, "end": 8},
                   "scalar": 5, "focus": "range", 'id': 'my id'}
         myapp = SwitchScalarRange(**params)
+
         sys.exit(app.exec_())
     finally:
         print("params=")

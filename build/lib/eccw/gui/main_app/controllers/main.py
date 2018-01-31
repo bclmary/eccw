@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 from collections import OrderedDict
 from os.path import dirname, realpath
 import sys
@@ -16,7 +16,7 @@ from eccw.shared.print_tools import graph_print
 from eccw.shared.file_management import EccwFile, open_pdf
 
 
-class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
+class MainController(QtWidgets.QWidget, Ui_Form, WrapperDict):
     """Main window of ECCW app."""
     def __init__(self, parent=None, **kwargs):
         super(MainController, self).__init__(parent)
@@ -26,12 +26,12 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
                            EccwFile.mime)
         # Set calculator tab.
         self.calculator = CalculatorController()
-        layoutC = QtGui.QVBoxLayout()
+        layoutC = QtWidgets.QVBoxLayout()
         layoutC.addWidget(self.calculator)
         self.tabWidget_main.widget(0).setLayout(layoutC)
         # Set plot tab.
         self.plot = PlotController()
-        layoutP = QtGui.QVBoxLayout()
+        layoutP = QtWidgets.QVBoxLayout()
         layoutP.addWidget(self.plot)
         self.tabWidget_main.widget(1).setLayout(layoutP)
         # Define behaviours
@@ -40,11 +40,11 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         self.pushButton_About.clicked.connect(self.click_about)
         self.pushButton_Documentation.clicked.connect(self.click_doc)
         # Defines keyboard shortcuts.
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Q"), self, self.close)
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Q"), self, self.close)
         TabW = self.tabWidget_main
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Page up"), self,
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Page up"), self,
                         lambda: TabW.setCurrentIndex(TabW.currentIndex()-1))
-        QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Page down"), self,
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Page down"), self,
                         lambda: TabW.setCurrentIndex(TabW.currentIndex()+1))
         # Dictionnary (WrapperDict)
         self.dict = OrderedDict([
@@ -65,9 +65,14 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
     # Save and load file management.
 
     def load_session(self):
-        OpenDialog = QtGui.QFileDialog.getOpenFileName
-        file_name = OpenDialog(self, "Open file", self.current_dir,
-                               self.mime_types)
+        OpenDialog = QtWidgets.QFileDialog.getOpenFileName
+        out_opendialog = OpenDialog(
+            self,
+            "Open file",
+            self.current_dir,
+            self.mime_types
+            )
+        file_name = out_opendialog[0]
         if file_name == "":
             return
         self.current_dir = dirname(realpath(file_name))
@@ -75,12 +80,12 @@ class MainController(QtGui.QWidget, Ui_Form, WrapperDict):
         if eccwf.values is None:
             message = ("Wrong file type.\n"
                        "Chosen file must be a *.eccw mime type.")
-            QtGui.QMessageBox.about(self, "Error", message)
+            QtWidgets.QMessageBox.about(self, "Error", message)
             return
         self.set_params(**eccwf.values)
 
     def save_session(self):
-        SaveDialog = QtGui.QFileDialog.getSaveFileNameAndFilter
+        SaveDialog = QtWidgets.QFileDialog.getSaveFileName
         file_name, _ = SaveDialog(self, "Save file", self.current_dir,
                                   self.mime_types)
         if file_name:
@@ -92,7 +97,7 @@ if __name__ == "__main__":
     eccwf = EccwFile(filename="../../../../tests/test.eccw")
     params = eccwf.values
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         myapp = MainController(**params)
         myapp.current_dir = "/home/bmary/Programmation/eccw/tests/"
         myapp.plot.current_dir = "/home/bmary/Programmation/eccw/tests/"

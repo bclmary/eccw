@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 from eccw.gui.shared.viewers.spinBox import Ui_Form
 from eccw.shared.checkers import float_check
 
 
-class SpinBox(QtGui.QWidget, Ui_Form):
+class SpinBox(QtWidgets.QWidget, Ui_Form):
     """Spin box widget.
 
     Arguments:
@@ -45,7 +45,7 @@ class SpinBox(QtGui.QWidget, Ui_Form):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         myapp = SpinBox('1.2')
         sys.exit(app.exec_())
     finally:

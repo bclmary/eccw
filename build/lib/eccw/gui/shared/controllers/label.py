@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 from eccw.gui.shared.viewers.label import Ui_Form
 
 
-class Label(QtGui.QWidget, Ui_Form):
+class Label(QtWidgets.QWidget, Ui_Form):
     """Label widget.
 
     Arguments:
@@ -47,7 +47,7 @@ class Label(QtGui.QWidget, Ui_Form):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         myapp = Label("poulpe", bold=True)
         sys.exit(app.exec_())
     finally:

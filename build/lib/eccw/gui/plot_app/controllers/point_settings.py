@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 from collections import OrderedDict
 
 from eccw.gui.plot_app.viewers.point_settings import Ui_Form
@@ -17,7 +17,7 @@ from eccw.gui.shared.wrappers import WrapperDict
 from eccw.shared.print_tools import graph_print
 
 
-class PointSettings(QtGui.QWidget, Ui_Form, WrapperDict):
+class PointSettings(QtWidgets.QWidget, Ui_Form, WrapperDict):
     """Abstract class."""
     def __init__(self, **kwargs):
         super(PointSettings, self).__init__()
@@ -137,7 +137,7 @@ if __name__ == "__main__":
     import sys
 
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
 
         params = {"beta": '0', "alpha": '3.12', "color": ('0', '1', '0', '1'),
                   "size": '5', "style": "*", "label": "poulpe"}
