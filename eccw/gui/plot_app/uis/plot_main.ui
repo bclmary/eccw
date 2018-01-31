@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1032</width>
-    <height>425</height>
+    <height>420</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -192,7 +192,16 @@
         <enum>QFrame::Sunken</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>1</number>
+        </property>
+        <property name="topMargin">
+         <number>1</number>
+        </property>
+        <property name="rightMargin">
+         <number>1</number>
+        </property>
+        <property name="bottomMargin">
          <number>1</number>
         </property>
         <item>
@@ -364,7 +373,7 @@
              <string>Check to add legend on plot</string>
             </property>
             <property name="text">
-             <string>show legend</string>
+             <string>s&amp;how legend</string>
             </property>
             <property name="autoExclusive">
              <bool>false</bool>
@@ -377,7 +386,7 @@
              <string>Check to show range as a light gray line under curve points</string>
             </property>
             <property name="text">
-             <string>show curve point range</string>
+             <string>sho&amp;w curve point range</string>
             </property>
             <property name="checked">
              <bool>false</bool>
@@ -405,6 +414,12 @@
           <iconset resource="../../../images/ressources.qrc">
            <normaloff>:/buttons/button_plotOne.png</normaloff>:/buttons/button_plotOne.png</iconset>
          </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
          <property name="shortcut">
           <string>Ctrl+P</string>
          </property>
@@ -425,11 +440,17 @@
           <string>Plot all curves and points (Crtl+A)</string>
          </property>
          <property name="text">
-          <string>Plot all</string>
+          <string> Plot all</string>
          </property>
          <property name="icon">
           <iconset resource="../../../images/ressources.qrc">
            <normaloff>:/buttons/button_plotAll.png</normaloff>:/buttons/button_plotAll.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
          </property>
          <property name="shortcut">
           <string>Ctrl+A</string>

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from os.path import dirname, realpath
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtWidgets
 from collections import OrderedDict
 from matplotlib.cm import get_cmap
 import csv
@@ -18,7 +18,7 @@ from eccw.physics.eccw_plot import EccwPlot
 from eccw.shared.print_tools import graph_print
 
 
-class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
+class PlotController(QtWidgets.QWidget, Ui_Form, WrapperDict):
     """Main widget for plotting curve and points.
 
     Keyword arguments:
@@ -137,9 +137,14 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
         label is any string value
         rgba color channels red, green , blue and alpha are floats in [0:1]
         """
-        OpenDialog = QtGui.QFileDialog.getOpenFileName
-        file_name = OpenDialog(self, "Import from csv file", self.current_dir,
-                               self.import_mimetypes)
+        OpenDialog = QtWidgets.QFileDialog.getOpenFileName
+        out_opendialog = OpenDialog(
+            self,
+            "Import from csv file",
+            self.current_dir,
+            self.import_mimetypes
+            )
+        file_name = out_opendialog[0]
         if file_name == "":
             return None  # Squip if no file selected.
         self.current_dir = dirname(realpath(file_name))
@@ -177,7 +182,7 @@ class PlotController(QtGui.QWidget, Ui_Form, WrapperDict):
                               "<tr><td>label</td><td>string</td></tr>"
                               "<tr><td>color</td><td>4 floats in [0:1]</td>"
                               "</tr></table>")
-                QtGui.QMessageBox.about(self, "Warning", ''.join(errors))
+                QtWidgets.QMessageBox.about(self, "Warning", ''.join(errors))
 
     # Curve tab management.
 
@@ -463,7 +468,7 @@ if __name__ == "__main__":
     params = eccwf.values['plot']
 
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         myapp = PlotController(**params)
         myapp.current_dir = "/home/bmary/Programmation/eccw/tests/"
         sys.exit(app.exec_())

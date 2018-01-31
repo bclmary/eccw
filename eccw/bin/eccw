@@ -14,7 +14,7 @@ Created on Nov 6 10:58:41 2017
 """
 
 import sys
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 
 from eccw.tui.main import options_parser
@@ -23,7 +23,7 @@ from eccw.gui.main_app.controllers.main import MainController
 
 def main() :
     inputoptions = options_parser()
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     myapp = MainController()
     sys.exit(app.exec_())
 

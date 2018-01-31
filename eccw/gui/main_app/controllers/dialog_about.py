@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 from eccw.gui.main_app.viewers.dialog_about import Ui_Dialog_About
 #import eccw.version as version
@@ -10,7 +10,7 @@ from eccw.gui.main_app.viewers.dialog_about import Ui_Dialog_About
 from eccw import __version__
 from eccw import __authors__
 
-class About(QtGui.QWidget, Ui_Dialog_About):
+class About(QtWidgets.QWidget, Ui_Dialog_About):
     """Widget for software informations display."""
     def __init__(self, parent=None):
         super(About, self).__init__(parent)
@@ -22,6 +22,6 @@ class About(QtGui.QWidget, Ui_Dialog_About):
 
 if __name__ == "__main__":
     import sys
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     myapp = About()
     sys.exit(app.exec_())

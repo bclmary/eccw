@@ -1,2 +1,2 @@
-pyrcc4 -py3 ressources.qrc -o ressources_rc.py
+pyrcc5 -py3 ressources.qrc -o ressources_rc.py
 

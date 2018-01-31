@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>901</width>
-    <height>257</height>
+    <height>268</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,12 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
        </property>
        <property name="title">
         <string>Frictional parameters</string>
@@ -115,11 +121,17 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="toolTip">
         <string>Check to activate fluids pore pressure parameters</string>
        </property>
        <property name="title">
-        <string>Fluids pore pressure</string>
+        <string>F&amp;luids pore pressure</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -297,7 +309,19 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>28</width>
+           <height>28</height>
+          </size>
+         </property>
          <property name="maximumSize">
+          <size>
+           <width>28</width>
+           <height>28</height>
+          </size>
+         </property>
+         <property name="baseSize">
           <size>
            <width>28</width>
            <height>28</height>

@@ -109,7 +109,7 @@
      <item>
       <widget class="QGroupBox" name="groupBox_parameters">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -126,8 +126,17 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="title">
         <string>Select parameter to calculate</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="4">
@@ -351,14 +360,20 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="toolTip">
         <string>Check to activate fluids pore pressure parameters</string>
        </property>
        <property name="title">
-        <string>Fluids pore pressure</string>
+        <string>F&amp;luids pore pressure</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -598,6 +613,12 @@
         <iconset resource="../../../images/ressources.qrc">
          <normaloff>:/buttons/button_compute.png</normaloff>:/buttons/button_compute.png</iconset>
        </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
        <property name="shortcut">
         <string>Ctrl+G</string>
        </property>
@@ -608,12 +629,12 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>32</height>
+         <height>28</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>60</width>
+         <width>54</width>
          <height>16777215</height>
         </size>
        </property>

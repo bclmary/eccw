@@ -35,7 +35,16 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -64,6 +73,12 @@
        <activeoff>:/buttons/button_range_off.png</activeoff>
        <activeon>:/buttons/button_range_on.png</activeon>
       </iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
      </property>
      <property name="checkable">
       <bool>true</bool>

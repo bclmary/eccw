@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 from collections import OrderedDict
 
 from eccw.gui.plot_app.viewers.curve_settings import Ui_Form
@@ -16,7 +16,7 @@ from eccw.gui.shared.wrappers import Wrapper, WrapperDict, WrapperList
 from eccw.shared.print_tools import graph_print
 
 
-class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
+class CurveController(QtWidgets.QWidget, Ui_Form, WrapperDict):
     """Widget for curve parameters and settings entry.
 
     Keyword arguments:
@@ -210,7 +210,7 @@ class CurveController(QtGui.QWidget, Ui_Form, WrapperDict):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
 
         phiB = {"range": {"begin": 25, "step": 5, "end": 45},
                 "scalar": 30, "focus": "range"}

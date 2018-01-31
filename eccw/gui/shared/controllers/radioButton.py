@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 
 from eccw.gui.shared.viewers.radioButton import Ui_Form
 
 
-class RadioButton(QtGui.QWidget, Ui_Form):
+class RadioButton(QtWidgets.QWidget, Ui_Form):
     """Radio button widget.
 
     Arguments:
@@ -47,7 +47,7 @@ class RadioButton(QtGui.QWidget, Ui_Form):
 if __name__ == "__main__":
     import sys
     try:
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         myapp = RadioButton("False", label="Poulpe")
         sys.exit(app.exec_())
     finally:

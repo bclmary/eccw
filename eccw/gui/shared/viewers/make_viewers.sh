@@ -7,7 +7,7 @@ for filename in $inpath/*.ui; do
     in=$filename
     out=${filename/uis/viewers}
     out=${out::-3}.py
-    pyuic4 -x $in -o $out
+    pyuic5 -x $in -o $out
     # Fix ressource import path
     sed -i -e 's/import ressources_rc/import eccw.images.ressources_rc/g' ./$out
 done

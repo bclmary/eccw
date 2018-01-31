@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets
 from collections import OrderedDict
 
 from eccw.gui.calculator_app.viewers.calculator_main import Ui_Form
@@ -12,7 +12,7 @@ from eccw.gui.shared.wrappers import Wrapper, WrapperDict
 from eccw.physics.eccw_compute import EccwCompute
 
 
-class CalculatorController(QtGui.QWidget, Ui_Form, WrapperDict):
+class CalculatorController(QtWidgets.QWidget, Ui_Form, WrapperDict):
 
     def __init__(self, **kwargs):
         super(CalculatorController, self).__init__()
@@ -272,7 +272,7 @@ if __name__ == "__main__":
         eccwf = EccwFile(filename="../../../../tests/test.eccw")
         params = eccwf.values['calculator']
 
-        app = QtGui.QApplication(sys.argv)
+        app = QtWidgets.QApplication(sys.argv)
         myapp = CalculatorController(**params)
         sys.exit(app.exec_())
     finally:
