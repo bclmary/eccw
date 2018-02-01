@@ -17,12 +17,17 @@ from PyQt5 import QtWidgets
 
 from eccw.tui.main import options_parser
 from eccw.gui.main_app.controllers.main import MainController
+from eccw.shared.file_management import EccwFile
 
 
 def launch() :
-    inputoptions = options_parser()
+    out = options_parser()
     app = QtWidgets.QApplication(sys.argv)
-    myapp = MainController()
+    params = dict()
+    if out:
+        eccwf = EccwFile(filename=out)
+        params = eccwf.values
+    myapp = MainController(**params)
     sys.exit(app.exec_())
 
 

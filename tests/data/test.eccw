@@ -85,7 +85,7 @@
 			<focus>scalar</focus>
 			<id>rho_sr</id>
 		</rho_sr>
-		<results></results>
+		<results>&lt;p align='center'&gt;&lt;table width='100%'&gt;&lt;tr&gt;&lt;td align='center', colspan='8',style='color: blue'&gt;------------------------------------- Compression -------------------------------------&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align='center', &gt;α&lt;/td&gt;&lt;td align='center', &gt;β&lt;/td&gt;&lt;td align='center', &gt;Φ&lt;sub&gt;B&lt;/sub&gt;&lt;/td&gt;&lt;td align='center', &gt;Φ&lt;sub&gt;D&lt;/sub&gt;&lt;/td&gt;&lt;td align='center', &gt;∆λ&lt;sub&gt;B&lt;/sub&gt;&lt;/td&gt;&lt;td align='center', &gt;∆λ&lt;sub&gt;D&lt;/sub&gt;&lt;/td&gt;&lt;td align='center', &gt;ρ&lt;sub&gt;f&lt;/sub&gt;&lt;/td&gt;&lt;td align='center', &gt;ρ&lt;sub&gt;sr&lt;/sub&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align='center', &gt;&lt;span style='color: red'&gt;⯅&lt;/span&gt;&lt;/td&gt;&lt;td align='center', &gt;0.0&lt;/td&gt;&lt;td align='center', &gt;30.0&lt;/td&gt;&lt;td align='center', &gt;10.0&lt;/td&gt;&lt;td align='center', &gt;0.5&lt;/td&gt;&lt;td align='center', &gt;0.1&lt;/td&gt;&lt;td align='center', &gt;1000.0&lt;/td&gt;&lt;td align='center', &gt;3500.0&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;table width='40%'&gt;&lt;tr&gt;&lt;td align='center', style='color: blue'&gt;inverse&lt;/td&gt;&lt;td align='center', style='color: blue'&gt;normal&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align='center', &gt;6.0734&lt;/td&gt;&lt;td align='center', &gt;8.8526&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;br/&gt;&lt;/p&gt;</results>
 	</calculator>
 	<plot>
 		<curves>
@@ -209,12 +209,12 @@
 					<id></id>
 				</alpha>
 				<style>square</style>
-				<label>square point</label>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
 				<size>5.0</size>
+				<label>square point</label>
 				<sketch>False</sketch>
 			</points>
 		</curves>
@@ -339,12 +339,12 @@
 					<id></id>
 				</alpha>
 				<style>circle</style>
-				<label>some</label>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>0.0</color>
 				<color>1.0</color>
 				<size>3.0</size>
+				<label>some</label>
 				<sketch>False</sketch>
 			</points>
 		</curves>
@@ -352,23 +352,23 @@
 			<beta>-4.0</beta>
 			<alpha>1.0</alpha>
 			<style>circle</style>
-			<label></label>
 			<color>0.0</color>
 			<color>0.0</color>
 			<color>1.0</color>
 			<color>1.0</color>
 			<size>5.0</size>
+			<label></label>
 		</refpoints>
 		<refpoints>
 			<beta>-2.0</beta>
 			<alpha>-2.0</alpha>
 			<style>star</style>
-			<label></label>
 			<color>0.3333333333333333</color>
 			<color>0.3333333333333333</color>
 			<color>1.0</color>
 			<color>1.0</color>
 			<size>7.0</size>
+			<label></label>
 		</refpoints>
 		<legend>True</legend>
 		<range_point>True</range_point>

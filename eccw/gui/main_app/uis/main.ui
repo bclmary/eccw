@@ -186,6 +186,8 @@
       <attribute name="title">
        <string>Calculator                    </string>
       </attribute>
+      <zorder></zorder>
+      <zorder></zorder>
      </widget>
      <widget class="QWidget" name="tab_plot">
       <property name="autoFillBackground">

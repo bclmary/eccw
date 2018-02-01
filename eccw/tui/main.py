@@ -36,6 +36,27 @@ def options_parser() :
         usage="eccw [-h|--help] [-d|--doc] [-V|--version]",
         )
 
+#    # Positional arguments
+#    posarg = parser.add_argument_group(title="-"*30+"\nPOSITIONAL ARGUMENTS", description="") 
+#    
+#    posarg.add_argument('FILE', # phi_D [delta_lambda_B delta_lambda_D density_ratio] [beta]',
+#                        type=(float),                        
+#                        nargs="*",
+#                        #action=EmptyIsTrue,
+#                        help=("parameters can be :\n"
+#                              "- phi_B : bulk friction angle of material [deg]\n"
+#                              "- phi_D : friction angle on detachment [deg]\n"
+#                              "          negative value for tectonic extension\n"
+#                              "- delta_lambda_B : bulk fluid overpressure gradient\n"
+#                              "- delta_lambda_D : décollement fluid overpressure gradient\n"
+#                              "- density_ratio : ratio of fluid density and saturated rock density\n"
+#                              "- beta : slope of detachment [deg]\n\n"
+#                              "different combinations of these parameters are expected:\n"
+#                              "  phi_B phi_D\n"
+#                              "  phi_B phi_D beta\n"
+#                              "  phi_B phi_D delta_lambda_B delta_lambda_D density_ratio\n"
+#                              "  phi_B phi_D delta_lambda_B delta_lambda_D density_ratio beta\n\n"))
+
     # Optional arguments.
     optarg = parser.add_argument_group(title="-"*30+"\nOPTIONAL ARGUMENT", description="")
 
@@ -59,17 +80,25 @@ def options_parser() :
         help="show complete documentation and exit\n\n"
         )
 
+    optarg.add_argument('-f', '--file',
+                        dest="file",
+                        metavar=("FILE"),
+#                        type=argparse.FileType('r'),
+                        type=(str),
+                        help="re-start session saved in FILE (*.eccw)\n\n")
+
     inputoptions = parser.parse_args() #parse the command line from the shell using arguments defined in the parser object
 
     if inputoptions.doc is True :
         open_pdf("/eccw/documentation/ECCW.pdf")
         exit()
 
-    return inputoptions
+    return inputoptions.file
+
 
 
 if __name__ == "__main__":
 
-    inputoptions = options_parser()
-    print("run can start")
+    out = options_parser()
+    print("run can start", out)
 

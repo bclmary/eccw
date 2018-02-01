@@ -12,7 +12,15 @@ def get_data_files():
     """Return data_files in a platform dependent manner"""
     if sys.platform.startswith('linux'):
         data_files = [('share/applications', ['scripts/eccw.desktop']),
-                      ('share/pixmaps', ['eccw/images/icon_eccw_256x256.png']),
+                      ('share/pixmaps', [
+                        'eccw/images/icon_eccw_16x16.png',
+                        'eccw/images/icon_eccw_24x24.png',
+                        'eccw/images/icon_eccw_32x32.png',
+                        'eccw/images/icon_eccw_48x48.png',
+                        'eccw/images/icon_eccw_128x128.png',
+                        'eccw/images/icon_eccw_256x256.png',
+                        'eccw/images/icon_eccw_512x512.png'
+                        ]),
                       ('share/metainfo', ['scripts/eccw.appdata.xml'])]
     else:
         data_files = []
