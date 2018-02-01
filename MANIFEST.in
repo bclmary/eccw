@@ -1,7 +1,6 @@
 include *.md *.txt
 global-exclude *.py[co] *.svg *.qrc *.ui
 graft eccw/bin
-graft eccw/scripts
 recursive-include eccw/documentation *.pdf
 recursive-include eccw/images *.py *.png
 

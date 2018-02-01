@@ -11,6 +11,27 @@ Exact Critical Coulomb Wedge
 
 *******************************************************************
 
+Overview
+========
+
+Calculator App
+++++++++++++++
+
+.. image:: eccw/images/screen-copy_calculator-app.png
+    :alt: screen copy of calculator app
+    :width: 400
+
+
+Plot App
+++++++++
+
+.. image:: eccw/images/screen-copy_plot-app.png
+    :alt: screen copy of plot app
+    :width: 400
+
+
+*******************************************************************
+
 Installation
 ============
 
@@ -76,26 +97,19 @@ Launch from pypi install
 
 Simply type ``eccw`` in a shell to launch *eccw*.
 
+To obtain help with text based mode, type:
+
+    $ eccw -h
+
+You can access off-line documentation with:
+
+    $ eccw -d
+
+
 Launch from sources install
 ---------------------------
 
 To launch eccw, run ``./eccw`` in a shell which current working directory is setted to `${HOME}/path/to/eccw/eccw/bin` (with ``${HOME}/path/to/`` replaced by your path to the *eccw* folder on your system)
-
-Calculator App
----------------
-
-.. image:: eccw/images/app-calculator_screen-copy.png
-    :alt: screen copy of calculator app
-    :width: 400
-
-
-Plot App
----------
-
-.. image:: eccw/images/app-plot_screen-copy.png
-    :alt: screen copy of plot app
-    :width: 400
-
 
 
 Python library usage
@@ -106,22 +120,22 @@ You can import and use the core objects for computing and plotting Critical Coul
 EccwCompute
 -----------
 
-    >>> from eccw import EccwCompute
-    >>> foo = EccwCompute(phiB=30, phiD=10, beta=0)
-    >>> foo.show_params()
-    { context       : 'Compression'
-      beta          : 0.0
-      alpha         : nan
-      phiB          : 30.0
-      phiD          : 10.0
-      rho_f         : 0.0
-      rho_sr        : 0.0
-      delta_lambdaB : 0.0
-      delta_lambdaD : 0.0
-    }
-    >>> foo.compute("alpha")
-    (3.4365319302835018, 23.946319406533199)
-    
+>>> from eccw import EccwCompute
+>>> foo = EccwCompute(phiB=30, phiD=10, beta=0)
+>>> foo.show_params()
+{ context       : 'Compression'
+  beta          : 0.0
+  alpha         : nan
+  phiB          : 30.0
+  phiD          : 10.0
+  rho_f         : 0.0
+  rho_sr        : 0.0
+  delta_lambdaB : 0.0
+  delta_lambdaD : 0.0
+}
+>>> foo.compute("alpha")
+(3.4365319302835018, 23.946319406533199)
+
 
 The result is always a tuple of two elements.
 First result is for inverse fault mechanism context, second result is for normal fault mechanism context.
@@ -129,15 +143,15 @@ First result is for inverse fault mechanism context, second result is for normal
 The ``beta`` parameter gets a specificity : 0, 1 or 2 results could be obtained in both the normal of inverse context.
 This is the reason ``beta`` results are tuples of tuples.
 
-    >>> foo.alpha = 3.436532
-    >>> foo.compute("beta") 
-    ((-1.0516746372768912e-07,), (69.6779628783264,))
-    >>> foo.alpha = 20
-    >>> foo.compute("beta") 
-    ((), (-3.580929608343892, 43.25889259183777))
-    >>> foo.alpha = -20
-    >>> foo.compute("beta") 
-    ((36.74110740816224, 83.58092960834391), ())
+>>> foo.alpha = 3.436532
+>>> foo.compute("beta") 
+((-1.0516746372768912e-07,), (69.6779628783264,))
+>>> foo.alpha = 20
+>>> foo.compute("beta") 
+((), (-3.580929608343892, 43.25889259183777))
+>>> foo.alpha = -20
+>>> foo.compute("beta") 
+((36.74110740816224, 83.58092960834391), ())
 
 
 Have a look on the plot obtained in next section to understand the previous results.
@@ -145,15 +159,15 @@ Have a look on the plot obtained in next section to understand the previous resu
 EccwPlot
 --------
 
-    >>> from eccw import EccwPlot
-    >>> foo = EccwPlot(phiB=30, phiD=10)
-    >>> foo.add_curve(inverse={'color':(1,0,0,1), 'label':'inverse'}, 
-                      normal={'color':(0,0,1,1), 'label':'normal'})
-    >>> foo.add_point(alpha=3.436532)
-    >>> foo.add_point(alpha=20, style='*', size=10)
-    >>> foo.add_point(alpha=-20, style='s')
-    >>> foo.add_legend()
-    >>> foo.show()
+>>> from eccw import EccwPlot
+>>> foo = EccwPlot(phiB=30, phiD=10)
+>>> foo.add_curve(inverse={'color':(1,0,0,1), 'label':'inverse'}, 
+                  normal={'color':(0,0,1,1), 'label':'normal'})
+>>> foo.add_point(alpha=3.436532)
+>>> foo.add_point(alpha=20, style='*', size=10)
+>>> foo.add_point(alpha=-20, style='s')
+>>> foo.add_legend()
+>>> foo.show()
 
 .. image:: eccw/images/EccwPlot_example.png
     :alt: screen copy of matplotlib window containing ECCW plot

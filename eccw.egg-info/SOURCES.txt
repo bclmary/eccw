@@ -68,8 +68,6 @@ eccw/gui/shared/viewers/toolButton.py
 eccw/gui/shared/viewers/verticalLayout.py
 eccw/images/EccwPlot_example.png
 eccw/images/Qt_logo_24x33.png
-eccw/images/app-calculator_screen-copy.png
-eccw/images/app-plot_screen-copy.png
 eccw/images/button_about.png
 eccw/images/button_close.png
 eccw/images/button_compression.png
@@ -123,6 +121,8 @@ eccw/images/params_rhof.png
 eccw/images/params_rhosr.png
 eccw/images/python-powered-60x24.png
 eccw/images/ressources_rc.py
+eccw/images/screen-copy_calculator-app.png
+eccw/images/screen-copy_plot-app.png
 eccw/images/tab_calculate.png
 eccw/images/tab_plot.png
 eccw/physics/__init__.py
