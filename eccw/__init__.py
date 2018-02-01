@@ -31,6 +31,13 @@ __authors__ = _extract_metadata("eccw", "author")
 __authors__ = list(set(__authors__.split('\n')) - {''})
 __authors__.sort()
 
+__license__ = _extract_metadata("eccw", "license")
+
+__url__ = _extract_metadata("eccw", "url")
+
+__contact__ = _extract_metadata("eccw", "author_email")
+
+
 __all__ = [
     'EccwCompute',
     'EccwPlot',

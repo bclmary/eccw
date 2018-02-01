@@ -21,7 +21,11 @@ def options_parser() :
         add_help=False,
         description=
             "    ECCW - Exact Critical Coulomb Wedge, Version {0}\n"
-            "(c) 2016-2018 {1}\n"
+            "\n"
+            "ECCW Copyright (c) 2016-2018 {1}\n"
+            "This program comes with ABSOLUTELY NO WARRANTY.\n"
+            "This is free software, and you are welcome to redistribute it"
+            "under certain conditions.\n"
             "\n"
             "ECCW is a Qt interface using python package 'eccw' to"
             " compute and draw the exact solution of critical Coulomb"

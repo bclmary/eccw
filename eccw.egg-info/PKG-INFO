@@ -2,7 +2,7 @@ Metadata-Version: 1.1
 Name: eccw
 Version: 2.0.0
 Summary: Exact Critical Coulomb Wedge : tools to compute and display the exact solution of any parameter of Critical Coulomb Wedge
-Home-page: http://github.com/???'
+Home-page: https://github.com/bclmary
 Author: 
 BCL Mary
 Xiaoping Yuan
@@ -10,7 +10,7 @@ YM Leroy
 Pauline Souloumiac
 Chong Wu
 Author-email: bclmary@mailoo.org
-License: UNKNOWN
+License: GPL-3.0+
 Description-Content-Type: UNKNOWN
 Description: |ECCW|
         ######

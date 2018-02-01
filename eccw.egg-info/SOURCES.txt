@@ -92,8 +92,13 @@ eccw/images/colormap_plasma.png
 eccw/images/colormap_viridis.png
 eccw/images/colormap_winter.png
 eccw/images/eccw_title.png
-eccw/images/icon_eccw.png
-eccw/images/icon_eccw_200px.png
+eccw/images/icon_eccw_128×128.png
+eccw/images/icon_eccw_16×16.png
+eccw/images/icon_eccw_24×24.png
+eccw/images/icon_eccw_256×256.png
+eccw/images/icon_eccw_32×32.png
+eccw/images/icon_eccw_48×48.png
+eccw/images/icon_eccw_512×512.png
 eccw/images/illustration_calculator.png
 eccw/images/line_continuous.png
 eccw/images/line_dash_dotted.png

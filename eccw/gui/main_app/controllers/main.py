@@ -21,9 +21,11 @@ class MainController(QtWidgets.QWidget, Ui_Form, WrapperDict):
     def __init__(self, parent=None, **kwargs):
         super(MainController, self).__init__(parent)
         self.setupUi(self)
+        self.setWindowTitle("ECCW")
+        self.set_app_icon()
         self.current_dir = QtCore.QDir.homePath()
-        self.mime_types = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)" %
-                           EccwFile.mime)
+        self.mime_types = ("Fichier eccw (*.%s);;Tout les Fichiers (*.*)"
+                           % EccwFile.mime)
         # Set calculator tab.
         self.calculator = CalculatorController()
         layoutC = QtWidgets.QVBoxLayout()
@@ -55,6 +57,16 @@ class MainController(QtWidgets.QWidget, Ui_Form, WrapperDict):
         if kwargs:
             self.set_params(**kwargs)
         self.show()
+
+    def set_app_icon(self):
+        """Set windows icon for Windows"""
+        app_icon = QtGui.QIcon()
+        app_icon.addFile('eccw/images/icon_eccw_16×16.png', QtCore.QSize(16,16))
+        app_icon.addFile('eccw/images/icon_eccw_24×24.png', QtCore.QSize(24,24))
+        app_icon.addFile('eccw/images/icon_eccw_32×32.png', QtCore.QSize(32,32))
+        app_icon.addFile('eccw/images/icon_eccw_48×48.png', QtCore.QSize(48,48))
+        app_icon.addFile('eccw/images/icon_eccw_256×256.png', QtCore.QSize(256,256))
+        self.setWindowIcon(app_icon)
 
     def click_about(self):
         self.about = About()

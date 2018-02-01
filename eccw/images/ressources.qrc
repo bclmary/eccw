@@ -5,13 +5,17 @@
     <file>line_dashed.png</file>
     <file>line_dotted.png</file>
   </qresource>
-  <qresource prefix="newPrefix"/>
   <qresource prefix="illustrations">
     <file>illustration_calculator.png</file>
   </qresource>
   <qresource prefix="icons">
-    <file>icon_eccw.png</file>
-    <file>icon_eccw_200px.png</file>
+    <file>icon_eccw_16×16.png</file>
+    <file>icon_eccw_24×24.png</file>
+    <file>icon_eccw_32×32.png</file>
+    <file>icon_eccw_48×48.png</file>
+    <file>icon_eccw_128×128.png</file>
+    <file>icon_eccw_256×256.png</file>
+    <file>icon_eccw_512×512.png</file>
   </qresource>
   <qresource prefix="markers">
     <file>marker_circle.png</file>
