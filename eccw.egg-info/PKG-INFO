@@ -11,7 +11,6 @@ Pauline Souloumiac
 Chong Wu
 Author-email: bclmary@mailoo.org
 License: GPL-3.0+
-Description-Content-Type: UNKNOWN
 Description: |ECCW|
         ######
         
@@ -211,10 +210,10 @@ Description: |ECCW|
         
 Keywords: geology,accretionnary prism
 Platform: UNKNOWN
-Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Stable
 Classifier: Environment :: X11 Applications :: Qt
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: MIT License
+Classifier: License :: OSI Approved :: GNU GPL-3.0+
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.4
 Classifier: Topic :: Scientific/Engineering :: Geology

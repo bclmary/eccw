@@ -5,6 +5,7 @@ requirements.txt
 setup.cfg
 setup.py
 eccw/__init__.py
+eccw/main.py
 eccw.egg-info/PKG-INFO
 eccw.egg-info/SOURCES.txt
 eccw.egg-info/dependency_links.txt
@@ -66,6 +67,7 @@ eccw/gui/shared/viewers/spinBox.py
 eccw/gui/shared/viewers/toolButton.py
 eccw/gui/shared/viewers/verticalLayout.py
 eccw/images/EccwPlot_example.png
+eccw/images/Qt_logo_24×33.png
 eccw/images/app-calculator_screen-copy.png
 eccw/images/app-plot_screen-copy.png
 eccw/images/button_about.png
@@ -119,6 +121,7 @@ eccw/images/params_phiB.png
 eccw/images/params_phiD.png
 eccw/images/params_rhof.png
 eccw/images/params_rhosr.png
+eccw/images/python-powered-60x24.png
 eccw/images/ressources_rc.py
 eccw/images/tab_calculate.png
 eccw/images/tab_plot.png
@@ -133,3 +136,5 @@ eccw/shared/print_tools.py
 eccw/shared/tools.py
 eccw/tui/__init__.py
 eccw/tui/main.py
+scripts/eccw.appdata.xml
+scripts/eccw.desktop

@@ -24,8 +24,11 @@ class About(QtWidgets.QWidget, Ui_Dialog_About):
         self.label_authors.setText("\n".join(__authors__))
         self.label_license.setText(__license__)
         color = '#888a85'
-        self.label_url.setText(self.color_text(__url__, color))
-        self.label_contact.setText(self.color_text(__contact__, color))
+        url = "<a href='{}'> GitHub </a>".format(__url__)
+        self.label_url.setText(url)
+#        self.label_contact.setText(self.color_text(__contact__, color))
+        contact = "<a href='mailto:{}'> {} </a>".format(__contact__, __contact__)
+        self.label_contact.setText(contact)
         self.show()
 
 
