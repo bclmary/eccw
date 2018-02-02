@@ -10,6 +10,8 @@ eccw.egg-info/PKG-INFO
 eccw.egg-info/SOURCES.txt
 eccw.egg-info/dependency_links.txt
 eccw.egg-info/entry_points.txt
+eccw.egg-info/not-zip-safe
+eccw.egg-info/requires.txt
 eccw.egg-info/top_level.txt
 eccw/bin/eccw
 eccw/documentation/ECCW.pdf

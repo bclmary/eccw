@@ -1,3 +1,6 @@
 [console_scripts]
 eccw = eccw.main:launch
 
+[gui_scripts]
+eccw = eccw.main:launch
+

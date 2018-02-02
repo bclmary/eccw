@@ -59,15 +59,15 @@ class MainController(QtWidgets.QWidget, Ui_Form, WrapperDict):
         self.show()
 
     def set_app_icon(self):
-        """Set windows icon for Windows"""
+        """Set main window icon displayed in pannel, overview mode, etc..."""
         app_icon = QtGui.QIcon()
-        app_icon.addFile('eccw/images/icon_eccw_16x16.png', QtCore.QSize(16,16))
-        app_icon.addFile('eccw/images/icon_eccw_24x24.png', QtCore.QSize(24,24))
-        app_icon.addFile('eccw/images/icon_eccw_32x32.png', QtCore.QSize(32,32))
-        app_icon.addFile('eccw/images/icon_eccw_48x48.png', QtCore.QSize(48,48))
-        app_icon.addFile('eccw/images/icon_eccw_128x128.png', QtCore.QSize(256,256))
-        app_icon.addFile('eccw/images/icon_eccw_256x256.png', QtCore.QSize(256,256))
-        app_icon.addFile('eccw/images/icon_eccw_512x512.png', QtCore.QSize(256,256))
+        app_icon.addPixmap(QtGui.QPixmap(":/icons/icon_eccw_16x16.png"))
+        app_icon.addPixmap(QtGui.QPixmap(":/icons/icon_eccw_24x24.png"))
+        app_icon.addPixmap(QtGui.QPixmap(":/icons/icon_eccw_32x32.png"))
+        app_icon.addPixmap(QtGui.QPixmap(":/icons/icon_eccw_48x48.png"))
+        app_icon.addPixmap(QtGui.QPixmap(":/icons/icon_eccw_128x128.png"))
+        app_icon.addPixmap(QtGui.QPixmap(":/icons/icon_eccw_256x256.png"))
+        app_icon.addPixmap(QtGui.QPixmap(":/icons/icon_eccw_512x512.png"))
         self.setWindowIcon(app_icon)
 
     def click_about(self):

@@ -35,7 +35,7 @@ __license__ = _extract_metadata("eccw", "license")
 
 __url__ = _extract_metadata("eccw", "url")
 
-__contact__ = _extract_metadata("eccw", "author_email")
+__contact__ = _extract_metadata("eccw", "maintainer_email")
 
 
 __all__ = [

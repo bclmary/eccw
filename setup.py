@@ -2,10 +2,10 @@
 # -*-coding:utf-8 -*
 
 from setuptools import setup, find_packages
-import sys
-from distutils.command.install_data import install_data
-import subprocess
-import os.path as osp
+#import sys
+#from distutils.command.install_data import install_data
+#import subprocess
+#import os.path as osp
 
 
 #def get_data_files():
@@ -45,13 +45,24 @@ setup(
         'console_scripts': [
             'eccw=eccw.main:launch',
             ],
+        'gui_scripts': [
+            'eccw=eccw.main:launch',
+            ]
         },
     # Auto scanning package
-    packages=find_packages(),
+#    packages=find_packages(),
     # Use MANIFEST.in for custom packaging
-    include_package_data=True,
+#    include_package_data=True,
+
+#    install_requires = [
+#        'numpy>=1.10',
+#        'matplotlib>=2.0',
+#        'pyqt5>=5.6',
+#        'xmltodict>=0.10',
+#        ],
+#    python_requires = '>=3.3',
 
 #    data_files=get_data_files(),
-#    script=[osp.join('scripts', 'eccw')],
+#    scripts=[osp.join('scripts', 'eccw/bin/eccw')],
 #    cmdclass=CMDCLASS,
     )

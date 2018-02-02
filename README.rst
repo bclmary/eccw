@@ -35,8 +35,8 @@ Plot App
 Installation
 ============
 
-Dependeancies
-+++++++++++++
+Dependancies
+++++++++++++
 
 The folowing dependancies are needed for manual installation from sources.
 All are availables on *ubuntu* and *debian* repositories.
