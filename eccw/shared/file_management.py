@@ -10,6 +10,7 @@ import xmltodict
 from xml.parsers.expat import ExpatError
 import webbrowser
 import sys
+from eccw import  __location__
 
 from eccw.shared.print_tools import graph_print
 
@@ -83,8 +84,9 @@ class EccwFile():
 
 
 def open_pdf(file_name):
-    file_name = "".join([p for p in sys.path if p[-4:] == "eccw"]
-                        + [file_name])
+#    file_name = "".join([p for p in sys.path if p[-4:] == "eccw"]
+#                        + [file_name])
+    file_name = __location__ + "/" + file_name
     webbrowser.open(file_name, new=0, autoraise=True)
 
 if __name__ == "__main__":

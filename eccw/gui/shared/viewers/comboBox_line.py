@@ -11,12 +11,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(125, 30)
+        Form.resize(127, 30)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.comboBox = QtWidgets.QComboBox(Form)
-        self.comboBox.setMaximumSize(QtCore.QSize(130, 16777215))
+        self.comboBox.setMinimumSize(QtCore.QSize(130, 28))
+        self.comboBox.setMaximumSize(QtCore.QSize(130, 28))
+        self.comboBox.setBaseSize(QtCore.QSize(130, 28))
         self.comboBox.setObjectName("comboBox")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/lines/line_continuous.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)

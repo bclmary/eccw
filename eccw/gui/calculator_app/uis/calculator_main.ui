@@ -603,6 +603,24 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_Go">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>80</width>
+         <height>32</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Launch calculation (Crtl+G)</string>
        </property>
@@ -628,14 +646,20 @@
       <widget class="QPushButton" name="pushButton_Clear">
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>28</height>
+         <width>54</width>
+         <height>32</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>54</width>
-         <height>16777215</height>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>54</width>
+         <height>32</height>
         </size>
        </property>
        <property name="toolTip">

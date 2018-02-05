@@ -1,6 +1,6 @@
-include *.md *.txt
+include *.md *.txt *.cfg
 global-exclude *.py[co] *.svg *.qrc *.ui
 graft eccw/bin
-recursive-include eccw/documentation *.pdf
-recursive-include eccw/images *.py *.png
+include eccw/documentation/ECCW.pdf
+include eccw/images *.py *.png
 

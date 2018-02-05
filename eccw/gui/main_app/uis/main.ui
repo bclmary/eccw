@@ -26,6 +26,24 @@
      </property>
      <item>
       <widget class="QPushButton" name="pushButton_Open">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Open previously saved session (Crtl+O)</string>
        </property>
@@ -49,6 +67,24 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_Save">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Save current session (Crtl+S)</string>
        </property>
@@ -85,6 +121,24 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_About">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>80</width>
+         <height>28</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>About ECCW software</string>
        </property>
@@ -105,6 +159,24 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_Documentation">
+       <property name="minimumSize">
+        <size>
+         <width>140</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>28</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>140</width>
+         <height>28</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>Display pdf fulll documentation (Crtl+D)</string>
        </property>
@@ -186,8 +258,6 @@
       <attribute name="title">
        <string>Calculator                    </string>
       </attribute>
-      <zorder></zorder>
-      <zorder></zorder>
      </widget>
      <widget class="QWidget" name="tab_plot">
       <property name="autoFillBackground">

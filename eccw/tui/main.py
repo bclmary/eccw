@@ -33,29 +33,8 @@ def options_parser() :
                 __version__, 
                 ", ".join(__authors__)
                 ),
-        usage="eccw [-h|--help] [-d|--doc] [-V|--version]",
+#        usage="eccw [-f FILE] [-h|--help] [-d|--doc] [-V|--version]",
         )
-
-#    # Positional arguments
-#    posarg = parser.add_argument_group(title="-"*30+"\nPOSITIONAL ARGUMENTS", description="") 
-#    
-#    posarg.add_argument('FILE', # phi_D [delta_lambda_B delta_lambda_D density_ratio] [beta]',
-#                        type=(float),                        
-#                        nargs="*",
-#                        #action=EmptyIsTrue,
-#                        help=("parameters can be :\n"
-#                              "- phi_B : bulk friction angle of material [deg]\n"
-#                              "- phi_D : friction angle on detachment [deg]\n"
-#                              "          negative value for tectonic extension\n"
-#                              "- delta_lambda_B : bulk fluid overpressure gradient\n"
-#                              "- delta_lambda_D : décollement fluid overpressure gradient\n"
-#                              "- density_ratio : ratio of fluid density and saturated rock density\n"
-#                              "- beta : slope of detachment [deg]\n\n"
-#                              "different combinations of these parameters are expected:\n"
-#                              "  phi_B phi_D\n"
-#                              "  phi_B phi_D beta\n"
-#                              "  phi_B phi_D delta_lambda_B delta_lambda_D density_ratio\n"
-#                              "  phi_B phi_D delta_lambda_B delta_lambda_D density_ratio beta\n\n"))
 
     # Optional arguments.
     optarg = parser.add_argument_group(title="-"*30+"\nOPTIONAL ARGUMENT", description="")
@@ -83,7 +62,7 @@ def options_parser() :
     optarg.add_argument('-f', '--file',
                         dest="file",
                         metavar=("FILE"),
-#                        type=argparse.FileType('r'),
+#                        type=argparse.FileType('r'), # open file
                         type=(str),
                         help="re-start session saved in FILE (*.eccw)\n\n")
 

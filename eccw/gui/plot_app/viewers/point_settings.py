@@ -60,6 +60,7 @@ class Ui_Form(object):
         self.pushButton_kill.setSizePolicy(sizePolicy)
         self.pushButton_kill.setMinimumSize(QtCore.QSize(28, 28))
         self.pushButton_kill.setMaximumSize(QtCore.QSize(28, 28))
+        self.pushButton_kill.setBaseSize(QtCore.QSize(28, 28))
         self.pushButton_kill.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/buttons/button_close.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)

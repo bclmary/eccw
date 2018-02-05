@@ -1,6 +1,6 @@
 Metadata-Version: 1.2
 Name: eccw
-Version: 2.0.4
+Version: 2.0.5.post9
 Summary: Exact Critical Coulomb Wedge : tools to compute and display the exact solution of any parameter of Critical Coulomb Wedge
 Home-page: https://github.com/bclmary
 Author: BCL Mary
@@ -23,8 +23,26 @@ Description: |ECCW|
         Overview
         ========
         
+        
+        General informations
+        ++++++++++++++++++++
+        
+        * ECCW is a python3 library;
+        * ECCW is also Qt interface using the python library;
+        * In the GUI, you can save a session and keep it in an xml file (.eccw)
+        * A pdf documentation is available (see Usage section) including:
+            * usage explainations;
+            * theoretical explainations 
+            * interpretation guidelines of the results;
+            * technical blueprints of the equation implemantation.
+        
+        
         Calculator App
         ++++++++++++++
+        
+        * Compute the solution of the *Critical Coulomb Wedge* for compressive or extensive tectonic context, with or without fluids overpressure.
+        * The solution can be computed with one of the four main parameters set as unknown.
+        * A range of solutions can be computed at once if you set one of the known parameters as a range.
         
         .. image:: eccw/images/screen-copy_calculator-app.png
             :alt: screen copy of calculator app
@@ -34,7 +52,16 @@ Description: |ECCW|
         Plot App
         ++++++++
         
+        * Plot the solution of the *Critical Coulomb Wedge* in matplotlib windows (includes zooms, exports, and more).
+        * A range of solutions can be ploted at once if you set one of the known parameters as a range.
+        * You can explore graphically points on the solution curve, with optional display of a sketch representing orientations and directions of faults.
+        * Refrences points can be manually added or imported from .csv files.
+        
         .. image:: eccw/images/screen-copy_plot-app.png
+            :alt: screen copy of plot app
+            :width: 400
+        
+        .. image:: eccw/images/screen-copy_plot-app_plot.png
             :alt: screen copy of plot app
             :width: 400
         
@@ -44,53 +71,76 @@ Description: |ECCW|
         Installation
         ============
         
-        Dependeancies
-        +++++++++++++
         
-        The folowing dependancies are needed for manual installation from sources.
-        All are availables on *ubuntu* and *debian* repositories.
+        Windows
+        +++++++
         
-        
-        	| python3-numpy
-        	| python3-matplotlib
-        	| python3-pyqt5
-        	| python3-xmltodict
-        	| canberra-gtk-module (?)
+        .. note :: Only tested on *Windows 7*.
         
         
-        Steps for installation
-        ++++++++++++++++++++++
+        1. Install python3 verson of **miniconda** python environment from https://conda.io/miniconda.html
+            a. run downloaded .exe;
+            b. at **Advanced Options** step, tick checkbox named *Add Anaconda to my PATH environment variable*.
         
-        Installation from pypi
+        2. Launch the windows **Command Prompt**:
+            a. type ``conda`` to check that *conda* is correctly installed;
+            b. type ``pip`` to check that *pip* is also correctly installed.
+        
+        3. Install *ECCW* with the following command in the *Command Prompt*::
+        
+            $ pip install eccw
+        
+        4. *ECCW* is then available from the *Command Prompt* by taping ``eccw`` or simply from the main *Windows* menu under the name *eccw*.
+        
+        
+        Linux
+        +++++
+        
+        .. note :: Only tested on *Debian 9 (Gnome)* and *Ubuntu 16.04 (Unity)*.
+        
+        Installation using pip
         ----------------------
         
-        Simply type in a shell
+        1. Install **pip** and **tk** for *Python3*. 
+           On *Debian* family distributions, you can install these packages using the following command::
         
-        	$ pip install eccw
+              $ sudo apt-get install python3-pip python3-tk
         
-        or 
+        2. Install *ECCW* with the following command::
         
-        	$ pip3 install eccw
+              $ pip3 install eccw
         
-        according to your system defaults.
-        Eccw is written in python3, so the pypi version should be so.
+        3. *ECCW* is then available from a Terminal by taping ``eccw``
         
-        Installations from sources
+        Installation from sources_
         --------------------------
         
-        Unzip eccw.zip somewhere in your home.
+        1. Install the folowing dependancies for python3:
         
-        Add the location of *eccw* folder to the environment variable `$PYTHONPATH`
+        	| tk
+        	| pyqt5
+        	| numpy
+        	| matplotlib
+        	| xmltodict
         
-            $ export PYTHONPATH=${PYTHONPATH}:${HOME}/path/to/eccw/
+           On *Debian* family distributions, you can install these packages using the following command::
         
-        Adding this line (correctly setted to suit your system) in your `.bashrc` file will permanently set  available the access to eccw module to your local python.
+              $ sudo apt-get install python3-tk python3-pyqt5 python3-numpy python3-matplotlib python3-xmltodict
         
-        Before to try to launch *eccw*, make sure that the file `eccw/eccw/bin/eccw` is executable
+        2. Using a terminal with current working directory setted on *ECCW* sources folder, you can install *ECCW* with the following command::
         
-            $ chmod +x ${HOME}/path/to/eccw/eccw/bin/eccw
+              $ python3 setup.py install
         
-        with `${HOME}/path/to/` replaced by your path to the *eccw* folder on your system.
+        3. *ECCW* is then available from a Terminal by taping ``eccw``
+        
+        
+        .. note:: You can also launch *ECCW* without installation (but with dependancies installed) if you add the path to the *ECCW* sources folder to the environment variable ``$PYTHONPATH``::
+        
+            $ export PYTHONPATH=${PYTHONPATH}:path/to/eccw/sources/
+        
+            This command can be added to your ``.bashrc`` file (hidden file located at the root of your home).
+            Once the PYTHONPATH is seted, you can launch *ECCW* by running ``eccw/main.py`` file in the sources folder.
+        
         
         
         *******************************************************************
@@ -98,11 +148,9 @@ Description: |ECCW|
         Usage
         =====
         
+        
         GUI usage
         +++++++++
-        
-        Launch from pypi install
-        ------------------------
         
         Simply type ``eccw`` in a shell to launch *eccw*.
         
@@ -114,20 +162,18 @@ Description: |ECCW|
         
             $ eccw -d
         
-        
-        Launch from sources install
-        ---------------------------
-        
-        To launch eccw, run ``./eccw`` in a shell which current working directory is setted to `${HOME}/path/to/eccw/eccw/bin` (with ``${HOME}/path/to/`` replaced by your path to the *eccw* folder on your system)
+        The documentation is also available using the button 'Documentation' of the GUI.
         
         
         Python library usage
         ++++++++++++++++++++
         
-        You can import and use the core objects for computing and plotting Critical Coulomb Wedge from python as discribe in what follows.
+        You can import and use the core objects for computing and plotting *Critical Coulomb Wedge* from python as discribed in what follows.
         
         EccwCompute
         -----------
+        
+        This the core object that compute the solutions of the *CCW* problem.
         
         >>> from eccw import EccwCompute
         >>> foo = EccwCompute(phiB=30, phiD=10, beta=0)
@@ -146,8 +192,8 @@ Description: |ECCW|
         (3.4365319302835018, 23.946319406533199)
         
         
-        The result is always a tuple of two elements.
-        First result is for inverse fault mechanism context, second result is for normal fault mechanism context.
+        The result obtained with the ``compute`` method is always a tuple of two elements.
+        First result is for **inverse** fault mechanism context, second result is for **normal** fault mechanism context.
         
         The ``beta`` parameter gets a specificity : 0, 1 or 2 results could be obtained in both the normal of inverse context.
         This is the reason ``beta`` results are tuples of tuples.
@@ -167,6 +213,8 @@ Description: |ECCW|
         
         EccwPlot
         --------
+        
+        This the core object that plot the solutions of the *CCW* problem. This object inherits from ``EccwCompute``.
         
         >>> from eccw import EccwPlot
         >>> foo = EccwPlot(phiB=30, phiD=10)
@@ -189,8 +237,8 @@ Description: |ECCW|
         Contributing
         ============
         
-        Dependancies
-        ++++++++++++
+        Additional dependancies
+        +++++++++++++++++++++++
         
         Some softwares are needed to convert Qt specific files into python code:
         
@@ -203,15 +251,34 @@ Description: |ECCW|
         
         Informations for developpers
         ++++++++++++++++++++++++++++
-        Convert xml .ui files created using *Qt-Designer* into python files::
+        
+        * Convert xml .ui files created using *Qt-Designer* into python files::
             
-            $ pyuic4 -x xxx.ui -o xxx_Viewer.py
+            $ pyuic5 -x xxx.ui -o xxx_Viewer.py
         
-        All graphical object (Qt-derived) get the following methods:
+          Some bash scripts located in ``gui/*/viewers`` folders named ``make_viewers.sh`` automatise this process.
+          Some custom corrections of *Qt* objects dimensions are also embedded in this script.
         
-        * getParams:   return an OrderedDict that describe the state of the object.
-        * setParams:   set the object with a dict obtained from getParams.
-        * getSelect:   return an OrderedDict that describe the selected parameters to treat (equal to getParams if the paramters gets single state).
+        * Convert *Qt* ressources .qrc files created using *Qt-Designer* into python files::
+            
+            $ pyrcc5 xxx.qrc -o xxx_rc.py
+        
+          These ressources files are a smart way to embed images into source code and solve the access path to these images problem after desktop installation.
+        
+        * All graphical object (Qt-derived) get the following methods:
+        
+            * getParams:   return an OrderedDict that describe the state of the object.
+            * setParams:   set the object with a dict obtained from getParams.
+            * getSelect:   return an OrderedDict that describe the selected parameters to treat (equal to getParams if the paramters gets single state).
+        
+        
+        
+        
+        
+        
+        
+        
+        .. _sources: https://github.com/bclmary
         
         
         .. |ECCW| image:: ./eccw/images/eccw_title.png
@@ -220,11 +287,17 @@ Description: |ECCW|
         
 Keywords: geology,accretionnary prism
 Platform: linux
-Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Natural Language :: English
 Classifier: Environment :: X11 Applications :: Qt
 Classifier: Environment :: Console
-Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Intended Audience :: Science/Research
 Classifier: Operating System :: POSIX
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: Microsoft :: Windows :: Windows 7
 Classifier: Topic :: Scientific/Engineering
-Requires-Python: >=3.3
+Classifier: Topic :: Education
+Requires-Python: >=3.4

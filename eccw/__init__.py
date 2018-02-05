@@ -27,15 +27,21 @@ def _extract_metadata(package_name, metadata_name):
 
 __version__ = _extract_metadata("eccw", "version")
 
-__authors__ = _extract_metadata("eccw", "author")
-__authors__ = list(set(__authors__.split('\n')) - {''})
-__authors__.sort()
+__location__ = _extract_metadata("eccw", "location")
 
-__license__ = _extract_metadata("eccw", "license")
+__authors__ = [
+    'BCL Mary',
+    'Xiaoping Yuan',
+    'YM Leroy',
+    'Pauline Souloumiac',
+    'Chong Wu',
+    ]
 
-__url__ = _extract_metadata("eccw", "url")
+__license__ = "GNU GPL-v3"
 
-__contact__ = _extract_metadata("eccw", "maintainer_email")
+__url__ = "https://github.com/bclmary"
+
+__contact__ = "bclmary@mailoo.org"
 
 
 __all__ = [

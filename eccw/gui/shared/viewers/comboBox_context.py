@@ -11,7 +11,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(136, 30)
+        Form.resize(140, 28)
+        Form.setMinimumSize(QtCore.QSize(0, 28))
+        Form.setMaximumSize(QtCore.QSize(16777215, 28))
+        Form.setBaseSize(QtCore.QSize(0, 28))
         self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -21,6 +24,9 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
         self.comboBox.setSizePolicy(sizePolicy)
+        self.comboBox.setMinimumSize(QtCore.QSize(140, 28))
+        self.comboBox.setMaximumSize(QtCore.QSize(140, 28))
+        self.comboBox.setBaseSize(QtCore.QSize(140, 28))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
