@@ -11,53 +11,6 @@ Exact Critical Coulomb Wedge
 
 *******************************************************************
 
-Overview
-========
-
-
-General informations
-++++++++++++++++++++
-
-* ECCW is a python3 library;
-* ECCW is also Qt interface using the python library;
-* In the GUI, you can save a session and keep it in an xml file (.eccw)
-* A pdf documentation is available (see Usage section) including:
-    * usage explainations;
-    * theoretical explainations 
-    * interpretation guidelines of the results;
-    * technical blueprints of the equation implemantation.
-
-
-Calculator App
-++++++++++++++
-
-* Compute the solution of the *Critical Coulomb Wedge* for compressive or extensive tectonic context, with or without fluids overpressure.
-* The solution can be computed with one of the four main parameters set as unknown.
-* A range of solutions can be computed at once if you set one of the known parameters as a range.
-
-.. image:: eccw/images/screen-copy_calculator-app.png
-    :alt: screen copy of calculator app
-    :width: 400
-
-
-Plot App
-++++++++
-
-* Plot the solution of the *Critical Coulomb Wedge* in matplotlib windows (includes zooms, exports, and more).
-* A range of solutions can be ploted at once if you set one of the known parameters as a range.
-* You can explore graphically points on the solution curve, with optional display of a sketch representing orientations and directions of faults.
-* Refrences points can be manually added or imported from .csv files.
-
-.. image:: eccw/images/screen-copy_plot-app.png
-    :alt: screen copy of plot app
-    :width: 400
-
-.. image:: eccw/images/screen-copy_plot-app_plot.png
-    :alt: screen copy of plot app
-    :width: 400
-
-
-*******************************************************************
 
 Installation
 ============
@@ -140,29 +93,8 @@ Usage
 =====
 
 
-GUI usage
-+++++++++
-
-Simply type ``eccw`` in a shell to launch *eccw*.
-
-To obtain help with text based mode, type:
-
-    $ eccw -h
-
-You can access off-line documentation with:
-
-    $ eccw -d
-
-The documentation is also available using the button 'Documentation' of the GUI.
-
-
-Python library usage
-++++++++++++++++++++
-
-You can import and use the core objects for computing and plotting *Critical Coulomb Wedge* from python as discribed in what follows.
-
 EccwCompute
------------
++++++++++++
 
 This the core object that compute the solutions of the *CCW* problem.
 
@@ -203,7 +135,7 @@ This is the reason ``beta`` results are tuples of tuples.
 Have a look on the plot obtained in next section to understand the previous results.
 
 EccwPlot
---------
+++++++++
 
 This the core object that plot the solutions of the *CCW* problem. This object inherits from ``EccwCompute``.
 
@@ -217,51 +149,9 @@ This the core object that plot the solutions of the *CCW* problem. This object i
 >>> foo.add_legend()
 >>> foo.show()
 
-.. image:: eccw/images/EccwPlot_example.png
+.. image:: ./images/EccwPlot_example.png
     :alt: screen copy of matplotlib window containing ECCW plot
     :width: 400
-
-
-
-*******************************************************************
-
-Contributing
-============
-
-Additional dependancies
-+++++++++++++++++++++++
-
-Some softwares are needed to convert Qt specific files into python code:
-
- * pyuic5 is used to convert form ``.ui`` files into python code calling PyQt;
- * pyrcc5 is used to convert Qt ressources files ``.qrc`` into python module.
-
-Both are found in following dependancies (ubuntu / debian):
-
-    | pyqt5-dev-tools 
-
-Informations for developpers
-++++++++++++++++++++++++++++
-
-* Convert xml .ui files created using *Qt-Designer* into python files::
-    
-    $ pyuic5 -x xxx.ui -o xxx_Viewer.py
-
-  Some bash scripts located in ``gui/*/viewers`` folders named ``make_viewers.sh`` automatise this process.
-  Some custom corrections of *Qt* objects dimensions are also embedded in this script.
-
-* Convert *Qt* ressources .qrc files created using *Qt-Designer* into python files::
-    
-    $ pyrcc5 xxx.qrc -o xxx_rc.py
-
-  These ressources files are a smart way to embed images into source code and solve the access path to these images problem after desktop installation.
-
-* All graphical object (Qt-derived) get the following methods:
-
-    * getParams:   return an OrderedDict that describe the state of the object.
-    * setParams:   set the object with a dict obtained from getParams.
-    * getSelect:   return an OrderedDict that describe the selected parameters to treat (equal to getParams if the paramters gets single state).
-
 
 
 
@@ -272,6 +162,6 @@ Informations for developpers
 .. _sources: https://github.com/bclmary
 
 
-.. |ECCW| image:: ./eccw/images/eccw_title.png
+.. |ECCW| image:: ./images/eccw_title.png
     :alt: ECCW
     :height: 200

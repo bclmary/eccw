@@ -1,6 +1,4 @@
 include *.md *.txt *.cfg
-global-exclude *.py[co] *.svg *.qrc *.ui
-graft eccw/bin
-include eccw/documentation/ECCW.pdf
-include eccw/images *.py *.png
+global-exclude *.py[co]
+
 

@@ -3,7 +3,7 @@
 
 import unittest
 
-from eccw.physics.eccw_compute import EccwCompute
+from eccw import EccwCompute
 
 
 class TestEccwCompute(unittest.TestCase):
