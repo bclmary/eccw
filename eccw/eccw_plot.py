@@ -14,6 +14,7 @@ from matplotlib.offsetbox import DrawingArea, AnnotationBbox
 from matplotlib import patches, lines
 import warnings
 
+
 from eccw import EccwCompute
 from eccw.shared import r2d, imin, imax
 
@@ -45,7 +46,7 @@ class EccwPlot(EccwCompute):
         EccwCompute.__init__(self, **kwargs)
         self.sketch_size_factor = kwargs.get('sketch_size_factor', 1.)
         self.legend = None
-        self.reset_figure()
+        self.init_figure()
 
     @property
     def sketch_size_factor(self):
@@ -242,16 +243,20 @@ class EccwPlot(EccwCompute):
 
     # Public methods
 
-    def reset_figure(self):
+    def init_figure(self):
         self.figure = plt.figure("ECCW", figsize=(8, 6))
         self.axe = self.figure.gca()
         self.axe.set_xlabel(r"Décollement angle $\beta$ [deg]", fontsize=12)
         self.axe.set_ylabel(r"Critical slope $\alpha_c$ [deg]", fontsize=12)
         self.axe.grid(True)
 
+    def reset_figure(self):
+#        plt.close('all')
+        self.init_figure()
+
     def show(self, block=True):
-        # plt.show(self.figure, block=False)
-        plt.show(block=block)
+        plt.show()
+#        plt.show(block=block)
 
     def add_title(self, title=''):
         self.axe.set_title(title, fontsize=16)
