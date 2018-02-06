@@ -6,8 +6,17 @@ Exact Critical Coulomb Wedge
 
 **ECCW** allows to compute the exact solution of any parameter of critical Coulomb wedge (as Dahlen 1984 and Yuan et al. 2015). It allows to draw any of these solutions in the β vs α domain (basal slope against surface slope). Are availables compressive or extensive geological context and fluid pore pressure.
 
-**ECCW** is under GNU GPL-v3  licence.
+**ECCW** is under GNU GPL-v3 license.
 
+
+*******************************************************************
+
+General informations
+====================
+
+*ECCW* is a *python3* library.
+
+A graphical user interface (GUI), written in *python3* and using *Qt* is also available under the name *ECCW-GUI*.
 
 *******************************************************************
 
@@ -92,6 +101,7 @@ Installation from sources_
 Usage
 =====
 
+The following describe usage of *ECCW* class objects, callable from a python3 shell.
 
 EccwCompute
 +++++++++++
