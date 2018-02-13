@@ -4,4 +4,4 @@
 # Ignore python packaging builds
 dist/
 build/
-eccw.egg-info/
+*.egg-info/
