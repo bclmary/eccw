@@ -9,7 +9,6 @@ import numpy as np
 from math import pi, cos, sin, tan, atan, asin
 from collections import OrderedDict
 
-from eccw.shared import graph_print
 from eccw.shared import d2r, r2d
 
 
@@ -21,6 +20,7 @@ class EccwCompute(object):
     _numtol = 1e-9
     _h = 1e-5  # Arbitrary small value
     _main_params_list = ['alpha', 'beta', 'phiB', 'phiD']
+
 
     def reset(self):
         self._sign = 1
@@ -53,6 +53,14 @@ class EccwCompute(object):
         # self.delta_lambdaB = kwargs.get("delta_lambdaB", 0.)
         # self.delta_lambdaD = kwargs.get("delta_lambdaD", 0.)
         # self.context = kwargs.get("context", "c")
+
+    def __repr__(self):
+        out = self.__class__.__name__ + "("
+        for key, value in self.params_table().items():
+            out += "{}={}, ".format(key, repr(value))
+        out = out[:-2] + ")"
+        return out
+
 
     # Properties ##############################################################
 
@@ -371,6 +379,7 @@ class EccwCompute(object):
 
     # 'Public' methods ########################################################
 
+
     def compute_beta_old(self, deg=True):
         """Get critical basal slope beta as ECCW.
         Return the 2 possible solutions in tectonic or  collapsing regime.
@@ -509,7 +518,14 @@ class EccwCompute(object):
         return parser[flag]()
 
     def show_params(self):
-        params = OrderedDict([
+        out = self.__class__.__name__ + "(\n"
+        for key, value in self.params_table().items():
+            out += "  {:13} = {},\n".format(key, value)
+        out += ")"
+        print(out)
+
+    def params_table(self):
+        return OrderedDict([
             ("context", self.context),
             ("beta", self.beta),
             ("alpha", self.alpha),
@@ -520,9 +536,9 @@ class EccwCompute(object):
             ("delta_lambdaB", self.delta_lambdaB),
             ("delta_lambdaD", self.delta_lambdaD),
             ])
-        graph_print(params)
 
     def set_params(self, **kwargs):
+#        self.__dict__.update(kwargs)
         try:
             for key, value in kwargs.items():
                 # print(key, value)
@@ -591,3 +607,5 @@ if __name__ == "__main__":
     # print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
 
     foo.show_params()
+    print(str(foo))
+    
