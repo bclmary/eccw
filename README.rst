@@ -1,5 +1,5 @@
-|ECCW|
-######
+ECCW
+####
 
 Exact Critical Coulomb Wedge
 ============================
@@ -17,6 +17,7 @@ General informations
 *ECCW* is a *python3* library.
 
 A graphical user interface (GUI), written in *python3* and using *Qt* is also available under the name *ECCW-GUI*.
+
 
 *******************************************************************
 
@@ -168,10 +169,6 @@ This the core object that plot the solutions of the *CCW* problem. This object i
 
 
 .. _sources: https://github.com/bclmary/eccw.git
-
-.. |ECCW| image:: ./images/eccw_title.png
-    :alt: ECCW
-    :height: 200
 
 .. |Screen copy of EccwPlot's plot| image:: ./images/EccwPlot_example.png
     :alt: screen copy of matplotlib window containing ECCW plot
