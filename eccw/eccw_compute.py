@@ -642,26 +642,26 @@ class EccwCompute(object):
         else:
             return tuple(), tuple()
 
+    def _compute_alpha(self, alpha, psiD, psi0, deg):
+        alpha = self._solve([alpha, psiD, psi0], self._runtime_alpha)
+        alpha = self._test_alpha(alpha)
+        if deg:
+            alpha = self._degrees_if_not_none(alpha)
+        return alpha
+
     def compute_alpha(self, deg=True) -> tuple:
         """Get critical topographic slope alpha as ECCW.
         Return the 2 possible solutions in tectonic or collapsing regime.
         Return two None if no physical solutions.
         """
         self._check_params()
-        # Inital values for Newton-Raphson solution.
+        # Inital values for first solution.
         alpha, psiD, psi0 = 0.0, 0.0, 0.0
-        # First solution of ECCW (lower).
-        alpha1 = self._solve([alpha, psiD, psi0], self._runtime_alpha)
-        alpha1 = self._test_alpha(alpha1)
-        # Other inital values for Newton-Raphson solution.
+        tectonic_alpha = self._compute_alpha(alpha, psiD, psi0, deg)
+        # Other inital values for second solution.
         alpha, psiD, psi0 = 0.0, self._sign * pi / 2.0, self._sign * pi / 4.0
-        # Second solution of ECCW (upper).
-        alpha2 = self._solve([alpha, psiD, psi0], self._runtime_alpha)
-        alpha2 = self._test_alpha(alpha2)
-        if deg:
-            alpha1 = self._degrees_if_not_none(alpha1)
-            alpha2 = self._degrees_if_not_none(alpha2)
-        return alpha1, alpha2
+        collapsing_alpha = self._compute_alpha(alpha, psiD, psi0, deg)
+        return tectonic_alpha, collapsing_alpha
 
     def compute_phiB(self, deg=True) -> tuple:
         self._check_params()
