@@ -386,7 +386,7 @@ class EccwCompute(object):
         """Third sub-function of function to root."""
         return sin(2 * psi0 + alpha_prime) * sin(phiB) - sin(alpha_prime)
 
-    def _function_to_root(self, X: np.array, runtime_fct: "function") -> np.array:
+    def _function_to_root(self, X: np.array, runtime_var: "function") -> np.array:
         """Function of wich we are searching the roots.
         Gets an array X of length 3 as input.
         Return an array of length 3.
@@ -396,7 +396,7 @@ class EccwCompute(object):
         variable, psiD, psi0 = X
         # Get needed values, disconnected from self's attributes.
         # '_set_at_runtime' method must be defined before to call this method.
-        alpha, phiB, phiD, lambdaB_D2, lambdaD_D2, alpha_prime = runtime_fct(variable)
+        alpha, phiB, phiD, lambdaB_D2, lambdaD_D2, alpha_prime = runtime_var(variable)
         # In this context (solving alpha, phiD or phiB), beta is a constant.
         return np.array(
             (
@@ -407,7 +407,7 @@ class EccwCompute(object):
         )
 
     def _derivative_matrix(
-        self, F: np.array, X: np.array, runtime_fct: "function"
+        self, F: np.array, X: np.array, runtime_var: "function"
     ) -> np.array:
         """Approximation of derivative of F.
         Return a 3×3 matrix of approx. of partial derivatives.
@@ -416,13 +416,13 @@ class EccwCompute(object):
         for j in range(3):
             Y = X.copy()
             Y[j] += self._h
-            DF = self._function_to_root(Y, runtime_fct)
+            DF = self._function_to_root(Y, runtime_var)
             # for i in range(3):
             #    M[i][j] = DF[i] - F[i]
             M[:, j] = DF - F
         return M / self._h
 
-    def _newton_raphson_solve(self, X: tuple, runtime_fct: "function") -> float:
+    def _newton_raphson_solve(self, X: tuple, runtime_var: "function") -> float:
         """
         Solve the "function to root" iteratively using Newton/Raphson's method.
         
@@ -431,20 +431,20 @@ class EccwCompute(object):
         """
         count = 0
         X = np.array(X)
-        F = self._function_to_root(X, runtime_fct)
+        F = self._function_to_root(X, runtime_var)
         if __debug__:
             self.path = [X]
             self.iter_conv = 0
         while not (abs(F) < self._numtol).all():
             count += 1
-            M = self._derivative_matrix(F, X, runtime_fct)  # Approx. of derivative.
+            M = self._derivative_matrix(F, X, runtime_var)  # Approx. of derivative.
             invM = np.linalg.inv(M)
             X = X - invM.dot(F)  # Newton-Raphson iteration.
             if __debug__:
                 self.path.append(X)
                 self.iter_conv = count
-            F = self._function_to_root(X, runtime_fct)
-            if count > 99:
+            F = self._function_to_root(X, runtime_var)
+            if count > 999:
                 raise RuntimeError(
                     f"""Error in {self.__class__.__name__}._newton_raphson_solve
                     More than 99 iterations to converge.
