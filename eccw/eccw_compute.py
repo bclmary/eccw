@@ -10,7 +10,7 @@ from math import pi, cos, sin, tan, atan, asin, nan, inf, degrees, radians
 from collections import OrderedDict
 
 
-class EccwCompute(object):
+class BaseEccwCompute(object):
     """
     Solve any parameter of the critical coulomb wedge.
 
@@ -298,6 +298,180 @@ class EccwCompute(object):
     def _is_valid_taper(self, a: float, b: float) -> bool:
         return self._taper_min < a + b < self._taper_max
 
+    def _degrees_if_not_none(self, value: "float or None") -> "float or None":
+        return degrees(value) if value is not None else None
+
+    ## 'Public' methods #######################################################
+
+    def compute_beta_old(self, deg=True) -> tuple:
+        """Get critical basal slope beta as ECCW.
+        Return the 2 possible solutions in tectonic or  collapsing regime.
+        Return two None if no physical solutions.
+        """
+        self._check_params()
+        # weird if statement because asin in PSI_D is your ennemy !
+        if -self._phiB <= self._alpha_prime <= self._phiB:
+            psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
+            psiD_11, psiD_12 = self._PSI_D(
+                psi0_1, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
+            )
+            psiD_21, psiD_22 = self._PSI_D(
+                psi0_2, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
+            )
+            beta_dl = psiD_11 - psi0_1 - self._alpha
+            beta_ur = psiD_12 - psi0_1 - self._alpha
+            beta_dr = psiD_21 - psi0_2 - self._alpha + pi  # Don't ask why +pi
+            beta_ul = psiD_22 - psi0_2 - self._alpha
+
+            betas = tuple(
+                b for b in [beta_dl, beta_dr, beta_ul, beta_ur] 
+                if self._is_valid_taper(self._alpha, b)
+            )
+            beta1, beta2 = min(betas), max(betas)
+            if deg:
+                beta1 = self._degrees_if_not_none(beta1)
+                beta2 = self._degrees_if_not_none(beta2)
+            return beta1, beta2
+        else:
+            return None, None
+
+    def compute_beta(self, deg=True) -> tuple:
+        """Get critical basal slope beta as ECCW.
+
+        Return the 2 possible solutions in two tuples respectively representing
+        tectonic and collapsing regime. The solutions can be in the same tuple, or
+        one in each tuple.
+
+        Return two empty tuples if no physical solutions exist.
+
+        .. note:: it may occurs that one of the solutions is a double solution
+            that is on both tectonic and collapsing regime (for a given phiB, phiD 
+            values, two double solutions exist). In that case, the double solution
+            appears in both returned tuples, so 3 solutions are displayed.
+
+        Summary of possible sets of returned solutions :
+
+        * 2 tectonic solutions : (x, y), ()
+        * 1 tectonic and 1 collapsing : (x,), (y,)
+        * 2 collapsing solutions : (), (x, y)
+        * 1 double solution and 1 collapsing : (x,), (x, y)
+        * 1 tectonic  and 1 double solution : (x, y), (y, )
+        * no solutions : (), ()
+        """
+        self._check_params()
+        # weird if statement because asin in PSI_D is your ennemy !
+        if -self._phiB <= self._alpha_prime <= self._phiB:
+            psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
+            psiD_11, psiD_12 = self._PSI_D(
+                psi0_1, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
+            )
+            psiD_21, psiD_22 = self._PSI_D(
+                psi0_2, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
+            )
+            beta_dl = psiD_11 - psi0_1 - self._alpha
+            beta_ur = psiD_12 - psi0_1 - self._alpha
+            beta_dr = psiD_21 - psi0_2 - self._alpha + pi  # Don't ask why +pi
+            beta_ul = psiD_22 - psi0_2 - self._alpha
+
+            beta_dw = tuple(
+                b for b in [beta_dl, beta_dr] if self._is_valid_taper(self._alpha, b)
+            )
+            beta_up = tuple(
+                b for b in [beta_ul, beta_ur] if self._is_valid_taper(self._alpha, b)
+            )
+            if deg:
+                beta_dw = tuple(degrees(b) for b in beta_dw)
+                beta_up = tuple(degrees(b) for b in beta_up)
+            return beta_dw, beta_up
+        else:
+            return tuple(), tuple()
+
+    def show_params(self) -> None:
+        out = self.__class__.__name__ + "(\n"
+        for key, value in self.params_table().items():
+            out += "  {:13} = {},\n".format(key, value)
+        out += ")"
+        print(out)
+
+    def params_table(self) -> OrderedDict:
+        return OrderedDict(
+            [
+                ("context", self.context),
+                ("beta", self.beta),
+                ("alpha", self.alpha),
+                ("phiB", self.phiB),
+                ("phiD", self.phiD),
+                ("rho_f", self.rho_f),
+                ("rho_sr", self.rho_sr),
+                ("delta_lambdaB", self.delta_lambdaB),
+                ("delta_lambdaD", self.delta_lambdaD),
+            ]
+        )
+
+    def kwargs(self) -> dict:
+        return {
+            "context": self.context,
+            "beta": self.beta,
+            "alpha": self.alpha,
+            "phiB": self.phiB,
+            "phiD": self.phiD,
+            "rho_f": self.rho_f,
+            "rho_sr": self.rho_sr,
+            "delta_lambdaB": self.delta_lambdaB,
+            "delta_lambdaD": self.delta_lambdaD,
+        }
+
+    def set_params(self, **kwargs) -> None:
+        try:
+            for key, value in kwargs.items():
+                if value is not None:
+                    setattr(self, key, value)
+        except TypeError:
+            raise
+
+    def set_no_fluids(self) -> None:
+        """Shortcut of set_params method with all fluid parameters set to zero."""
+        self.set_params(rho_f=0, rho_sr=0, delta_lambdaB=0, delta_lambdaD=0)
+
+
+class EmbeddedEccwCompute(BaseEccwCompute):
+
+    def __init__(self, **kwargs):
+        """See 'Data descriptors' section of help for available named parameters."""
+        self.reset()
+        self.set_params(**kwargs)
+
+    def _categorize_result(
+        self, value:float, tectonic:list, collapsing:list, deg:bool=True
+    ) -> (list, list):
+        """Dirty way of categorize a result value using another instance of EccwCompute.
+        
+        Category is its membership of a result between tectonic or collapsing solutions.
+
+        'value' parameter MUST be another parameter than beta. This value MUST be already
+        setted in this instance, and is used to compute the possible beta values according
+        with the other parameters. Since beta categories are well known, we can compare the
+        new computed betas with the reference one (the attribute of this instance). If the 
+        reference beta match one of the new betas, the matching category IS the category of
+        the given parameter 'value'.
+        """
+        
+        tectonic_betas, collapsing_betas = self.compute_beta(deg=False)
+        if any(abs(self._beta - beta) < self._numtol for beta in tectonic_betas):
+            tectonic.append(degrees(value) if deg else value)
+        if any(abs(self._beta - beta) < self._numtol for beta in collapsing_betas):
+            collapsing.append(degrees(value) if deg else value)
+        return tectonic, collapsing
+
+
+class EccwCompute(BaseEccwCompute):
+
+    def __init__(self, **kwargs):
+        """See 'Data descriptors' section of help for available named parameters."""
+        self.reset()
+        self.set_params(**kwargs)
+        self._embedded_compute = EmbeddedEccwCompute(**kwargs)
+
     def _test_alpha(self, a: float) -> "float or None":
         """Test if an alpha solution is physically meaningfull."""
         return a if self._is_valid_taper(a, self._beta) else None
@@ -312,9 +486,6 @@ class EccwCompute(object):
         # return abs(phiD) if phiD is not nan else None
         # return phiD if phiD is not nan else None
         return phiD if -self._numtol < phiD < self._phiB + self._numtol else None
-
-    def _degrees_if_not_none(self, value: "float or None") -> "float or None":
-        return degrees(value) if value is not None else None
 
     def _runtime_alpha(self, alpha: float) -> tuple:
         """return a set of values disconnected from self's attributes.
@@ -520,111 +691,7 @@ class EccwCompute(object):
     def _solve(self, X, runtime_var):
         return self._solve_new(X, runtime_var)
 
-    def __categorize_result(
-        self, value:float, tectonic:list, collapsing:list, deg:bool=True
-    ) -> (list, list):
-        """Dirty way of categorize a result value using another instance of EccwCompute.
-        
-        Category is its membership of a result between tectonic or collapsing solutions.
-
-        'value' parameter MUST be another parameter than beta. This value MUST be already
-        setted in this instance, and is used to compute the possible beta values according
-        with the other parameters. Since beta categories are well known, we can compare the
-        new computed betas with the reference one (the attribute of this instance). If the 
-        reference beta match one of the new betas, the matching category IS the category of
-        the given parameter 'value'.
-        """
-        tectonic_betas, collapsing_betas = self.compute_beta(deg=False)
-        if any(abs(self._beta - beta) < self._numtol for beta in tectonic_betas):
-            tectonic.append(degrees(value) if deg else value)
-        if any(abs(self._beta - beta) < self._numtol for beta in collapsing_betas):
-            collapsing.append(degrees(value) if deg else value)
-        return tectonic, collapsing
-
     ## 'Public' methods #######################################################
-
-    def compute_beta_old(self, deg=True) -> tuple:
-        """Get critical basal slope beta as ECCW.
-        Return the 2 possible solutions in tectonic or  collapsing regime.
-        Return two None if no physical solutions.
-        """
-        self._check_params()
-        # weird if statement because asin in PSI_D is your ennemy !
-        if -self._phiB <= self._alpha_prime <= self._phiB:
-            psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
-            psiD_11, psiD_12 = self._PSI_D(
-                psi0_1, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
-            )
-            psiD_21, psiD_22 = self._PSI_D(
-                psi0_2, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
-            )
-            beta_dl = psiD_11 - psi0_1 - self._alpha
-            beta_ur = psiD_12 - psi0_1 - self._alpha
-            beta_dr = psiD_21 - psi0_2 - self._alpha + pi  # Don't ask why +pi
-            beta_ul = psiD_22 - psi0_2 - self._alpha
-
-            betas = tuple(
-                b for b in [beta_dl, beta_dr, beta_ul, beta_ur] 
-                if self._is_valid_taper(self._alpha, b)
-            )
-            beta1, beta2 = min(betas), max(betas)
-            if deg:
-                beta1 = self._degrees_if_not_none(beta1)
-                beta2 = self._degrees_if_not_none(beta2)
-            return beta1, beta2
-        else:
-            return None, None
-
-    def compute_beta(self, deg=True) -> tuple:
-        """Get critical basal slope beta as ECCW.
-
-        Return the 2 possible solutions in two tuples respectively representing
-        tectonic and collapsing regime. The solutions can be in the same tuple, or
-        one in each tuple.
-
-        Return two empty tuples if no physical solutions exist.
-
-        .. note:: it may occurs that one of the solutions is a double solution
-            that is on both tectonic and collapsing regime (for a given phiB, phiD 
-            values, two double solutions exist). In that case, the double solution
-            appears in both returned tuples, so 3 solutions are displayed.
-
-        Summary of possible sets of returned solutions :
-
-        * 2 tectonic solutions : (x, y), ()
-        * 1 tectonic and 1 collapsing : (x,), (y,)
-        * 2 collapsing solutions : (), (x, y)
-        * 1 double solution and 1 collapsing : (x,), (x, y)
-        * 1 tectonic  and 1 double solution : (x, y), (y, )
-        * no solutions : (), ()
-        """
-        self._check_params()
-        # weird if statement because asin in PSI_D is your ennemy !
-        if -self._phiB <= self._alpha_prime <= self._phiB:
-            psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
-            psiD_11, psiD_12 = self._PSI_D(
-                psi0_1, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
-            )
-            psiD_21, psiD_22 = self._PSI_D(
-                psi0_2, self._phiB, self._phiD, self._lambdaB_D2, self._lambdaD_D2
-            )
-            beta_dl = psiD_11 - psi0_1 - self._alpha
-            beta_ur = psiD_12 - psi0_1 - self._alpha
-            beta_dr = psiD_21 - psi0_2 - self._alpha + pi  # Don't ask why +pi
-            beta_ul = psiD_22 - psi0_2 - self._alpha
-
-            beta_dw = tuple(
-                b for b in [beta_dl, beta_dr] if self._is_valid_taper(self._alpha, b)
-            )
-            beta_up = tuple(
-                b for b in [beta_ul, beta_ur] if self._is_valid_taper(self._alpha, b)
-            )
-            if deg:
-                beta_dw = tuple(degrees(b) for b in beta_dw)
-                beta_up = tuple(degrees(b) for b in beta_up)
-            return beta_dw, beta_up
-        else:
-            return tuple(), tuple()
 
     def _compute_alpha(self, alpha, psiD, psi0, deg):
         alpha = self._solve([alpha, psiD, psi0], self._runtime_alpha)
@@ -647,42 +714,45 @@ class EccwCompute(object):
         collapsing_alpha = self._compute_alpha(alpha, psiD, psi0, deg)
         return tectonic_alpha, collapsing_alpha
 
-    def _compute_phiB(self, phiB, psiD, psi0, tectonic, collapsing, local_compute, deg) -> tuple:
+    def _compute_phiB(self, phiB, psiD, psi0, tectonic, collapsing, deg) -> tuple:
+        embedded = self._embedded_compute
         phiB = self._solve([phiB, psiD, psi0], self._runtime_phiB)
         phiB = self._test_phiB(phiB)
         if phiB is not None:
-            local_compute._phiB = phiB
-            tectonic, collapsing = local_compute.__categorize_result(phiB, tectonic, collapsing, deg=deg)
+            embedded._phiB = phiB
+            tectonic, collapsing = embedded._categorize_result(phiB, tectonic, collapsing, deg)
         return tectonic, collapsing
 
     def compute_phiB(self, deg=True) -> tuple:
         self._check_params()
         tectonic, collapsing = [], []
-        local_compute = EccwCompute(**self.kwargs(), _numtol=self._numtol)
+        # Update with current parameters the embedded compute.
+        self._embedded_compute.set_params(**self.kwargs(), _numtol=self._numtol)
         ab = self._alpha + self._beta
         # Inital values for first solution.
         phiB = self._phiD  #pi / 7.0
         psiD = ab  #pi
         psi0 = self._alpha  #psiD - self._alpha - self._beta
         tectonic, collapsing = self._compute_phiB(
-            phiB, psiD, psi0, tectonic, collapsing, local_compute, deg
+            phiB, psiD, psi0, tectonic, collapsing, deg
         )
         # Other inital values for second solution.
         phiB = -self._phiD  #pi / 7.0
         psiD = -pi/2 + ab  # pi / 2.0
         psi0 = -pi/2 + self._alpha  # psiD - self._alpha - self._beta
         tectonic, collapsing = self._compute_phiB(
-            phiB, psiD, psi0, tectonic, collapsing, local_compute, deg
+            phiB, psiD, psi0, tectonic, collapsing, deg
         )
         return tuple(tectonic), tuple(collapsing)
 
-    def _compute_phiD(self, phiD, psiD, psi0, tectonic, collapsing, local_compute, deg) -> tuple:
+    def _compute_phiD(self, phiD, psiD, psi0, tectonic, collapsing, deg) -> tuple:
+        embedded = self._embedded_compute
         phiD = self._solve([phiD, psiD, psi0], self._runtime_phiD)
         phiD = self._test_phiD(phiD)
         if phiD is not None:
-            local_compute._phiD = phiD * local_compute._sign
-            local_compute._taper_max = pi / 2.0 - local_compute._phiD + local_compute._numtol
-            tectonic, collapsing = local_compute.__categorize_result(phiD, tectonic, collapsing, deg=deg)
+            embedded._phiD = phiD * embedded._sign
+            embedded._taper_max = pi / 2.0 - embedded._phiD + embedded._numtol
+            tectonic, collapsing = embedded._categorize_result(phiD, tectonic, collapsing, deg)
         return tectonic, collapsing
 
     def compute_phiD(self, deg=True) -> tuple:
@@ -698,20 +768,21 @@ class EccwCompute(object):
         """
         self._check_params()
         tectonic, collapsing = [], []
-        local_compute = EccwCompute(**self.kwargs(), _numtol=self._numtol)
+        # Update with current parameters the embedded compute.
+        self._embedded_compute.set_params(**self.kwargs(), _numtol=self._numtol)
         apb = self._alpha + self._beta
         # Inital values for First solution.
         #phiD, psiD, psi0 = apb, apb, 0.0
         phiD, psiD, psi0 = -apb, -pi/2, -pi/2
         tectonic, collapsing = self._compute_phiD(
-            phiD, psiD, psi0, tectonic, collapsing, local_compute, deg
+            phiD, psiD, psi0, tectonic, collapsing, deg
         )
         # Other inital values second solution.
         #phiD, psiD, psi0 = 0.0, pi/2, pi/2 - apb
         phiD, psiD, psi0 = 0., apb, 0.
         # Second solution of ECCW (upper).
         tectonic, collapsing = self._compute_phiD(
-            phiD, psiD, psi0, tectonic, collapsing, local_compute, deg
+            phiD, psiD, psi0, tectonic, collapsing, deg
         )
         return tuple(tectonic), tuple(collapsing)
 
@@ -727,52 +798,6 @@ class EccwCompute(object):
         }
         return parser[flag]()
 
-    def show_params(self) -> None:
-        out = self.__class__.__name__ + "(\n"
-        for key, value in self.params_table().items():
-            out += "  {:13} = {},\n".format(key, value)
-        out += ")"
-        print(out)
-
-    def params_table(self) -> OrderedDict:
-        return OrderedDict(
-            [
-                ("context", self.context),
-                ("beta", self.beta),
-                ("alpha", self.alpha),
-                ("phiB", self.phiB),
-                ("phiD", self.phiD),
-                ("rho_f", self.rho_f),
-                ("rho_sr", self.rho_sr),
-                ("delta_lambdaB", self.delta_lambdaB),
-                ("delta_lambdaD", self.delta_lambdaD),
-            ]
-        )
-
-    def kwargs(self) -> dict:
-        return {
-            "context": self.context,
-            "beta": self.beta,
-            "alpha": self.alpha,
-            "phiB": self.phiB,
-            "phiD": self.phiD,
-            "rho_f": self.rho_f,
-            "rho_sr": self.rho_sr,
-            "delta_lambdaB": self.delta_lambdaB,
-            "delta_lambdaD": self.delta_lambdaD,
-        }
-
-    def set_params(self, **kwargs) -> None:
-        try:
-            for key, value in kwargs.items():
-                if value is not None:
-                    setattr(self, key, value)
-        except TypeError:
-            raise
-
-    def set_no_fluids(self) -> None:
-        """Shortcut of set_params method with all fluid parameters set to zero."""
-        self.set_params(rho_f=0, rho_sr=0, delta_lambdaB=0, delta_lambdaD=0)
 
 
 if __name__ == "__main__":
