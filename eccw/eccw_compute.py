@@ -108,10 +108,26 @@ class EccwCompute(object):
         if value < 0:
             raise TypeError(self._error_message("phiD", "sign", ">= 0"))
         try:
-            self._phiD = radians(value) * (self._sign if self._sign else 1.0)
+            self._phiD = radians(value) * self._sign #(self._sign if self._sign else 1.0)
             self._taper_max = pi / 2.0 - self._phiD + self._numtol
         except TypeError:
             raise TypeError(self._error_message("phiD", "type", "a float"))
+
+    @property
+    def phiD_rad(self):
+        """Basal friction angle [rad], positive."""
+        return self._sign * self._phiD
+
+    @phiD_rad.setter
+    def phiD_rad(self, value):
+        if value < 0:
+            raise TypeError(self._error_message("phiD_rad", "sign", ">= 0"))
+        try:
+            self._phiD = value * self._sign
+            self._taper_max = pi / 2.0 - self._phiD + self._numtol
+        except TypeError:
+            raise TypeError(self._error_message("phiD_rad", "type", "a float"))
+
 
     @property
     def context(self):
@@ -280,7 +296,7 @@ class EccwCompute(object):
         phiD: float,
         lambdaB_D2: float,
         lambdaD_D2: float,
-    ) -> float:
+    ) -> tuple:
         """Compute psi_D as [Yuan, 2015], equation (B6)."""
         tmp = (1.0 - lambdaD_D2) * sin(phiD) / (1.0 - lambdaB_D2) / sin(phiB)
         tmp += (
@@ -290,10 +306,10 @@ class EccwCompute(object):
             return 0.0, 0.0  # TODO
         return (asin(tmp) - phiD) * 0.5, (pi - asin(tmp) - phiD) * 0.5
 
-    def _PSI_0(self, alpha_prime: float, phiB: float) -> float:
+    def _PSI_0(self, alpha_prime: float, phiB: float) -> tuple:
         """Compute psi_0 as [Yuan, 2015], equ (B6)."""
         tmp = sin(alpha_prime) / sin(phiB)
-        return ((asin(tmp) - alpha_prime) * 0.5, (pi - asin(tmp) - alpha_prime) * 0.5)
+        return (asin(tmp) - alpha_prime) * 0.5, (pi - asin(tmp) - alpha_prime) * 0.5
 
     def _is_valid_taper(self, a: float, b: float) -> bool:
         return self._taper_min < a + b < self._taper_max
@@ -406,6 +422,67 @@ class EccwCompute(object):
             )
         )
 
+    def _initial_jacobian(
+        self, F: np.array, X: np.array, runtime_var: "function"
+    ) -> np.array:
+        """Return an approximation of initial Jacobian using finite differences."""
+        J = np.zeros((3, 3))
+        for j in range(3):
+            Y = X.copy()
+            Y[j] += self._h
+            DF = self._function_to_root(Y, runtime_var)
+            J[:, j] = DF - F
+        return J / self._h
+
+    def _iter_inverse_jacobian(self, invJ, dF, dX):
+        """Bad Broyden's method.
+        
+                            dX - invJ . dF
+        new_invJ = inJ +  --------------------- dF^T
+                                || dX || ^2
+        """
+        return invJ + np.outer(dX - invJ.dot(dF), dF) / np.linalg.norm(dF) ** 2.0
+
+    def _solve_new(self, X: tuple, runtime_var: "function") -> float:
+        """
+        Solve the "function to root" iteratively using a generalized Newton/Raphson's method,
+        also called Broyden's method (the bad version)
+        
+        Broyden's method: https://en.wikipedia.org/wiki/Broyden%27s_method
+        About bad version : https://link.springer.com/article/10.1007%2FBF01931297
+
+        Solve is made accordingly with parameter X (array of size 3).
+        Function to root takes X as an input and return an array of same size.
+        """
+        count, countmax = 0, 99
+        X = np.array(X)
+        F = self._function_to_root(X, runtime_var)
+        J = self._initial_jacobian(F, X, runtime_var)
+        invJ = np.linalg.inv(J)
+        if __debug__:
+            self.path = [X]
+            self.iter_conv = 0
+        while not (abs(F) < self._numtol).all():
+            count += 1
+            newX = X - invJ.dot(F)  # Newton-Raphson iteration.
+            newF = self._function_to_root(newX, runtime_var)
+            invJ = self._iter_inverse_jacobian(invJ, newF-F, newX-X)
+            X, F = newX, newF
+            if __debug__:
+                self.path.append(newX)
+                self.iter_conv = count
+            if count > countmax:
+                raise RuntimeError(
+                    f"""Error in {self.__class__.__name__}._solve
+                    More than {countmax} iterations to converge.
+                    Current values (in rad) are: 
+                      var  = {X[0]}
+                      psiD = {X[1]}
+                      psi0 = {X[2]}
+                    """
+                )
+        return X[0] if abs(X[0]) > self._numtol else 0.0
+
     def _derivative_matrix(
         self, F: np.array, X: np.array, runtime_var: "function"
     ) -> np.array:
@@ -422,10 +499,10 @@ class EccwCompute(object):
             M[:, j] = DF - F
         return M / self._h
 
-    def _newton_raphson_solve(self, X: tuple, runtime_var: "function") -> float:
+    def _solve_old(self, X: tuple, runtime_var: "function") -> float:
         """
-        Solve the "function to root" iteratively using Newton/Raphson's method.
-        
+        Solve the "function to root" iteratively using a naive generalized Newton/Raphson's method.
+
         Solve is made accordingly with parameter X (array of size 3).
         Function to root takes X as an input and return an array of same size.
         """
@@ -446,7 +523,7 @@ class EccwCompute(object):
             F = self._function_to_root(X, runtime_var)
             if count > 999:
                 raise RuntimeError(
-                    f"""Error in {self.__class__.__name__}._newton_raphson_solve
+                    f"""Error in {self.__class__.__name__}._solve
                     More than 99 iterations to converge.
                     Current values (in rad) are: 
                       var  = {X[0]}
@@ -455,7 +532,30 @@ class EccwCompute(object):
                     """
                 )
         return X[0] if abs(X[0]) > self._numtol else 0.0
-        # return X[0]
+
+    def _solve(self, X, runtime_var):
+        return self._solve_old(X, runtime_var)
+
+    def __categorize_result(
+        self, value:float, tectonic:list, collapsing:list, deg:bool=True
+    ) -> (list, list):
+        """Dirty way of categorize a result value using another instance of EccwCompute.
+        
+        Category is its membership of a result between tectonic or collapsing solutions.
+
+        'value' parameter MUST be another parameter than beta. This value MUST be already
+        setted in this instance, and is used to compute the possible beta values according
+        with the other parameters. Since beta categories are well known, we can compare the
+        new computed betas with the reference one (the attribute of this instance). If the 
+        reference beta match one of the new betas, the matching category IS the category of
+        the given parameter 'value'.
+        """
+        tectonic_betas, collapsing_betas = self.compute_beta(deg=False)
+        if any(abs(self._beta - beta) < self._numtol for beta in tectonic_betas):
+            tectonic.append(degrees(value) if deg else value)
+        if any(abs(self._beta - beta) < self._numtol for beta in collapsing_betas):
+            collapsing.append(degrees(value) if deg else value)
+        return tectonic, collapsing
 
     ## 'Public' methods #######################################################
 
@@ -506,7 +606,7 @@ class EccwCompute(object):
             appears in both returned tuples, so 3 solutions are displayed.
 
         Summary of possible sets of returned solutions :
-        
+
         * 2 tectonic solutions : (x, y), ()
         * 1 tectonic and 1 collapsing : (x,), (y,)
         * 2 collapsing solutions : (), (x, y)
@@ -551,12 +651,12 @@ class EccwCompute(object):
         # Inital values for Newton-Raphson solution.
         alpha, psiD, psi0 = 0.0, 0.0, 0.0
         # First solution of ECCW (lower).
-        alpha1 = self._newton_raphson_solve([alpha, psiD, psi0], self._runtime_alpha)
+        alpha1 = self._solve([alpha, psiD, psi0], self._runtime_alpha)
         alpha1 = self._test_alpha(alpha1)
         # Other inital values for Newton-Raphson solution.
         alpha, psiD, psi0 = 0.0, self._sign * pi / 2.0, self._sign * pi / 4.0
         # Second solution of ECCW (upper).
-        alpha2 = self._newton_raphson_solve([alpha, psiD, psi0], self._runtime_alpha)
+        alpha2 = self._solve([alpha, psiD, psi0], self._runtime_alpha)
         alpha2 = self._test_alpha(alpha2)
         if deg:
             alpha1 = self._degrees_if_not_none(alpha1)
@@ -565,45 +665,63 @@ class EccwCompute(object):
 
     def compute_phiB(self, deg=True) -> tuple:
         self._check_params()
+        ab = self._alpha + self._beta
         # Inital values for Newton-Raphson solution.
-        phiB = pi / 7.0
-        psiD = pi
-        psi0 = psiD - self._alpha - self._beta
+        phiB = self._phiD  #pi / 7.0
+        psiD = ab  #pi
+        psi0 = self._alpha  #psiD - self._alpha - self._beta
         # First solution of ECCW (lower).
-        phiB1 = self._newton_raphson_solve([phiB, psiD, psi0], self._runtime_phiB)
+        phiB1 = self._solve([phiB, psiD, psi0], self._runtime_phiB)
         phiB1 = self._test_phiB(phiB1)
         # Other inital values for Newton-Raphson solution.
-        phiB = pi / 7.0
-        psiD = pi / 2.0
-        psi0 = psiD - self._alpha - self._beta
+        phiB = -self._phiD  #pi / 7.0
+        psiD = -pi/2 + ab  # pi / 2.0
+        psi0 = -pi/2 + self._alpha  # psiD - self._alpha - self._beta
         # Second solution of ECCW (upper).
-        phiB2 = self._newton_raphson_solve([phiB, psiD, psi0], self._runtime_phiB)
+        phiB2 = self._solve([phiB, psiD, psi0], self._runtime_phiB)
         phiB2 = self._test_phiB(phiB2)
         if deg:
             phiB1 = self._degrees_if_not_none(phiB1)
             phiB2 = self._degrees_if_not_none(phiB2)
         return phiB1, phiB2
 
+    def _compute_phiD(self, phiD, psiD, psi0, tectonic, collapsing, local_compute, deg) -> tuple:
+        phiD = self._solve([phiD, psiD, psi0], self._runtime_phiD)
+        phiD = self._test_phiD(phiD)
+        if phiD is not None:
+            local_compute.phiD_rad = phiD
+            tectonic, collapsing = local_compute.__categorize_result(phiD, tectonic, collapsing, deg=deg)
+        return tectonic, collapsing
+
     def compute_phiD(self, deg=True) -> tuple:
+        """Get critical basal friction angle as ECCW.
+
+        Return the 2 possible solutions in two tuples respectively representing
+        tectonic and collapsing regime. The solutions can be in the same tuple, or
+        one in each tuple.
+
+        Return two empty tuples if no physical solutions exist.
+
+        .. note:: double solutions (phiD == phiB) are not returned.
+        """
         self._check_params()
-        # Inital values for Newton-Raphson solution.
-        phiD = pi / 4.0
-        psiD = pi
-        psi0 = psiD - self._alpha - self._beta
-        # First solution of ECCW (lower).
-        phiD1 = self._newton_raphson_solve([phiD, psiD, psi0], self._runtime_phiD)
-        phiD1 = self._test_phiD(phiD1)
-        # Other inital values for Newton-Raphson solution.
-        phiD = pi / 4.0
-        psiD = pi / 2.0
-        psi0 = psiD - self._alpha - self._beta
+        tectonic, collapsing = [], []
+        local_compute = EccwCompute(**self.kwargs(), _numtol=self._numtol)
+        apb = self._alpha + self._beta
+        # Inital values for First solution.
+        #phiD, psiD, psi0 = apb, apb, 0.0
+        phiD, psiD, psi0 = -apb, -pi/2, -pi/2
+        tectonic, collapsing = self._compute_phiD(
+            phiD, psiD, psi0, tectonic, collapsing, local_compute, deg
+        )
+        # Other inital values second solution.
+        #phiD, psiD, psi0 = 0.0, pi/2, pi/2 - apb
+        phiD, psiD, psi0 = 0., apb, 0.
         # Second solution of ECCW (upper).
-        phiD2 = self._newton_raphson_solve([phiD, psiD, psi0], self._runtime_phiD)
-        phiD2 = self._test_phiD(phiD2)
-        if deg:
-            phiD1 = self._degrees_if_not_none(phiD1)
-            phiD2 = self._degrees_if_not_none(phiD2)
-        return phiD1, phiD2
+        tectonic, collapsing = self._compute_phiD(
+            phiD, psiD, psi0, tectonic, collapsing, local_compute, deg
+        )
+        return tuple(tectonic), tuple(collapsing)
 
     def compute(self, flag: str) -> tuple:
         """Compute solution for given parameter.
@@ -638,6 +756,19 @@ class EccwCompute(object):
                 ("delta_lambdaD", self.delta_lambdaD),
             ]
         )
+
+    def kwargs(self) -> dict:
+        return {
+            "context": self.context,
+            "beta": self.beta,
+            "alpha": self.alpha,
+            "phiB": self.phiB,
+            "phiD": self.phiD,
+            "rho_f": self.rho_f,
+            "rho_sr": self.rho_sr,
+            "delta_lambdaB": self.delta_lambdaB,
+            "delta_lambdaD": self.delta_lambdaD,
+        }
 
     def set_params(self, **kwargs) -> None:
         try:
@@ -711,17 +842,39 @@ if __name__ == "__main__":
     #    foo.show_params()
     #    print(str(foo))
 
+    print("ALPHA")
     foo = EccwCompute(phiB=30, beta=0)
     for phiD in [x * 0.10000 for x in range(270, 301)]:
         foo.phiD = phiD
         print(f"phiD={round(foo.phiD,3)}", foo.compute_alpha())
 
     print()
-
-    foo = EccwCompute(phiB=30, beta=0)
+    print("PHI_D")
+    foo = EccwCompute(phiB=30, beta=10, context="c")
     for alpha in [x * 0.10000 for x in range(0, 50)]:
         foo.alpha = alpha
         print(f"alpha={round(foo.alpha,3)}", foo.compute_phiD())
+
+
+    print() # two solutions in tectonic and collapsing categories.
+    foo = EccwCompute(phiB=30, alpha=11.6, beta=-1.5)
+    print(foo.compute_phiD())
+    print() # same solutions (reversed) with other parameters.
+    foo = EccwCompute(phiB=30, alpha=-20.13, beta=80.84)
+    print(foo.compute_phiD())
+    print() # two solutions both in collapsing category.
+    foo = EccwCompute(phiB=30, alpha=21.86, beta=2.58)
+    print(foo.compute_phiD())
+    print() # same solutions both in tectonic category.
+    foo = EccwCompute(phiB=30, alpha=-28.05, beta=72.51)
+    print(foo.compute_phiD())
+
+
+    print()
+    foo = EccwCompute(phiB=30, phiD=5, alpha=-20.13)
+    print(foo.compute_beta_old())
+    print(foo.compute_beta())
+
 
     # foo._draw_full_solution_alpha(64)
     # foo._draw_map_solution_alpha()
