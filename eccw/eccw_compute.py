@@ -114,22 +114,6 @@ class EccwCompute(object):
             raise TypeError(self._error_message("phiD", "type", "a float"))
 
     @property
-    def phiD_rad(self):
-        """Basal friction angle [rad], positive."""
-        return self._sign * self._phiD
-
-    @phiD_rad.setter
-    def phiD_rad(self, value):
-        if value < 0:
-            raise TypeError(self._error_message("phiD_rad", "sign", ">= 0"))
-        try:
-            self._phiD = value * self._sign
-            self._taper_max = pi / 2.0 - self._phiD + self._numtol
-        except TypeError:
-            raise TypeError(self._error_message("phiD_rad", "type", "a float"))
-
-
-    @property
     def context(self):
         """Tectonic context: 'compression' or 'extension' (shortcuts: 'c' or 'e')."""
         if self._sign == 1:
@@ -534,7 +518,7 @@ class EccwCompute(object):
         return X[0] if abs(X[0]) > self._numtol else 0.0
 
     def _solve(self, X, runtime_var):
-        return self._solve_old(X, runtime_var)
+        return self._solve_new(X, runtime_var)
 
     def __categorize_result(
         self, value:float, tectonic:list, collapsing:list, deg:bool=True
@@ -663,33 +647,41 @@ class EccwCompute(object):
         collapsing_alpha = self._compute_alpha(alpha, psiD, psi0, deg)
         return tectonic_alpha, collapsing_alpha
 
+    def _compute_phiB(self, phiB, psiD, psi0, tectonic, collapsing, local_compute, deg) -> tuple:
+        phiB = self._solve([phiB, psiD, psi0], self._runtime_phiB)
+        phiB = self._test_phiB(phiB)
+        if phiB is not None:
+            local_compute._phiB = phiB
+            tectonic, collapsing = local_compute.__categorize_result(phiB, tectonic, collapsing, deg=deg)
+        return tectonic, collapsing
+
     def compute_phiB(self, deg=True) -> tuple:
         self._check_params()
+        tectonic, collapsing = [], []
+        local_compute = EccwCompute(**self.kwargs(), _numtol=self._numtol)
         ab = self._alpha + self._beta
-        # Inital values for Newton-Raphson solution.
+        # Inital values for first solution.
         phiB = self._phiD  #pi / 7.0
         psiD = ab  #pi
         psi0 = self._alpha  #psiD - self._alpha - self._beta
-        # First solution of ECCW (lower).
-        phiB1 = self._solve([phiB, psiD, psi0], self._runtime_phiB)
-        phiB1 = self._test_phiB(phiB1)
-        # Other inital values for Newton-Raphson solution.
+        tectonic, collapsing = self._compute_phiB(
+            phiB, psiD, psi0, tectonic, collapsing, local_compute, deg
+        )
+        # Other inital values for second solution.
         phiB = -self._phiD  #pi / 7.0
         psiD = -pi/2 + ab  # pi / 2.0
         psi0 = -pi/2 + self._alpha  # psiD - self._alpha - self._beta
-        # Second solution of ECCW (upper).
-        phiB2 = self._solve([phiB, psiD, psi0], self._runtime_phiB)
-        phiB2 = self._test_phiB(phiB2)
-        if deg:
-            phiB1 = self._degrees_if_not_none(phiB1)
-            phiB2 = self._degrees_if_not_none(phiB2)
-        return phiB1, phiB2
+        tectonic, collapsing = self._compute_phiB(
+            phiB, psiD, psi0, tectonic, collapsing, local_compute, deg
+        )
+        return tuple(tectonic), tuple(collapsing)
 
     def _compute_phiD(self, phiD, psiD, psi0, tectonic, collapsing, local_compute, deg) -> tuple:
         phiD = self._solve([phiD, psiD, psi0], self._runtime_phiD)
         phiD = self._test_phiD(phiD)
         if phiD is not None:
-            local_compute.phiD_rad = phiD
+            local_compute._phiD = phiD * local_compute._sign
+            local_compute._taper_max = pi / 2.0 - local_compute._phiD + local_compute._numtol
             tectonic, collapsing = local_compute.__categorize_result(phiD, tectonic, collapsing, deg=deg)
         return tectonic, collapsing
 
@@ -875,6 +867,9 @@ if __name__ == "__main__":
     print(foo.compute_beta_old())
     print(foo.compute_beta())
 
+    print() # phiB
+    foo = EccwCompute(phiD=24.84, alpha=11.6, beta=-1.5)
+    print(foo.compute_phiB())
 
     # foo._draw_full_solution_alpha(64)
     # foo._draw_map_solution_alpha()
