@@ -493,11 +493,28 @@ class EccwCompute(object):
 
     def compute_beta(self, deg=True) -> tuple:
         """Get critical basal slope beta as ECCW.
-        Return the 2 possible solutions in tectonic or  collapsing regime.
-        Return two None if no physical solutions.
+
+        Return the 2 possible solutions in two tuples respectively representing
+        tectonic and collapsing regime. The solutions can be in the same tuple, or
+        one in each tuple.
+
+        Return two empty tuples if no physical solutions exist.
+
+        .. note:: it may occurs that one of the solutions is a double solution
+            that is on both tectonic and collapsing regime (for a given phiB, phiD 
+            values, two double solutions exist). In that case, the double solution
+            appears in both returned tuples, so 3 solutions are displayed.
+
+        Summary of possible sets of returned solutions :
+        
+        * 2 tectonic solutions : (x, y), ()
+        * 1 tectonic and 1 collapsing : (x,), (y,)
+        * 2 collapsing solutions : (), (x, y)
+        * 1 double solution and 1 collapsing : (x,), (x, y)
+        * 1 tectonic  and 1 double solution : (x, y), (y, )
+        * no solutions : (), ()
         """
         self._check_params()
-        beta_dw, beta_up = list(), list()
         # weird if statement because asin in PSI_D is your ennemy !
         if -self._phiB <= self._alpha_prime <= self._phiB:
             psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
@@ -523,7 +540,7 @@ class EccwCompute(object):
                 beta_up = tuple(degrees(b) for b in beta_up)
             return beta_dw, beta_up
         else:
-            return None, None
+            return tuple(), tuple()
 
     def compute_alpha(self, deg=True) -> tuple:
         """Get critical topographic slope alpha as ECCW.
