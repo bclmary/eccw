@@ -7,16 +7,17 @@ Elements dedicated to plot physics.
 
 
 import numpy as np
-from math import pi, tan, atan, cos, sin, sqrt, asin
+from math import pi, tan, atan, cos, sin, sqrt, asin, degrees
 from matplotlib import pyplot as plt
 import matplotlib.patheffects as pe
 from matplotlib.offsetbox import DrawingArea, AnnotationBbox
 from matplotlib import patches, lines
+from matplotlib import ticker, cm
 import warnings
 
 
 from eccw import EccwCompute
-from eccw.shared import r2d, imin, imax
+from eccw.shared import imin, imax
 
 
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
@@ -65,7 +66,9 @@ class EccwPlot(EccwCompute):
         self._arrow_head_width = self._arrow_L / 3.
         self._arrow_head_length = self._arrow_L / 2.
 
-    # Private methods
+
+    ## Private methods ########################################################
+
 
     def _get_alphamax(self):
         return atan((1 - self._lambdaB) / (1 - self._density_ratio)
@@ -73,8 +76,8 @@ class EccwPlot(EccwCompute):
 
     def _store_if_valid(self, beta, alpha, betas, alphas):
         if self._is_valid_taper(alpha, beta):
-            betas.append(r2d(beta))
-            alphas.append(r2d(alpha))
+            betas.append(degrees(beta))
+            alphas.append(degrees(alpha))
 
     def _compute_betas_alphas(self, alphas):
         """Return nested lists of valid values of beta, alpha"""
@@ -126,10 +129,15 @@ class EccwPlot(EccwCompute):
         Cys.append((Y[0] + Y[-2] + Y[-1]) / 3.)
         A = sum(Ss)
         if abs(A) < self._numtol:
-            raise Exception("!!!ERROR : polygon gets surface lower than tol.")
-        # Centroid is weighed average of element triangle centroids.
-        x = sum([Cx * S for Cx, S in zip(Cxs, Ss)]) / A
-        y = sum([Cy * S for Cy, S in zip(Cys, Ss)]) / A
+            # Compute x and y with an alternative (approximated) method.
+            Xmin, Xmax = min(X), max(X)
+            Ymin, Ymax = min(Y), max(Y)
+            x = Xmin + (Xmax - Xmin) / 2.
+            y = Ymin + (Ymax - Ymin) / 2.
+        else :
+            # Centroid is weighed average of element triangle centroids.
+            x = sum([Cx * S for Cx, S in zip(Cxs, Ss)]) / A
+            y = sum([Cy * S for Cy, S in zip(Cys, Ss)]) / A
         return x, y
 
     def _test_value(self, value, other, values, others, v_min, v_max):
@@ -185,13 +193,16 @@ class EccwPlot(EccwCompute):
             b_f = Ni[1] - a_f * Ni[0]
             X, Y = [], []
             # Fault intersection with base
-            x = (self._b_basal - b_f) / (a_f - self._a_basal)
-            y = a_f * x + b_f
-            self._is_node_in_box(x, y, X, Y)
+            try:
+                x = (self._b_basal - b_f) / (a_f - self._a_basal)
+                y = a_f * x + b_f
+                self._append_if_node_in_box(x, y, X, Y)
+            except ZeroDivisionError:
+                pass
             # Fault intersection with topo
             x = (self._b_topo - b_f) / (a_f - self._a_topo)
             y = a_f * x + b_f
-            self._is_node_in_box(x, y, X, Y)
+            self._append_if_node_in_box(x, y, X, Y)
             # Fault intersection with rear arc
             A = 1 + a_f ** 2.
             B = 2. * (a_f * (b_f - yt) - xt)
@@ -200,10 +211,10 @@ class EccwPlot(EccwCompute):
             if D >= 0.:
                 x = (-B - sqrt(D)) / 2. / A
                 y = a_f * x + b_f
-                self._is_node_in_box(x, y, X, Y)
+                self._append_if_node_in_box(x, y, X, Y)
                 x = (-B + sqrt(D)) / 2. / A
                 y = a_f * x + b_f
-                self._is_node_in_box(x, y, X, Y)
+                self._append_if_node_in_box(x, y, X, Y)
             if len(X) < 2:
                 break
             p = lines.Line2D(X, Y, lw=1, c=col)
@@ -225,7 +236,7 @@ class EccwPlot(EccwCompute):
         return (pi / 2. - self._phiB + 2. * self._alpha - self._alpha_prime
                 + asin(sin(self._alpha_prime) / sin(self._phiB))) / 2.
 
-    def _is_node_in_box(self, x, y, X, Y):
+    def _append_if_node_in_box(self, x, y, X, Y):
         foo = self._padding - self._numtol
         bar = self._padding + self._numtol
         if foo <= x <= self._sketch_box_width - bar:
@@ -241,7 +252,9 @@ class EccwPlot(EccwCompute):
             'figure': self.figure
             }
 
-    # Public methods
+
+    ## Public methods #########################################################
+
 
     def init_figure(self):
         self.figure = plt.figure("ECCW", figsize=(8, 6))
@@ -317,9 +330,9 @@ class EccwPlot(EccwCompute):
         b, a = self._get_centroid(betas, alphas)
         self._point_center = (b, a)
         i = imax(as_up)
-        self._point_top = (bs_up[i], r2d(alphamax))
+        self._point_top = (bs_up[i], degrees(alphamax))
         i = imin(as_dw)
-        self._point_bottom = (bs_dw[i], -r2d(alphamax))
+        self._point_bottom = (bs_dw[i], -degrees(alphamax))
         self._point_left = (bs_up[0], as_up[0])
         self._point_right = (bs_up[-1], as_up[-1])
 
@@ -425,7 +438,7 @@ class EccwPlot(EccwCompute):
         self.sketch_size_factor = kwargs.get('sketch_size_factor', 1.)
         # Renaming is cheapper than multiple access.
         alpha, beta = self._alpha, self._beta
-        a_deg, b_deg = r2d(alpha), r2d(beta)
+        a_deg, b_deg = degrees(alpha), degrees(beta)
         padding = self._padding
         # Surface of prism : arbitrary set, allows a cst looking.
         # Box distance from enveloppe.
