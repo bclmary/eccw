@@ -457,9 +457,9 @@ class EmbeddedEccwCompute(BaseEccwCompute):
         """
         
         tectonic_betas, collapsing_betas = self.compute_beta(deg=False)
-        if any(abs(self._beta - beta) < self._numtol for beta in tectonic_betas):
+        if any(abs(self._beta - beta) < self._h for beta in tectonic_betas):
             tectonic.append(degrees(value) if deg else value)
-        if any(abs(self._beta - beta) < self._numtol for beta in collapsing_betas):
+        if any(abs(self._beta - beta) < self._h for beta in collapsing_betas):
             collapsing.append(degrees(value) if deg else value)
         return tectonic, collapsing
 
@@ -689,7 +689,13 @@ class EccwCompute(BaseEccwCompute):
         return X[0] if abs(X[0]) > self._numtol else 0.0
 
     def _solve(self, X, runtime_var):
-        return self._solve_new(X, runtime_var)
+        return self._solve_old(X, runtime_var)
+        #return self._solve_new(X, runtime_var)
+        # TODO
+        # https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Muller
+        # https://en.wikipedia.org/wiki/Root-finding_algorithm
+        # https://en.wikipedia.org/wiki/Sidi%27s_generalized_secant_method#cite_ref-1
+
 
     ## 'Public' methods #######################################################
 
@@ -727,7 +733,7 @@ class EccwCompute(BaseEccwCompute):
         self._check_params()
         tectonic, collapsing = [], []
         # Update with current parameters the embedded compute.
-        self._embedded_compute.set_params(**self.kwargs(), _numtol=self._numtol)
+        self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         ab = self._alpha + self._beta
         # Inital values for first solution.
         phiB = self._phiD  #pi / 7.0
@@ -769,7 +775,7 @@ class EccwCompute(BaseEccwCompute):
         self._check_params()
         tectonic, collapsing = [], []
         # Update with current parameters the embedded compute.
-        self._embedded_compute.set_params(**self.kwargs(), _numtol=self._numtol)
+        self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         apb = self._alpha + self._beta
         # Inital values for First solution.
         #phiD, psiD, psi0 = apb, apb, 0.0
