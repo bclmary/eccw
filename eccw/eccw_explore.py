@@ -8,7 +8,7 @@ Elements dedicated to explore solutions.
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import ticker, cm
-from math import pi, degrees, inf
+from math import pi, degrees, radians, inf, nan
 from itertools import product
 #import multiprocessing   # fails at pickling the class
 #import concurrent.futures   # fail at pickling the class
@@ -40,14 +40,14 @@ class EccwExplore(EccwCompute):
         )
         return np.reshape(tuple(MAP), (len(X),len(PSID),-1))
 
-    def _solve_for_map_solution(self, X):
+    def _solve_for_map_solution(self, X, runtime_var):
         # self._set_at_runtime = self._runtime_alpha
-        _ = self._newton_raphson_solve(X, self._runtime_alpha)
+        _ = self._solve(X, runtime_var)
         alpha_path, psiD_path, psi0_path = zip(*self.path)
         alpha_path = [degrees(x) for x in alpha_path]
         psiD_path = [degrees(x) for x in psiD_path]
         psi0_path = [degrees(x) for x in psi0_path]
-        return alpha_path, psiD_path, psi0_path, self.iter_conv
+        return (alpha_path, psiD_path, psi0_path), self.iter_conv
 
     ## display elements #######################################################
 
@@ -75,83 +75,194 @@ class EccwExplore(EccwCompute):
     def _subplot_conv_path(self, pathX1, pathY1, pathX2, pathY2, axe):
         axe.plot(pathX1, pathY1, "-or")
         axe.plot(pathX1[-1], pathY1[-1], "ob")
-        axe.plot(pathX2, pathY2, "-or")
+        axe.plot(pathX2, pathY2, "-oy")
         axe.plot(pathX2[-1], pathY2[-1], "ob")
 
-    def draw_map_solution(self, N=32):
-        psimin, psimax = -pi / 2, pi / 2
-        amin, amax = -self._phiB, self._phiB
-
+    def draw_map_solution(self, runtime_var, X1, X2, N=32, vmin=-pi/2, vmax=pi/2):
+        """Draw a convergence map for the 3 parameters X, psiD and psi0.
+        X can be {alpha, phiD, phiB}.
+        Sélection of X is made through runtime_var parameter.
+        X1 and X2 are 3 elements lists containig 2 sets of initial values.
+        """
+        parser = {
+            self._runtime_alpha: "$\\alpha$",
+            self._runtime_phiB: "$\phi_B$",
+            self._runtime_phiD: "$\phi_D$",
+        }
+        var_label = parser[runtime_var]
         #### SOLVE ####
-        X = [0.0, 0.0, 0.0]
-        alpha_path1, psiD_path1, psi0_path1, c1 = self._solve_for_map_solution(X)
+        try:
+            paths1, count1 = self._solve_for_map_solution(X1, runtime_var)
+        except RuntimeError:
+            paths1, count1 = [(nan, nan)] * 4, None
+        try:
+            paths2, count2 = self._solve_for_map_solution(X2, runtime_var)
+        except RuntimeError:
+            paths2, count2 = [(nan, nan)] * 4, None
 
-        X = [0.0, self._sign * pi / 2.0, self._sign * pi / 4.0]
-        alpha_path2, psiD_path2, psi0_path2, c2 = self._solve_for_map_solution(X)
-
-        ALPHAs = np.linspace(amin, amax, N)
-        PSIDs = np.linspace(psimin, psimax, N)
-        PSI0s = np.linspace(psimin, psimax, N)
+        VARs = np.linspace(vmin, vmax, N)
+        PSIDs = np.linspace(vmin, vmax, N)
+        PSI0s = np.linspace(vmin, vmax, N)
         MATRIX = self._matrix_of_function_to_root(
-            ALPHAs, PSIDs, PSI0s, self._runtime_alpha
+            VARs, PSIDs, PSI0s, runtime_var
         )
 
         ### PLOT ###
-        ALPHAs = [degrees(x) for x in ALPHAs]
+        VARs = [degrees(x) for x in VARs]
         PSIDs = [degrees(x) for x in PSIDs]
         PSI0s = [degrees(x) for x in PSI0s]
 
-        title = f"conv_map_phiD{round(self.phiD,1)}"
-        fig = plt.figure(title, figsize=(10, 10))
-        fig.suptitle(
-            f"Convergence maps for parameters $\\beta$={round(self.beta,2)}, "
-            f"$\phi_B$={round(self.phiB,2)} and $\phi_D$={round(self.phiD,2)}",
-            fontsize=14,
-        )
-        #     0  1  2
-        #   ┌──┬──┬──┐
-        # 0 │  │░░│░░│   ▓ ax1
-        #   ├──┼──┼──┤
-        # 1 │▒▒│▓▓│▓▓│   ▒ ax2      3x3 subplot grid
-        #   ├──┼──┼──┤
-        # 2 │▒▒│▓▓│▓▓│   ░ ax3
-        #   └──┴──┴──┘
-        ax1 = plt.subplot2grid((3, 3), (1, 1), colspan=2, rowspan=2)
-        ax2 = plt.subplot2grid((3, 3), (1, 0), rowspan=2, sharey=ax1)
-        ax3 = plt.subplot2grid((3, 3), (0, 1), colspan=2, sharex=ax1)
+        fig = plt.figure("convergence maps", figsize=(10, 9))
+        title = f"""
+        Convergence maps for parameters
+        $\\alpha$={round(self.alpha,2)}
+        $\\beta$={round(self.beta,2)}
+        $\phi_D$={round(self.phiD,2)}
+        $\phi_B$={round(self.phiB,2)} 
+        context: {self.context}
+        """
+
+        #      0   1 
+        #   ┌────┬────┐
+        # 0 │ax00│ax01│
+        #   ├────┼────┤   2x2 subplot grid
+        # 1 │ax10│ax11│
+        #   └────┴────┘
+        ax00 = plt.subplot2grid((2, 2), (0, 0))
+        ax10 = plt.subplot2grid((2, 2), (1, 0), sharex=ax00)
+        ax01 = plt.subplot2grid((2, 2), (0, 1), sharey=ax00)
+        ax11 = plt.subplot2grid((2, 2), (1, 1), sharex=ax01, sharey=ax10)
 
         PMAP = np.transpose(np.min(MATRIX, axis=0))
-        self._subplot_labels("$\psi_D$", "", "", ax1)
-        h1 = self._subplot_conv_map(PSIDs, PSI0s, PMAP, ax1)
-        self._subplot_conv_path(psiD_path1, psi0_path1, psiD_path2, psi0_path2, ax1)
+        ax11.xaxis.set_ticks_position('both')
+        ax11.yaxis.tick_right()
+        ax11.yaxis.set_ticks_position('both')
+        ax11.yaxis.set_label_position("right")
+        self._subplot_labels("$\psi_D$", "$\psi_0$", "", ax11)
+        h1 = self._subplot_conv_map(PSIDs, PSI0s, PMAP, ax11)
+        self._subplot_conv_path(paths1[1], paths1[2], paths2[1], paths2[2], ax11)
+        ax11.grid()
 
         PMAP = np.transpose(np.min(MATRIX, axis=1))
-        self._subplot_labels("$\\alpha$", "$\psi_0$", "", ax2)
-        self._subplot_conv_map(ALPHAs, PSI0s, PMAP, ax2)
-        self._subplot_conv_path(alpha_path1, psi0_path1, alpha_path2, psi0_path2, ax2)
+        ax10.yaxis.set_ticks_position('both')
+        self._subplot_labels(var_label, "$\psi_0$", "", ax10)
+        self._subplot_conv_map(VARs, PSI0s, PMAP, ax10)
+        self._subplot_conv_path(paths1[0], paths1[2], paths2[0], paths2[2], ax10)
+        ax10.grid()
 
         PMAP = np.min(MATRIX, axis=2)
-        self._subplot_labels("", "$\\alpha$", "", ax3)
-        self._subplot_conv_map(PSIDs, ALPHAs, PMAP, ax3)
-        self._subplot_conv_path(psiD_path1, alpha_path1, psiD_path2, alpha_path2, ax3)
+        ax01.xaxis.tick_top()
+        ax01.xaxis.set_ticks_position("both")
+        ax01.xaxis.set_label_position("top")
+        ax01.yaxis.tick_right()
+        ax01.yaxis.set_ticks_position('right')
+        ax01.yaxis.set_label_position("right")
+        self._subplot_labels("$\psi_D$", var_label, "", ax01)
+        self._subplot_conv_map(PSIDs, VARs, PMAP, ax01)
+        self._subplot_conv_path(paths1[1], paths1[0], paths2[1], paths2[0], ax01)
+        ax01.grid()
 
-        fig.subplots_adjust(right=0.8)
-        cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
-        cb = fig.colorbar(h1, cax=cbar_ax)
-        cb.ax.set_ylabel("convergence to zero")
+        ax00.axis('off')
+        x = (ax00.get_xlim()[0] + (ax00.get_xlim()[1] - ax00.get_xlim()[0]) / 2) * 0.7
+        y = ax00.get_ylim()[1]
+        ax00.text(x, y, title, size=14, va="top", ha="center")
 
-        # plt.tight_layout()
-        plt.show()
+        cbar_ax = fig.add_axes([0.1, 0.6, 0.35, 0.04])
+        cb = fig.colorbar(h1, cax=cbar_ax, orientation="horizontal")
+        cb.ax.set_xlabel("convergence to zero", )
 
+        plt.tight_layout()
+        plt.draw()
         # fig.savefig("/home/bmary/"+title+".png")
         # fig.savefig("/home/bmary/conv_map.png")
-        # plt.draw()
         # plt.close(fig)
-        return c1, c2
+        return count1, count2, fig
 
 
 if __name__ == "__main__":
 
-    foo = EccwExplore(phiB=30, phiD=20, beta=0)
-    c1, c2 = foo.draw_map_solution()
-    print(foo.phiD, c1, c2)
+    do = "phiB"
+    loop = False
+
+    if do == "alpha" and not loop:
+        foo = EccwExplore(phiB=30, phiD=20, beta=10, context="c")
+        X1 = [0.0, 0.0, 0.0]
+        X2 = [0.0, foo._sign * pi / 2.0, foo._sign * pi / 4.0]
+        c1, c2, fig = foo.draw_map_solution(foo._runtime_alpha, X1, X2)
+        print(c1, c2, foo.compute_alpha())
+        plt.show()
+
+    if do == "alpha" and loop:
+        foo = EccwExplore(phiB=30, phiD=20, beta=10, context="c")
+        phiDs, betas = range(0,35,5), range(-20,20,5)
+        for i, (phiD, beta) in enumerate(product(phiDs, betas)):
+            foo.set_params(phiD=phiD, beta=beta)
+            X1 = [0.0, 0.0, 0.0]
+            X2 = [0.0, foo._sign * pi / 2.0, foo._sign * pi / 4.0]
+            c1, c2, fig = foo.draw_map_solution(foo._runtime_alpha, X1, X2)
+            print(c1, c2, foo.compute_alpha())
+            title = f"convergence_map_alpha_{i+1}"
+            fig.savefig("/home/bmary/tmp/"+title+".png")
+            plt.close(fig)
+
+    if do == "phiD" and not loop:
+        #TODO: extension donne même résultat que compression !!!
+        #foo = EccwExplore(phiB=30, alpha=0, beta=10, context="c")
+        #foo = EccwExplore(phiB=30, alpha=-20.13, beta=80.8363, context="c") #phiD=5,25
+        #foo = EccwExplore(phiB=30, alpha=11.6, beta=-1.5, context="c") #phiD=5,25
+        #foo = EccwExplore(phiB=30, alpha=-10, beta=39, context="c")
+        foo = EccwExplore(phiB=30, alpha=21.86, beta=2.58, context="c") # phiD=7, 29 collapse
+        delta = foo._alpha+foo._beta
+        #X1 = [delta, delta, 0.0]
+        X1 = [-delta, -pi/2, -pi/2]
+        #X2 = [0., pi/2, pi/2 - delta]
+        X2 = [0., delta, 0.]
+        c1, c2, fig = foo.draw_map_solution(foo._runtime_phiD, X1, X2, vmin=-3*pi/4, vmax=3*pi/4, N=50)
+        print(c1, c2)
+        try:
+            print(foo.compute_phiD())
+        except RuntimeError:
+            print("Error")
+            pass
+        plt.show()
+
+    if do == "phiD" and loop:
+        foo = EccwExplore(phiB=30, alpha=0, beta=10, context="c")
+        alphas, betas = range(-20,20,5), range(-20,20,5)
+        for i, (alpha, beta) in enumerate(product(alphas, betas)):
+            foo.set_params(alpha=alpha, beta=beta)
+            delta = foo._alpha+foo._beta
+            X1 = [delta, delta, 0.]
+            X2 = [0., pi/2, pi/2 - delta]
+            c1, c2, fig = foo.draw_map_solution(foo._runtime_phiD, X1, X2, vmin=-pi/4, vmax=3*pi/4)
+            print(c1, c2)
+            try:
+                print(foo.compute_phiD())
+            except RuntimeError:
+                print("Error")
+                pass
+            title = f"convergence_map_phiD_{i+1}"
+            fig.savefig("/home/bmary/tmp/"+title+".png")
+            plt.close(fig)
+
+
+    if do == "phiB":
+        foo = EccwExplore(phiD=15, alpha=20, beta=10, context="c")
+        delta = foo._alpha+foo._beta
+        #X1 =[radians(29), radians(13), radians(0)]  # phiD=20, alpha=1, beta=10
+        #X1 =[radians(21), radians(28), radians(9)]  # phiD=20, alpha=10, beta=8
+        #X1 =[radians(21), radians(28), radians(9)]  # phiD=15, alpha=30, beta=10, extension
+        X1 = [foo._phiD, delta, foo._alpha]
+        X2 = [-foo._phiD, -pi/2+delta, -pi/2+foo._alpha]
+        c1, c2, fig = foo.draw_map_solution(foo._runtime_phiB, X1, X2)
+        print(c1, c2)
+        try:
+            print(foo.compute_phiB())
+        except RuntimeError:
+            print("Error")
+            pass
+        plt.show()
+
+
+
+    
