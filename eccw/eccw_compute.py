@@ -108,7 +108,9 @@ class BaseEccwCompute(object):
         if value < 0:
             raise TypeError(self._error_message("phiD", "sign", ">= 0"))
         try:
-            self._phiD = radians(value) * self._sign #(self._sign if self._sign else 1.0)
+            self._phiD = (
+                radians(value) * self._sign
+            )  # (self._sign if self._sign else 1.0)
             self._taper_max = pi / 2.0 - self._phiD + self._numtol
         except TypeError:
             raise TypeError(self._error_message("phiD", "type", "a float"))
@@ -324,7 +326,8 @@ class BaseEccwCompute(object):
             beta_ul = psiD_22 - psi0_2 - self._alpha
 
             betas = tuple(
-                b for b in [beta_dl, beta_dr, beta_ul, beta_ur] 
+                b
+                for b in [beta_dl, beta_dr, beta_ul, beta_ur]
                 if self._is_valid_taper(self._alpha, b)
             )
             beta1, beta2 = min(betas), max(betas)
@@ -435,14 +438,13 @@ class BaseEccwCompute(object):
 
 
 class EmbeddedEccwCompute(BaseEccwCompute):
-
     def __init__(self, **kwargs):
         """See 'Data descriptors' section of help for available named parameters."""
         self.reset()
         self.set_params(**kwargs)
 
     def _categorize_result(
-        self, value:float, tectonic:list, collapsing:list, deg:bool=True
+        self, value: float, tectonic: list, collapsing: list, deg: bool = True
     ) -> (list, list):
         """Dirty way of categorize a result value using another instance of EccwCompute.
         
@@ -455,7 +457,7 @@ class EmbeddedEccwCompute(BaseEccwCompute):
         reference beta match one of the new betas, the matching category IS the category of
         the given parameter 'value'.
         """
-        
+
         tectonic_betas, collapsing_betas = self.compute_beta(deg=False)
         if any(abs(self._beta - beta) < self._h for beta in tectonic_betas):
             tectonic.append(degrees(value) if deg else value)
@@ -465,7 +467,6 @@ class EmbeddedEccwCompute(BaseEccwCompute):
 
 
 class EccwCompute(BaseEccwCompute):
-
     def __init__(self, **kwargs):
         """See 'Data descriptors' section of help for available named parameters."""
         self.reset()
@@ -621,7 +622,7 @@ class EccwCompute(BaseEccwCompute):
             count += 1
             newX = X - invJ.dot(F)  # Newton-Raphson iteration.
             newF = self._function_to_root(newX, runtime_var)
-            invJ = self._iter_inverse_jacobian(invJ, newF-F, newX-X)
+            invJ = self._iter_inverse_jacobian(invJ, newF - F, newX - X)
             X, F = newX, newF
             if __debug__:
                 self.path.append(newX)
@@ -690,12 +691,11 @@ class EccwCompute(BaseEccwCompute):
 
     def _solve(self, X, runtime_var):
         return self._solve_old(X, runtime_var)
-        #return self._solve_new(X, runtime_var)
+        # return self._solve_new(X, runtime_var)
         # TODO
         # https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Muller
         # https://en.wikipedia.org/wiki/Root-finding_algorithm
         # https://en.wikipedia.org/wiki/Sidi%27s_generalized_secant_method#cite_ref-1
-
 
     ## 'Public' methods #######################################################
 
@@ -726,7 +726,9 @@ class EccwCompute(BaseEccwCompute):
         phiB = self._test_phiB(phiB)
         if phiB is not None:
             embedded._phiB = phiB
-            tectonic, collapsing = embedded._categorize_result(phiB, tectonic, collapsing, deg)
+            tectonic, collapsing = embedded._categorize_result(
+                phiB, tectonic, collapsing, deg
+            )
         return tectonic, collapsing
 
     def compute_phiB(self, deg=True) -> tuple:
@@ -736,16 +738,16 @@ class EccwCompute(BaseEccwCompute):
         self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         ab = self._alpha + self._beta
         # Inital values for first solution.
-        phiB = self._phiD  #pi / 7.0
-        psiD = ab  #pi
-        psi0 = self._alpha  #psiD - self._alpha - self._beta
+        phiB = self._phiD  # pi / 7.0
+        psiD = ab  # pi
+        psi0 = self._alpha  # psiD - self._alpha - self._beta
         tectonic, collapsing = self._compute_phiB(
             phiB, psiD, psi0, tectonic, collapsing, deg
         )
         # Other inital values for second solution.
-        phiB = -self._phiD  #pi / 7.0
-        psiD = -pi/2 + ab  # pi / 2.0
-        psi0 = -pi/2 + self._alpha  # psiD - self._alpha - self._beta
+        phiB = -self._phiD  # pi / 7.0
+        psiD = -pi / 2 + ab  # pi / 2.0
+        psi0 = -pi / 2 + self._alpha  # psiD - self._alpha - self._beta
         tectonic, collapsing = self._compute_phiB(
             phiB, psiD, psi0, tectonic, collapsing, deg
         )
@@ -758,7 +760,9 @@ class EccwCompute(BaseEccwCompute):
         if phiD is not None:
             embedded._phiD = phiD * embedded._sign
             embedded._taper_max = pi / 2.0 - embedded._phiD + embedded._numtol
-            tectonic, collapsing = embedded._categorize_result(phiD, tectonic, collapsing, deg)
+            tectonic, collapsing = embedded._categorize_result(
+                phiD, tectonic, collapsing, deg
+            )
         return tectonic, collapsing
 
     def compute_phiD(self, deg=True) -> tuple:
@@ -778,14 +782,14 @@ class EccwCompute(BaseEccwCompute):
         self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         apb = self._alpha + self._beta
         # Inital values for First solution.
-        #phiD, psiD, psi0 = apb, apb, 0.0
-        phiD, psiD, psi0 = -apb, -pi/2, -pi/2
+        # phiD, psiD, psi0 = apb, apb, 0.0
+        phiD, psiD, psi0 = -apb, -pi / 2, -pi / 2
         tectonic, collapsing = self._compute_phiD(
             phiD, psiD, psi0, tectonic, collapsing, deg
         )
         # Other inital values second solution.
-        #phiD, psiD, psi0 = 0.0, pi/2, pi/2 - apb
-        phiD, psiD, psi0 = 0., apb, 0.
+        # phiD, psiD, psi0 = 0.0, pi/2, pi/2 - apb
+        phiD, psiD, psi0 = 0.0, apb, 0.0
         # Second solution of ECCW (upper).
         tectonic, collapsing = self._compute_phiD(
             phiD, psiD, psi0, tectonic, collapsing, deg
@@ -803,7 +807,6 @@ class EccwCompute(BaseEccwCompute):
             "phiD": self.compute_phiD,
         }
         return parser[flag]()
-
 
 
 if __name__ == "__main__":
@@ -878,27 +881,25 @@ if __name__ == "__main__":
         foo.alpha = alpha
         print(f"alpha={round(foo.alpha,3)}", foo.compute_phiD())
 
-
-    print() # two solutions in tectonic and collapsing categories.
+    print()  # two solutions in tectonic and collapsing categories.
     foo = EccwCompute(phiB=30, alpha=11.6, beta=-1.5)
     print(foo.compute_phiD())
-    print() # same solutions (reversed) with other parameters.
+    print()  # same solutions (reversed) with other parameters.
     foo = EccwCompute(phiB=30, alpha=-20.13, beta=80.84)
     print(foo.compute_phiD())
-    print() # two solutions both in collapsing category.
+    print()  # two solutions both in collapsing category.
     foo = EccwCompute(phiB=30, alpha=21.86, beta=2.58)
     print(foo.compute_phiD())
-    print() # same solutions both in tectonic category.
+    print()  # same solutions both in tectonic category.
     foo = EccwCompute(phiB=30, alpha=-28.05, beta=72.51)
     print(foo.compute_phiD())
-
 
     print()
     foo = EccwCompute(phiB=30, phiD=5, alpha=-20.13)
     print(foo.compute_beta_old())
     print(foo.compute_beta())
 
-    print() # phiB
+    print()  # phiB
     foo = EccwCompute(phiD=24.84, alpha=11.6, beta=-1.5)
     print(foo.compute_phiB())
 

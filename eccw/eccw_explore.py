@@ -10,9 +10,10 @@ from matplotlib import pyplot as plt
 from matplotlib import ticker, cm
 from math import pi, degrees, radians, inf, nan
 from itertools import product
-#import multiprocessing   # fails at pickling the class
-#import concurrent.futures   # fail at pickling the class
-#import pathos   # <<<<< solution !
+
+# import multiprocessing   # fails at pickling the class
+# import concurrent.futures   # fail at pickling the class
+# import pathos   # <<<<< solution !
 
 
 from eccw import EccwCompute
@@ -36,9 +37,9 @@ class EccwExplore(EccwCompute):
         """
         MAP = map(
             lambda xyz: np.mean(np.abs(self._function_to_root(xyz, runtime_var))),
-            product(X, PSID, PSI0)
+            product(X, PSID, PSI0),
         )
-        return np.reshape(tuple(MAP), (len(X),len(PSID),-1))
+        return np.reshape(tuple(MAP), (len(X), len(PSID), -1))
 
     def _solve_for_map_solution(self, X, runtime_var):
         # self._set_at_runtime = self._runtime_alpha
@@ -78,7 +79,7 @@ class EccwExplore(EccwCompute):
         axe.plot(pathX2, pathY2, "-oy")
         axe.plot(pathX2[-1], pathY2[-1], "ob")
 
-    def draw_map_solution(self, runtime_var, X1, X2, N=32, vmin=-pi/2, vmax=pi/2):
+    def draw_map_solution(self, runtime_var, X1, X2, N=32, vmin=-pi / 2, vmax=pi / 2):
         """Draw a convergence map for the 3 parameters X, psiD and psi0.
         X can be {alpha, phiD, phiB}.
         Sélection of X is made through runtime_var parameter.
@@ -103,9 +104,7 @@ class EccwExplore(EccwCompute):
         VARs = np.linspace(vmin, vmax, N)
         PSIDs = np.linspace(vmin, vmax, N)
         PSI0s = np.linspace(vmin, vmax, N)
-        MATRIX = self._matrix_of_function_to_root(
-            VARs, PSIDs, PSI0s, runtime_var
-        )
+        MATRIX = self._matrix_of_function_to_root(VARs, PSIDs, PSI0s, runtime_var)
 
         ### PLOT ###
         VARs = [degrees(x) for x in VARs]
@@ -122,7 +121,7 @@ class EccwExplore(EccwCompute):
         context: {self.context}
         """
 
-        #      0   1 
+        #      0   1
         #   ┌────┬────┐
         # 0 │ax00│ax01│
         #   ├────┼────┤   2x2 subplot grid
@@ -134,9 +133,9 @@ class EccwExplore(EccwCompute):
         ax11 = plt.subplot2grid((2, 2), (1, 1), sharex=ax01, sharey=ax10)
 
         PMAP = np.transpose(np.min(MATRIX, axis=0))
-        ax11.xaxis.set_ticks_position('both')
+        ax11.xaxis.set_ticks_position("both")
         ax11.yaxis.tick_right()
-        ax11.yaxis.set_ticks_position('both')
+        ax11.yaxis.set_ticks_position("both")
         ax11.yaxis.set_label_position("right")
         self._subplot_labels("$\psi_D$", "$\psi_0$", "", ax11)
         h1 = self._subplot_conv_map(PSIDs, PSI0s, PMAP, ax11)
@@ -144,7 +143,7 @@ class EccwExplore(EccwCompute):
         ax11.grid()
 
         PMAP = np.transpose(np.min(MATRIX, axis=1))
-        ax10.yaxis.set_ticks_position('both')
+        ax10.yaxis.set_ticks_position("both")
         self._subplot_labels(var_label, "$\psi_0$", "", ax10)
         self._subplot_conv_map(VARs, PSI0s, PMAP, ax10)
         self._subplot_conv_path(paths1[0], paths1[2], paths2[0], paths2[2], ax10)
@@ -155,21 +154,21 @@ class EccwExplore(EccwCompute):
         ax01.xaxis.set_ticks_position("both")
         ax01.xaxis.set_label_position("top")
         ax01.yaxis.tick_right()
-        ax01.yaxis.set_ticks_position('right')
+        ax01.yaxis.set_ticks_position("right")
         ax01.yaxis.set_label_position("right")
         self._subplot_labels("$\psi_D$", var_label, "", ax01)
         self._subplot_conv_map(PSIDs, VARs, PMAP, ax01)
         self._subplot_conv_path(paths1[1], paths1[0], paths2[1], paths2[0], ax01)
         ax01.grid()
 
-        ax00.axis('off')
+        ax00.axis("off")
         x = (ax00.get_xlim()[0] + (ax00.get_xlim()[1] - ax00.get_xlim()[0]) / 2) * 0.7
         y = ax00.get_ylim()[1]
         ax00.text(x, y, title, size=14, va="top", ha="center")
 
         cbar_ax = fig.add_axes([0.1, 0.6, 0.35, 0.04])
         cb = fig.colorbar(h1, cax=cbar_ax, orientation="horizontal")
-        cb.ax.set_xlabel("convergence to zero", )
+        cb.ax.set_xlabel("convergence to zero")
 
         plt.tight_layout()
         plt.draw()
@@ -194,7 +193,7 @@ if __name__ == "__main__":
 
     if do == "alpha" and loop:
         foo = EccwExplore(phiB=30, phiD=20, beta=10, context="c")
-        phiDs, betas = range(0,35,5), range(-20,20,5)
+        phiDs, betas = range(0, 35, 5), range(-20, 20, 5)
         for i, (phiD, beta) in enumerate(product(phiDs, betas)):
             foo.set_params(phiD=phiD, beta=beta)
             X1 = [0.0, 0.0, 0.0]
@@ -202,22 +201,26 @@ if __name__ == "__main__":
             c1, c2, fig = foo.draw_map_solution(foo._runtime_alpha, X1, X2)
             print(c1, c2, foo.compute_alpha())
             title = f"convergence_map_alpha_{i+1}"
-            fig.savefig("/home/bmary/tmp/"+title+".png")
+            fig.savefig("/home/bmary/tmp/" + title + ".png")
             plt.close(fig)
 
     if do == "phiD" and not loop:
-        #TODO: extension donne même résultat que compression !!!
-        #foo = EccwExplore(phiB=30, alpha=0, beta=10, context="c")
-        #foo = EccwExplore(phiB=30, alpha=-20.13, beta=80.8363, context="c") #phiD=5,25
-        #foo = EccwExplore(phiB=30, alpha=11.6, beta=-1.5, context="c") #phiD=5,25
-        #foo = EccwExplore(phiB=30, alpha=-10, beta=39, context="c")
-        foo = EccwExplore(phiB=30, alpha=21.86, beta=2.58, context="c") # phiD=7, 29 collapse
-        delta = foo._alpha+foo._beta
-        #X1 = [delta, delta, 0.0]
-        X1 = [-delta, -pi/2, -pi/2]
-        #X2 = [0., pi/2, pi/2 - delta]
-        X2 = [0., delta, 0.]
-        c1, c2, fig = foo.draw_map_solution(foo._runtime_phiD, X1, X2, vmin=-3*pi/4, vmax=3*pi/4, N=50)
+        # TODO: extension donne même résultat que compression !!!
+        # foo = EccwExplore(phiB=30, alpha=0, beta=10, context="c")
+        # foo = EccwExplore(phiB=30, alpha=-20.13, beta=80.8363, context="c") #phiD=5,25
+        # foo = EccwExplore(phiB=30, alpha=11.6, beta=-1.5, context="c") #phiD=5,25
+        # foo = EccwExplore(phiB=30, alpha=-10, beta=39, context="c")
+        foo = EccwExplore(
+            phiB=30, alpha=21.86, beta=2.58, context="c"
+        )  # phiD=7, 29 collapse
+        delta = foo._alpha + foo._beta
+        # X1 = [delta, delta, 0.0]
+        X1 = [-delta, -pi / 2, -pi / 2]
+        # X2 = [0., pi/2, pi/2 - delta]
+        X2 = [0.0, delta, 0.0]
+        c1, c2, fig = foo.draw_map_solution(
+            foo._runtime_phiD, X1, X2, vmin=-3 * pi / 4, vmax=3 * pi / 4, N=50
+        )
         print(c1, c2)
         try:
             print(foo.compute_phiD())
@@ -228,13 +231,15 @@ if __name__ == "__main__":
 
     if do == "phiD" and loop:
         foo = EccwExplore(phiB=30, alpha=0, beta=10, context="c")
-        alphas, betas = range(-20,20,5), range(-20,20,5)
+        alphas, betas = range(-20, 20, 5), range(-20, 20, 5)
         for i, (alpha, beta) in enumerate(product(alphas, betas)):
             foo.set_params(alpha=alpha, beta=beta)
-            delta = foo._alpha+foo._beta
-            X1 = [delta, delta, 0.]
-            X2 = [0., pi/2, pi/2 - delta]
-            c1, c2, fig = foo.draw_map_solution(foo._runtime_phiD, X1, X2, vmin=-pi/4, vmax=3*pi/4)
+            delta = foo._alpha + foo._beta
+            X1 = [delta, delta, 0.0]
+            X2 = [0.0, pi / 2, pi / 2 - delta]
+            c1, c2, fig = foo.draw_map_solution(
+                foo._runtime_phiD, X1, X2, vmin=-pi / 4, vmax=3 * pi / 4
+            )
             print(c1, c2)
             try:
                 print(foo.compute_phiD())
@@ -242,18 +247,17 @@ if __name__ == "__main__":
                 print("Error")
                 pass
             title = f"convergence_map_phiD_{i+1}"
-            fig.savefig("/home/bmary/tmp/"+title+".png")
+            fig.savefig("/home/bmary/tmp/" + title + ".png")
             plt.close(fig)
-
 
     if do == "phiB":
         foo = EccwExplore(phiD=15, alpha=20, beta=10, context="c")
-        delta = foo._alpha+foo._beta
-        #X1 =[radians(29), radians(13), radians(0)]  # phiD=20, alpha=1, beta=10
-        #X1 =[radians(21), radians(28), radians(9)]  # phiD=20, alpha=10, beta=8
-        #X1 =[radians(21), radians(28), radians(9)]  # phiD=15, alpha=30, beta=10, extension
+        delta = foo._alpha + foo._beta
+        # X1 =[radians(29), radians(13), radians(0)]  # phiD=20, alpha=1, beta=10
+        # X1 =[radians(21), radians(28), radians(9)]  # phiD=20, alpha=10, beta=8
+        # X1 =[radians(21), radians(28), radians(9)]  # phiD=15, alpha=30, beta=10, extension
         X1 = [foo._phiD, delta, foo._alpha]
-        X2 = [-foo._phiD, -pi/2+delta, -pi/2+foo._alpha]
+        X2 = [-foo._phiD, -pi / 2 + delta, -pi / 2 + foo._alpha]
         c1, c2, fig = foo.draw_map_solution(foo._runtime_phiB, X1, X2)
         print(c1, c2)
         try:
@@ -262,7 +266,3 @@ if __name__ == "__main__":
             print("Error")
             pass
         plt.show()
-
-
-
-    
