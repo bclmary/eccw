@@ -27,6 +27,7 @@ class BaseEccwCompute(object):
         self._sign = 1  # Determine context: +1 for compression, -1 for extension.
         self._beta = nan
         self._alpha = nan
+        self._alpha_prime = nan
         self._phiB = nan
         self._phiD = nan
         self._rho_f = 0.0
@@ -64,11 +65,14 @@ class BaseEccwCompute(object):
     def alpha(self, value):
         try:
             self._alpha = radians(value)
-            self._lambdaD_D2 = self._convert_lambda(self._alpha, self._lambdaD)
-            self._lambdaB_D2 = self._convert_lambda(self._alpha, self._lambdaB)
-            self._alpha_prime = self._convert_alpha(self._alpha, self._lambdaB_D2)
+            self._alpha_related_changes()
         except TypeError:
             raise TypeError(self._error_message("alpha", "type", "a float"))
+
+    def _alpha_related_changes(self):
+        self._lambdaD_D2 = self._convert_lambda(self._alpha, self._lambdaD)
+        self._lambdaB_D2 = self._convert_lambda(self._alpha, self._lambdaB)
+        self._alpha_prime = self._convert_alpha(self._alpha, self._lambdaB_D2)
 
     @property
     def beta(self):
@@ -108,12 +112,13 @@ class BaseEccwCompute(object):
         if value < 0:
             raise TypeError(self._error_message("phiD", "sign", ">= 0"))
         try:
-            self._phiD = (
-                radians(value) * self._sign
-            )  # (self._sign if self._sign else 1.0)
-            self._taper_max = pi / 2.0 - self._phiD + self._numtol
+            self._phiD = radians(value) * self._sign
+            self._phiD_related_changes()
         except TypeError:
             raise TypeError(self._error_message("phiD", "type", "a float"))
+
+    def _phiD_related_changes(self):
+        self._taper_max = pi / 2.0 - self._phiD + self._numtol
 
     @property
     def context(self):
@@ -208,15 +213,20 @@ class BaseEccwCompute(object):
 
     ## 'Private' methods ######################################################
 
-    def _check_params(self) -> None:
+    def _check_params_with_raise(self) -> None:
         """Raise error(s) if fluid related parameters are not set correctly."""
         out = self.check_params()
         if out:
             raise ValueError(out)
 
     def check_params(self) -> str:
-        """Ckeck sanity of fluid related parameters."""
+        """Ckeck sanity of parameters."""
         errors = ""
+        if abs(self._phiD) > self._phiB:
+            errors += self._error_message(
+                "phiD", "value", "lower than phiB\n"
+            )
+
         if not (0.0 <= self._delta_lambdaD < 1 - self._density_ratio):
             errors += self._error_message(
                 "delta_lambdaD", "value", "in [0 : %s]\n" % (1 - self._density_ratio)
@@ -310,7 +320,7 @@ class BaseEccwCompute(object):
         Return the 2 possible solutions in tectonic or  collapsing regime.
         Return two None if no physical solutions.
         """
-        self._check_params()
+        self._check_params_with_raise()
         # weird if statement because asin in PSI_D is your ennemy !
         if -self._phiB <= self._alpha_prime <= self._phiB:
             psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
@@ -361,7 +371,7 @@ class BaseEccwCompute(object):
         * 1 tectonic  and 1 double solution : (x, y), (y, )
         * no solutions : (), ()
         """
-        self._check_params()
+        self._check_params_with_raise()
         # weird if statement because asin in PSI_D is your ennemy !
         if -self._phiB <= self._alpha_prime <= self._phiB:
             psi0_1, psi0_2 = self._PSI_0(self._alpha_prime, self._phiB)
@@ -457,12 +467,14 @@ class EmbeddedEccwCompute(BaseEccwCompute):
         reference beta match one of the new betas, the matching category IS the category of
         the given parameter 'value'.
         """
-
-        tectonic_betas, collapsing_betas = self.compute_beta(deg=False)
-        if any(abs(self._beta - beta) < self._h for beta in tectonic_betas):
-            tectonic.append(degrees(value) if deg else value)
-        if any(abs(self._beta - beta) < self._h for beta in collapsing_betas):
-            collapsing.append(degrees(value) if deg else value)
+        value = degrees(value) if deg else value
+        for (iolist, reflist) in zip(
+            (tectonic, collapsing), self.compute_beta(deg=False)
+        ):
+            if any(abs(self._beta - beta) < self._h for beta in reflist):
+                # Is thre any duplicated result ?
+                if all(abs(value - other) > self._h for other in iolist):
+                    iolist.append(value)
         return tectonic, collapsing
 
 
@@ -599,7 +611,7 @@ class EccwCompute(BaseEccwCompute):
         """
         return invJ + np.outer(dX - invJ.dot(dF), dF) / np.linalg.norm(dF) ** 2.0
 
-    def _solve_new(self, X: tuple, runtime_var: "function") -> float:
+    def _solve_Broyden(self, X: tuple, runtime_var: "function") -> float:
         """
         Solve the "function to root" iteratively using a generalized Newton/Raphson's method,
         also called Broyden's method (the bad version)
@@ -655,7 +667,7 @@ class EccwCompute(BaseEccwCompute):
             M[:, j] = DF - F
         return M / self._h
 
-    def _solve_old(self, X: tuple, runtime_var: "function") -> float:
+    def _solve_Newton(self, X: tuple, runtime_var: "function") -> float:
         """
         Solve the "function to root" iteratively using a naive generalized Newton/Raphson's method.
 
@@ -690,8 +702,8 @@ class EccwCompute(BaseEccwCompute):
         return X[0] if abs(X[0]) > self._numtol else 0.0
 
     def _solve(self, X, runtime_var):
-        return self._solve_old(X, runtime_var)
-        # return self._solve_new(X, runtime_var)
+        return self._solve_Newton(X, runtime_var)
+        # return self._solve_Broyden(X, runtime_var)
         # TODO
         # https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Muller
         # https://en.wikipedia.org/wiki/Root-finding_algorithm
@@ -699,26 +711,40 @@ class EccwCompute(BaseEccwCompute):
 
     ## 'Public' methods #######################################################
 
-    def _compute_alpha(self, alpha, psiD, psi0, deg):
+    def _compute_alpha(self, alpha, psiD, psi0, tectonic, collapsing, deg):
+        embedded = self._embedded_compute
         alpha = self._solve([alpha, psiD, psi0], self._runtime_alpha)
         alpha = self._test_alpha(alpha)
-        if deg:
-            alpha = self._degrees_if_not_none(alpha)
-        return alpha
+        # print("yo", degrees(alpha))
+        if alpha is not None:
+            embedded._alpha = alpha
+            embedded._alpha_related_changes()
+            # print("yo", embedded._beta, embedded.compute_beta() )
+            tectonic, collapsing = embedded._categorize_result(
+                alpha, tectonic, collapsing, deg
+            )
+        return tectonic, collapsing
 
     def compute_alpha(self, deg=True) -> tuple:
         """Get critical topographic slope alpha as ECCW.
         Return the 2 possible solutions in tectonic or collapsing regime.
         Return two None if no physical solutions.
         """
-        self._check_params()
+        self._check_params_with_raise()
+        tectonic, collapsing = [], []
+        # Update with current parameters the embedded compute.
+        self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         # Inital values for first solution.
         alpha, psiD, psi0 = 0.0, 0.0, 0.0
-        tectonic_alpha = self._compute_alpha(alpha, psiD, psi0, deg)
+        tectonic, collapsing = self._compute_alpha(
+            alpha, psiD, psi0, tectonic, collapsing, deg
+        )
         # Other inital values for second solution.
         alpha, psiD, psi0 = 0.0, self._sign * pi / 2.0, self._sign * pi / 4.0
-        collapsing_alpha = self._compute_alpha(alpha, psiD, psi0, deg)
-        return tectonic_alpha, collapsing_alpha
+        tectonic, collapsing = self._compute_alpha(
+            alpha, psiD, psi0, tectonic, collapsing, deg
+        )
+        return tuple(tectonic), tuple(collapsing)
 
     def _compute_phiB(self, phiB, psiD, psi0, tectonic, collapsing, deg) -> tuple:
         embedded = self._embedded_compute
@@ -732,7 +758,7 @@ class EccwCompute(BaseEccwCompute):
         return tectonic, collapsing
 
     def compute_phiB(self, deg=True) -> tuple:
-        self._check_params()
+        self._check_params_with_raise()
         tectonic, collapsing = [], []
         # Update with current parameters the embedded compute.
         self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
@@ -759,7 +785,7 @@ class EccwCompute(BaseEccwCompute):
         phiD = self._test_phiD(phiD)
         if phiD is not None:
             embedded._phiD = phiD * embedded._sign
-            embedded._taper_max = pi / 2.0 - embedded._phiD + embedded._numtol
+            embedded._phiD_related_changes()
             tectonic, collapsing = embedded._categorize_result(
                 phiD, tectonic, collapsing, deg
             )
@@ -776,7 +802,7 @@ class EccwCompute(BaseEccwCompute):
 
         .. note:: double solutions (phiD == phiB) are not returned.
         """
-        self._check_params()
+        self._check_params_with_raise()
         tectonic, collapsing = [], []
         # Update with current parameters the embedded compute.
         self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
@@ -902,6 +928,7 @@ if __name__ == "__main__":
     print()  # phiB
     foo = EccwCompute(phiD=24.84, alpha=11.6, beta=-1.5)
     print(foo.compute_phiB())
+
 
     # foo._draw_full_solution_alpha(64)
     # foo._draw_map_solution_alpha()

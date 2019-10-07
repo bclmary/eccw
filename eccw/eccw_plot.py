@@ -17,7 +17,6 @@ import warnings
 
 
 from eccw import EccwCompute
-from eccw.shared import imin, imax
 
 
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
@@ -400,9 +399,10 @@ class EccwPlot(EccwCompute):
         # Get bounding and central points (used by sketch).
         b, a = self._get_centroid(betas, alphas)
         self._point_center = (b, a)
-        i = imax(as_up)
+        i = np.argmax(as_up)
         self._point_top = (bs_up[i], degrees(alphamax))
-        i = imin(as_dw)
+        self._point_top = (betas[i], degrees(alphamax))
+        i = np.argmin(as_dw)
         self._point_bottom = (bs_dw[i], -degrees(alphamax))
         self._point_left = (bs_up[0], as_up[0])
         self._point_right = (bs_up[-1], as_up[-1])
@@ -432,7 +432,7 @@ class EccwPlot(EccwCompute):
             # if a_min == minf and a_max == pinf and line:
             #     plt.axvline(beta, lw=1.5, c='gray', figure=self.figure)
             self.beta = beta
-            alpha1, alpha2 = self.compute_alpha()
+            (alpha1,), (alpha2,) = self.compute_alpha()
             self._test_value(alpha1, beta, alphas, betas, a_min, a_max)
             self._test_value(alpha2, beta, alphas, betas, a_min, a_max)
             if sketch is True:
@@ -445,7 +445,7 @@ class EccwPlot(EccwCompute):
             # if b_min == minf and b_max == pinf and line:
             #     plt.axhline(alpha, lw=1, c='gray', figure=self.figure)
             self.alpha = alpha
-            beta1, beta2 = self.compute_beta_old()
+            beta1, beta2 = self.compute_beta_old() #TODO potential bug with context
             self._test_value(beta1, alpha, betas, alphas, b_min, b_max)
             self._test_value(beta2, alpha, betas, alphas, b_min, b_max)
             if sketch is True:
@@ -507,7 +507,7 @@ class EccwPlot(EccwCompute):
         self.sketch_size_factor = kwargs.get("sketch_size_factor", 1.0)
         # Renaming is cheapper than multiple access.
         alpha, beta = self._alpha, self._beta
-        a_deg, b_deg = degrees(alpha), degrees(beta)
+        a_deg, b_deg = self.alpha, self.beta
         padding = self._padding
         # Surface of prism : arbitrary set, allows a cst looking.
         # Box distance from enveloppe.
@@ -560,7 +560,7 @@ class EccwPlot(EccwCompute):
         )
         dist_from_curve_b = box_dist_from_curve * cos(slope)
         dist_from_curve_a = box_dist_from_curve * sin(slope)
-        alpha1, alpha2 = self.compute_alpha(deg=False)
+        (alpha1,), (alpha2,) = self.compute_alpha(deg=False)
         a_mid = alpha1 + (alpha2 - alpha1) / 2.0
         if alpha <= a_mid:  # bottom part -> inverse faults
             if b_deg < self._point_bottom[0]:  # bottom left quadrant
