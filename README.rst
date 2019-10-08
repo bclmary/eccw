@@ -124,14 +124,13 @@ This the core object that compute the solutions of the *CCW* problem.
       delta_lambdaD : 0.0
     }
     >>> foo.compute("alpha")
-    (3.4365319302835018, 23.946319406533199)
+    ((3.4365319302835018,), (23.946319406533199,))
     
 
-The result obtained with the ``compute`` method is always a tuple of two elements.
-First result is for **inverse** fault mechanism context, second result is for **normal** fault mechanism context.
-
-The ``beta`` parameter gets a specificity : 0, 1 or 2 results could be obtained in both the normal of inverse context.
-This is the reason ``beta`` results are tuples of tuples.
+The result obtained with the ``compute`` method is always a tuple of two tuples.
+The first tuple contains results in **inverse** fault mechanism, while the second tuple contains results in **normal** fault mechanism.
+These tuples can each contain 0, 1 or 2 values, with a total always equal to 0 or 2.
+Here some more examples with computation of beta ``parameter``::
 ::
 
     >>> foo.alpha = 3.436532
@@ -143,8 +142,11 @@ This is the reason ``beta`` results are tuples of tuples.
     >>> foo.alpha = -20
     >>> foo.compute("beta") 
     ((36.74110740816224, 83.58092960834391), ())
+    >>> foo.alpha = -35
+    >>> foo.compute("beta") 
+    ((), ())
 
-Have a look on the plot obtained in next section to understand the previous results.
+Have a look on the plot obtained in next section to understand these results.
 
 EccwPlot
 ++++++++
