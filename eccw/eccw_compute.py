@@ -449,7 +449,7 @@ class EmbeddedEccwCompute(BaseEccwCompute):
         self.set_params(**kwargs)
 
     def _categorize_result(
-        self, value: float, tectonic: list, collapsing: list, deg: bool = True
+        self, value: float, inverse: list, normal: list, deg: bool = True
     ) -> (list, list):
         """Dirty way of categorize a result value using another instance of EccwCompute.
         
@@ -464,13 +464,13 @@ class EmbeddedEccwCompute(BaseEccwCompute):
         """
         value = degrees(value) if deg else value
         for (iolist, reflist) in zip(
-            (tectonic, collapsing), self.compute_beta(deg=False)
+            (inverse, normal), self.compute_beta(deg=False)
         ):
             if any(abs(self._beta - beta) < self._h for beta in reflist):
                 # Is thre any duplicated result ?
                 if all(abs(value - other) > self._h for other in iolist):
                     iolist.append(value)
-        return tectonic, collapsing
+        return inverse, normal
 
 
 class EccwCompute(BaseEccwCompute):
@@ -706,7 +706,7 @@ class EccwCompute(BaseEccwCompute):
 
     ## 'Public' methods #######################################################
 
-    def _compute_alpha(self, alpha, psiD, psi0, tectonic, collapsing, deg):
+    def _compute_alpha(self, alpha, psiD, psi0, inverse, normal, deg):
         embedded = self._embedded_compute
         alpha = self._solve([alpha, psiD, psi0], self._runtime_alpha)
         alpha = self._test_alpha(alpha)
@@ -715,10 +715,10 @@ class EccwCompute(BaseEccwCompute):
             embedded._alpha = alpha
             embedded._alpha_related_changes()
             # print("yo", embedded._beta, embedded.compute_beta() )
-            tectonic, collapsing = embedded._categorize_result(
-                alpha, tectonic, collapsing, deg
+            inverse, normal = embedded._categorize_result(
+                alpha, inverse, normal, deg
             )
-        return tectonic, collapsing
+        return inverse, normal
 
     def compute_alpha(self, deg=True) -> tuple:
         """Get critical topographic slope alpha as ECCW.
@@ -726,35 +726,35 @@ class EccwCompute(BaseEccwCompute):
         Return two None if no physical solutions.
         """
         self._check_params_with_raise()
-        tectonic, collapsing = [], []
+        inverse, normal = [], []
         # Update with current parameters the embedded compute.
         self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         # Inital values for first solution.
         alpha, psiD, psi0 = 0.0, 0.0, 0.0
-        tectonic, collapsing = self._compute_alpha(
-            alpha, psiD, psi0, tectonic, collapsing, deg
+        inverse, normal = self._compute_alpha(
+            alpha, psiD, psi0, inverse, normal, deg
         )
         # Other inital values for second solution.
         alpha, psiD, psi0 = 0.0, self._sign * pi / 2.0, self._sign * pi / 4.0
-        tectonic, collapsing = self._compute_alpha(
-            alpha, psiD, psi0, tectonic, collapsing, deg
+        inverse, normal = self._compute_alpha(
+            alpha, psiD, psi0, inverse, normal, deg
         )
-        return tuple(tectonic), tuple(collapsing)
+        return tuple(inverse), tuple(normal)
 
-    def _compute_phiB(self, phiB, psiD, psi0, tectonic, collapsing, deg) -> tuple:
+    def _compute_phiB(self, phiB, psiD, psi0, inverse, normal, deg) -> tuple:
         embedded = self._embedded_compute
         phiB = self._solve([phiB, psiD, psi0], self._runtime_phiB)
         phiB = self._test_phiB(phiB)
         if phiB is not None:
             embedded._phiB = phiB
-            tectonic, collapsing = embedded._categorize_result(
-                phiB, tectonic, collapsing, deg
+            inverse, normal = embedded._categorize_result(
+                phiB, inverse, normal, deg
             )
-        return tectonic, collapsing
+        return inverse, normal
 
     def compute_phiB(self, deg=True) -> tuple:
         self._check_params_with_raise()
-        tectonic, collapsing = [], []
+        inverse, normal = [], []
         # Update with current parameters the embedded compute.
         self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         ab = self._alpha + self._beta
@@ -762,29 +762,29 @@ class EccwCompute(BaseEccwCompute):
         phiB = self._phiD  # pi / 7.0
         psiD = ab  # pi
         psi0 = self._alpha  # psiD - self._alpha - self._beta
-        tectonic, collapsing = self._compute_phiB(
-            phiB, psiD, psi0, tectonic, collapsing, deg
+        inverse, normal = self._compute_phiB(
+            phiB, psiD, psi0, inverse, normal, deg
         )
         # Other inital values for second solution.
         phiB = -self._phiD  # pi / 7.0
         psiD = -pi / 2 + ab  # pi / 2.0
         psi0 = -pi / 2 + self._alpha  # psiD - self._alpha - self._beta
-        tectonic, collapsing = self._compute_phiB(
-            phiB, psiD, psi0, tectonic, collapsing, deg
+        inverse, normal = self._compute_phiB(
+            phiB, psiD, psi0, inverse, normal, deg
         )
-        return tuple(tectonic), tuple(collapsing)
+        return tuple(inverse), tuple(normal)
 
-    def _compute_phiD(self, phiD, psiD, psi0, tectonic, collapsing, deg) -> tuple:
+    def _compute_phiD(self, phiD, psiD, psi0, inverse, normal, deg) -> tuple:
         embedded = self._embedded_compute
         phiD = self._solve([phiD, psiD, psi0], self._runtime_phiD)
         phiD = self._test_phiD(phiD)
         if phiD is not None:
             embedded._phiD = phiD * embedded._sign
             embedded._phiD_related_changes()
-            tectonic, collapsing = embedded._categorize_result(
-                phiD, tectonic, collapsing, deg
+            inverse, normal = embedded._categorize_result(
+                phiD, inverse, normal, deg
             )
-        return tectonic, collapsing
+        return inverse, normal
 
     def compute_phiD(self, deg=True) -> tuple:
         """Get critical basal friction angle as ECCW.
@@ -798,24 +798,24 @@ class EccwCompute(BaseEccwCompute):
         .. note:: double solutions (phiD == phiB) are not returned.
         """
         self._check_params_with_raise()
-        tectonic, collapsing = [], []
+        inverse, normal = [], []
         # Update with current parameters the embedded compute.
         self._embedded_compute.set_params(**self.kwargs(), _h=self._h)
         apb = self._alpha + self._beta
         # Inital values for First solution.
         # phiD, psiD, psi0 = apb, apb, 0.0
         phiD, psiD, psi0 = -apb, -pi / 2, -pi / 2
-        tectonic, collapsing = self._compute_phiD(
-            phiD, psiD, psi0, tectonic, collapsing, deg
+        inverse, normal = self._compute_phiD(
+            phiD, psiD, psi0, inverse, normal, deg
         )
         # Other inital values second solution.
         # phiD, psiD, psi0 = 0.0, pi/2, pi/2 - apb
         phiD, psiD, psi0 = 0.0, apb, 0.0
         # Second solution of ECCW (upper).
-        tectonic, collapsing = self._compute_phiD(
-            phiD, psiD, psi0, tectonic, collapsing, deg
+        inverse, normal = self._compute_phiD(
+            phiD, psiD, psi0, inverse, normal, deg
         )
-        return tuple(tectonic), tuple(collapsing)
+        return tuple(inverse), tuple(normal)
 
     def compute(self, flag: str) -> tuple:
         """Compute solution for given parameter.
