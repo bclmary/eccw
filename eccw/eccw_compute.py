@@ -229,23 +229,18 @@ class BaseEccwCompute(object):
 
         if not (0.0 <= self._delta_lambdaD < 1 - self._density_ratio):
             errors += self._error_message(
-                "delta_lambdaD", "value", "in [0 : %s]\n" % (1 - self._density_ratio)
+                "delta_lambdaD", "value", f"in [0 : {1 - self._density_ratio}]\n"
             )
         if not (0.0 <= self._delta_lambdaB <= 1 - self._density_ratio):
             errors += self._error_message(
-                "delta_lambdaB", "value", "in [0 : %s]\n" % (1 - self._density_ratio)
+                "delta_lambdaB", "value", f"in [0 : {1 - self._density_ratio}]\n"
             )
         return errors
 
     def _error_message(self, who: str, problem: str, solution: str) -> str:
         """Error message formater."""
         class_name = self.__class__.__name__
-        return "%s() gets wrong %s for '%s': must be %s" % (
-            class_name,
-            problem,
-            who,
-            solution,
-        )
+        return f"{class_name}() gets wrong {problem} for '{who}': must be {solution}"
 
     def _set_density_ratio(self) -> None:
         """Ratio of mass densities of fluids over saturated rock.
@@ -838,61 +833,6 @@ class EccwCompute(BaseEccwCompute):
 if __name__ == "__main__":
 
     foo = EccwCompute()
-    #    foo.show_params()
-
-    #    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.4365, context="c")
-    #    foo.show_params()
-    #    print("\ndry_inverse")
-    #    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
-    #    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
-    #    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
-    #    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
-    #
-    #    foo.set_params(phiB=30, phiD=10, beta=0, alpha=23.9463194, context="c")
-    #    print("\ndry_normal - set")
-    #    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
-    #    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
-    #    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
-    #    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
-    #
-    #    foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=23.9463194, context="c")
-    #    print("\ndry_normal - init")
-    #    print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
-    #    print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
-    #    print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
-    #    print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
-    #
-    #    foo = EccwCompute(phiB=30, phiD=10, alpha=0., context="c")
-    #    print("\nbetas")
-    #    print("alpha =   0., betas =", foo.compute("beta"))
-    #    foo.alpha = 20
-    #    print("alpha =  20., betas =", foo.compute("beta"))
-    #    foo.alpha = -20
-    #    print("alpha = -20., betas =", foo.compute("beta"))
-
-    # foo = EccwCompute(phiB=30, phiD=10, beta=20, alpha=9.4113, context="e")
-    # foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=3.8353, context="c",
-    #                       rho_f=1000, rho_sr=3500,
-    #                       delta_lambdaB=0.50, delta_lambdaD=0.3)
-    # print("\nfluids_inverse")
-    # print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
-    # print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
-    # print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
-    # print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
-    #
-    #
-    # foo = EccwCompute(phiB=30, phiD=10, beta=0, alpha=6.76084021, context="c",
-    #                       rho_f=1000, rho_sr=3500,
-    #                       delta_lambdaB=0.50, delta_lambdaD=0.3)
-    # # print("\nextension")
-    # print("\nfluids_normal")
-    # print("alphas =", foo.compute("alpha"), "[%s]" % foo.alpha)
-    # print("betas  =", foo.compute("beta"), "[%s]" % foo.beta)
-    # print("phiB =", foo.compute("phiB"), "[%s]" % foo.phiB)
-    # print("phiD =", foo.compute("phiD"), "[%s]" % foo.phiD)
-
-    #    foo.show_params()
-    #    print(str(foo))
 
     print("ALPHA")
     foo = EccwCompute(phiB=30, beta=0)
