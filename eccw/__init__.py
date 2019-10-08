@@ -64,9 +64,9 @@ __authors__ = [
 
 __license__ = "GNU GPL-v3"
 
-__url__ = "https://github.com/bclmary"
+__url__ = "https://github.com/bclmary/eccw"
 
-__contact__ = "bclmary@mailoo.org"
+__contact__ = "baptiste.mary@u-cergy.fr"
 
 
 __all__ = [
