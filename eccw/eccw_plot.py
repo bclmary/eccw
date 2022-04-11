@@ -154,7 +154,7 @@ class EccwPlot(EccwCompute):
         xL, yL = self._arrow_L * cos(angle), self._arrow_L * sin(angle)
         dum_l = sqrt(self._arrow_gap ** 2.0 + self._arrow_L ** 2.0) / 2.0
         dum_angle = atan(self._arrow_gap / self._arrow_L)
-        if solution is "B":
+        if solution == "B":
             dx = dum_l * cos(angle - dum_angle)
             dy = dum_l * sin(angle - dum_angle)
             way = "right" if gamma else "left"
@@ -331,7 +331,7 @@ class EccwPlot(EccwCompute):
     def add_legend(self):
         self.legend = plt.legend(loc="best", fontsize="10")
         if self.legend is not None:
-            self.legend.draggable()
+            self.legend.set_draggable(True)
 
     def add_refpoint(self, *args, **kwargs):
         try:

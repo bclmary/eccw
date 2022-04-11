@@ -36,41 +36,27 @@ Exact Critical Coulomb Wedge
 
 """
 
-import pkg_resources
-from os import path
-from setuptools.config import read_configuration
+from importlib.metadata import metadata
 
 from eccw.eccw_compute import EccwCompute
 from eccw.eccw_plot import EccwPlot
 
-
-def _extract_metadata(metadata_name):
-    """Get metadata from pip installation."""
-    return getattr(pkg_resources.get_distribution("eccw"), metadata_name)
-
 try:
-    __version__ = _extract_metadata("version")
-except pkg_resources.DistributionNotFound:
-    _conf = read_configuration(path.join(
-        path.dirname(path.dirname(__file__)), 'setup.cfg')
-        )
-    __version__ = _conf['metadata']["version"]
-
-__authors__ = [
-    'BCL Mary',
-    'Xiaoping Yuan',
-    'YM Leroy',
-    ]
-
-__license__ = "GNU GPL-v3"
-
-__url__ = "https://github.com/bclmary/eccw"
-
-__contact__ = "baptiste.mary@u-cergy.fr"
-
+    mdatas = dict(metadata("eccw").items())
+    __version__ = mdatas["Version"]
+    __license__ = mdatas["License"]
+    __url__ = mdatas["Home-page"]
+    __contact__ = mdatas["Author-email"]
+    __authors__ = [name.strip() for name in mdatas["Author"].split(",")]
+except :
+    # These infos are not mandatory.
+    __version__ = ""
+    __license__ = ""
+    __url__ = ""
+    __authors__ = ""
+    __contact__ = ""
 
 __all__ = [
     'EccwCompute',
     'EccwPlot',
     ]
-
