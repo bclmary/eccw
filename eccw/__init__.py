@@ -36,12 +36,15 @@ Exact Critical Coulomb Wedge
 
 """
 
-from importlib.metadata import metadata
-
 from eccw.eccw_compute import EccwCompute
 from eccw.eccw_plot import EccwPlot
 
 try:
+    try:
+        from importlib.metadata import metadata
+    except ImportError:  # Python < 3.10 (backport)
+        from importlib_metadata import metadata
+
     mdatas = dict(metadata("eccw").items())
     __version__ = mdatas["Version"]
     __license__ = mdatas["License"]
